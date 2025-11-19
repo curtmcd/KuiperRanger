@@ -1,0 +1,80 @@
+.TH kuiper-ranger 6 "March 1998 - December 2025" "Kuiper Ranger version 2.5" "Games"
+.SH NAME
+kuiper-ranger \- Space rocks shooting game using SDL2 cross-platform graphics
+.SH SYNOPSIS
+.B kuiper-ranger
+[\-w \fIWIDTH\fR] [\-fhv]
+.SH DESCRIPTION
+.LP
+An old-style vector graphics arcade game
+in which your space ship
+shoots down rocks and flying saucers to gain points.
+Opens in a window or takes over the whole
+screen and uses monochrome vector graphics.
+Allows a one- to three-player game.
+.LP
+The game and ship control key assignments may be viewed by pressing H (help).
+.SH OPTIONS
+.sp 1
+.TP 0.5i
+\fB\-w \fIWIDTH\fR
+Open with a specified window width of at least 512 and
+at most the screen width.
+.TP 0.5i
+\fB\-f\fR
+Open in full-screen mode where possible.
+Alternately, you may press F during the game to toggle full-screen mode.
+.TP 0.5i
+\fB\-h\FR
+Display a help message and exit.
+.TP 0.5i
+\fB\-v\FR
+Display the program version and exit.
+.LP
+Use the -f option to run full-screen, or press F during the game.
+.SH SOUND
+Cool sound effects are provided!
+They are off by default.
+Press S to toggle the sound on and off.
+.SH ENVIRONMENT
+Set KR_NICK to provide a
+nickname to use in the high score list.
+If it is not set, then USER and LOGNAME are consulted, respectively.
+For multi-player games, set KR_NICK1, KR_NICK2, and KR_NICK3.
+.LP
+Set PLOT_WIDTH to request a window width similar to the
+.B \-w
+option.
+.LP
+Set AUDIO_SAMPLES to change the size of the audio sample buffer.
+The default is 1024.
+A lower value such as 512 provides less latency but potentially more dropouts.
+A higher value such as 4096 reduces dropouts but increases latency.
+.SH HIGH SCORES
+High scores are maintained persistently in /var/games/kuiper-ranger/scores
+if that file exists and is world writable.
+To create that file, you can run these commands:
+.in +4n
+.EX
+sudo mkdir -p /var/games/kuiper-ranger
+sudo touch /var/games/kuiper-ranger/scores
+sudo chmod 777 /var/games/kuiper-ranger/scores
+.EE
+.LP
+If that file is not writable but $HOME/.local exists, then scores are
+stored in $HOME/.local/state/kuiper-ranger/scores instead.
+And failing that, scores are stored in $HOME/.kr-scores.
+.SH COPYRIGHT
+Permission is granted to use this source code for any purpose
+provided proper credit is given to the authors.
+.SH AUTHOR
+.nf
+Curt McDowell
+Miles Bader
+William Lott
+Christos Zoulas
+Zalman Stern
+Liverpool
+David Sanderson
+and others!
+.fi

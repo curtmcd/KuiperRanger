@@ -1,0 +1,11 @@
+.TH soundtest 6 "November 2025" "Kuiper Ranger version 2.5" "Games"
+.SH NAME
+soundtest \- Test game sound module
+.SH SYNOPSIS
+.B soundtest
+.SH DESCRIPTION
+Presents a menu where you can enter sound numbers and they get played.
+.SH AUTHOR
+.nf
+Curt McDowell
+.fi
