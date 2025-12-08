@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Kuiper Ranger
+Comment=A vector arcade game - shoot down rocks and flying saucers
+Exec=/usr/games/kuiper-ranger
+Icon=kuiper-ranger
+Categories=Game;
+Terminal=false

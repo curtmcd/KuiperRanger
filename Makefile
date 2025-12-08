@@ -3,8 +3,22 @@
 # Build configuration
 BUILD_DIR ?= build
 
-# Platforms: native (gcc/SDL2) and emscripten
-PLATFORMS := native emscripten
+# Platforms: build native (gcc/SDL2) always
+PLATFORMS := native
+
+# Prefix includes DESTDIR to support distro package build
+PREFIX ?= $(DESTDIR)/usr
+
+# Platforms: build emscripten if EMSDK is set to an Emscripten root dir
+# If emsdk_env.sh has not yet been sourced, do that and restart recursively.
+ifdef EMSDK
+ifeq ($(shell which em++),)
+%:
+	@BASH_SOURCE=$(EMSDK)/emsdk_env.sh \
+		. $(EMSDK)/emsdk_env.sh && $(MAKE) $(MAKECMDGOALS)
+endif
+PLATFORMS += emscripten
+endif
 
 # Default: build all platforms
 .DEFAULT_GOAL := all
@@ -42,7 +56,7 @@ CXX_native := g++
 #DEBUG_native = -g -fsanitize=address
 DEBUG_native = -O2 -fno-strict-aliasing
 
-CXXFLAGS_native := $(DEBUG_native) -Wall -Wextra -Wconversion -Wshadow -Werror
+CXXFLAGS_native := $(DEBUG_native) -D_REENTRANT -Wall -Wextra -Wconversion -Wshadow -Werror
 LIBS_native := -lSDL2 -lm -lstdc++
 
 NATIVE_BIN := $(BUILD_DIR)/native/bin
@@ -64,7 +78,7 @@ $(NATIVE_OBJ)/%.o: %.cpp
 
 # Emscripten
 CXX_emscripten := em++
-CXXFLAGS_emscripten := -s USE_SDL=2 -O3
+CXXFLAGS_emscripten := -D_REENTRANT -s USE_SDL=2 -O3
 LDFLAGS_emscripten := -s USE_SDL=2 --shell-file shell_min.html
 
 EM_BIN := $(BUILD_DIR)/emscripten/bin
@@ -88,7 +102,7 @@ native: $(NATIVE_BIN)/kuiper-ranger $(NATIVE_BIN)/soundtest
 # Build emscripten target under $(BUILD_DIR)/emscripten/bin
 emscripten: $(EM_BIN)/kuiper-ranger.html
 
-build-all: native emscripten
+build-all: $(PLATFORMS)
 
 # Default all builds everything (same as build-all)
 all: build-all
@@ -96,6 +110,32 @@ all: build-all
 ########################################################################
 # Common rules
 ########################################################################
+
+install:
+	install -d $(PREFIX)/games
+	install -d $(PREFIX)/share/man/man6
+	install -d $(PREFIX)/share/applications
+	install -d $(PREFIX)/share/icons/hicolor/16x16/apps
+	install -d $(PREFIX)/share/icons/hicolor/32x32/apps
+	install -d $(PREFIX)/share/icons/hicolor/48x48/apps
+	install -d $(PREFIX)/share/icons/hicolor/64x64/apps
+	install -d $(PREFIX)/share/icons/hicolor/128x128/apps
+
+	install -m 755 build/native/bin/kuiper-ranger $(PREFIX)/games/
+	install -m 644 kuiper-ranger.man $(PREFIX)/share/man/man6/kuiper-ranger.6
+	install -m 644 kuiper-ranger.desktop $(PREFIX)/share/applications/
+
+	install -m 644 icons/16x16.png $(PREFIX)/share/icons/hicolor/16x16/apps/kuiper-ranger.png
+	install -m 644 icons/32x32.png $(PREFIX)/share/icons/hicolor/32x32/apps/kuiper-ranger.png
+	install -m 644 icons/48x48.png $(PREFIX)/share/icons/hicolor/48x48/apps/kuiper-ranger.png
+	install -m 644 icons/64x64.png $(PREFIX)/share/icons/hicolor/64x64/apps/kuiper-ranger.png
+	install -m 644 icons/128x128.png $(PREFIX)/share/icons/hicolor/128x128/apps/kuiper-ranger.png
+
+uninstall:
+	$(RM) $(PREFIX)/games/kuiper-ranger
+	$(RM) $(PREFIX)/share/man/man6/kuiper-ranger.6
+	$(RM) $(PREFIX)/share/applications/kuiper-ranger.desktop
+	$(RM) $(PREFIX)/share/icons/hicolor/*/apps/kuiper-ranger.png
 
 # Generate ID database for GNU id-utils
 ID:
