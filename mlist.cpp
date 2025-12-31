@@ -45,7 +45,7 @@ void MList::update()
     }
 }
 
-void MList::fire(const Vect &fromPos, const Vect& vel, double timeout, double radius)
+void MList::fire(const Point &fromPos, const Vect& vel, double timeout, double radius)
 {
     MListElement *me = new MListElement;
 

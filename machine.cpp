@@ -10,6 +10,7 @@
 #include "highlist.hpp"
 #include "title.hpp"
 #include "speaker.hpp"
+#include "paused.hpp"
 
 static bool soundIsOn = false;
 static bool soundOverride = false;
@@ -110,7 +111,7 @@ void Machine::term()
 static bool updateAttract()
 {
 #ifndef __EMSCRIPTEN__
-    // Quit from web page isn't supported
+    // Quit from web page isn't supported (user can press P to pause)
     if (Button::isDown(Button::quit, true)) {
 	stopAttract();
 	return false;
@@ -137,14 +138,14 @@ static bool updateAttract()
 
     int nPlayers = 0;
 
+    if (Button::isDown(Button::start3, true))
+	nPlayers = 3;
+    if (Button::isDown(Button::start2, true))
+	nPlayers = 2;
     if (Button::isDown(Button::start1, true))
 	nPlayers = 1;
-    else if (Button::isDown(Button::start2, true))
-	nPlayers = 2;
-    else if (Button::isDown(Button::start3, true))
-	nPlayers = 3;
 
-    if (nPlayers > 0) {
+    if (nPlayers > 0 && !Plot::getPauseMode()) {
 	stopAttract();
 
 	for (int i = 0; i < nPlayers; i++)
@@ -164,6 +165,7 @@ static void updateTurn()
 
     if (Button::isDown(Button::quit, true)) {
 	Plot::setPauseMode(false);
+	Paused::off();
 
 	turnOver = true;
 	playerOut = true;
@@ -233,19 +235,21 @@ bool Machine::update()
 	Plot::setFullScreen(!Plot::getFullScreen());
 
     if (Button::isDown(Button::togglePause, true)) {
-	bool paused = Plot::getPauseMode();
-
-	paused = !paused;
-	Plot::setPauseMode(paused);
-
-	// Mute all sound (including continuous ones like alienMotor)
-	if (paused)
+	if (Plot::getPauseMode()) {
+	    Plot::setPauseMode(false);
+	    Paused::off();
+	    if (soundIsOn && !soundOverride)
+		Sound::on();
+	} else {
+	    Plot::setPauseMode(true);
+	    Paused::on();
+	    // Mute all sound (including continuous ones like alienMotor)
 	    Sound::off();
-	else if (soundIsOn && !soundOverride)
-	    Sound::on();
+	}
     }
 
     Speaker::update();
+    Paused::update();
 
     if (attractGame != NULL) {
 	if (!updateAttract())

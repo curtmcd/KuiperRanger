@@ -2,14 +2,12 @@
 #define text_hpp
 
 #include "linefont.hpp"
-#include "type.hpp"
-#include "vect.hpp"
 
 #define MAXTEXT 80
 
 struct TextState {
     char str[MAXTEXT];
-    Vect pos;
+    Point pos;
     bool on;
     Linefont *font;
 };
@@ -29,8 +27,8 @@ struct Text {
 	state.str[MAXTEXT - 1] = '\0';
     }
 
-    void setPos(const Vect& pos) { state.pos = pos; }
-    Vect getPos() { return state.pos; }
+    void setPos(const Point& pos) { state.pos = pos; }
+    Point getPos() { return state.pos; }
 
     void setFont(Linefont *lf) { state.font = lf; }
 

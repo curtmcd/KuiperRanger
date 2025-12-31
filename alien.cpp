@@ -8,16 +8,16 @@
 #include "alien.hpp"
 
 static Line alienVec[] = {
-    { Vect(-11, 11), Vect(11, 11) },
-    { Vect(11, 11), Vect(23, 0) },
-    { Vect(-23, 0), Vect(-11, 11) },
-    { Vect(-23, 0), Vect(23, 0) },
-    { Vect(-23, 0), Vect(-11, -8) },
-    { Vect(23, 0), Vect(11, -8) },
-    { Vect(-11, -8), Vect(11, -8) },
-    { Vect(-8, -8), Vect(-5, -18) },
-    { Vect(-5, -18), Vect(5, -18) },
-    { Vect(5, -18), Vect(8, -8) }
+    { Point(-11, 11), Point(11, 11) },
+    { Point(11, 11), Point(23, 0) },
+    { Point(-23, 0), Point(-11, 11) },
+    { Point(-23, 0), Point(23, 0) },
+    { Point(-23, 0), Point(-11, -8) },
+    { Point(23, 0), Point(11, -8) },
+    { Point(-11, -8), Point(11, -8) },
+    { Point(-8, -8), Point(-5, -18) },
+    { Point(-5, -18), Point(5, -18) },
+    { Point(5, -18), Point(8, -8) }
 };
 
 static Shape *alienShape;
@@ -26,7 +26,7 @@ static Linefont *pointsFont;
 void Alien::init()
 {
     alienShape = new Shape(alienVec, ARRAYSIZE(alienVec));
-    pointsFont = new Linefont(PERCENT(130), 0.0, false);
+    pointsFont = new Linefont(PERCENT(130), false);
 }
 
 void Alien::term()
@@ -78,7 +78,8 @@ void Alien::start()
     Plot::getWrapArea(&wa);
 
     double margin = sprite->getRadius() * 1.25;
-    Vect pos, vel;
+    Point pos;
+    Vect vel;
 
     if (Rand::natural(2) == 0) {
 	pos.x = wa.ul.x + margin;
@@ -140,7 +141,7 @@ void Alien::off()
 
 void Alien::fire(Sprite *targets[], int nTargets, int wave)
 {
-    Vect fireOrigin = sprite->getPos();
+    Point fireOrigin = sprite->getPos();
 
     // Pick a random direction to fire by default, in case no targets
     // are suitable.
@@ -155,7 +156,7 @@ void Alien::fire(Sprite *targets[], int nTargets, int wave)
 	// missile gets there. This does not take into account ship
 	// thrust or ship friction.
 
-	Vect targetPos = targets[tryTarget]->getPos();
+	Point targetPos = targets[tryTarget]->getPos();
 	Vect targetVel = targets[tryTarget]->getVel();
 	double targetDistance = (targetPos - fireOrigin).magnitude();
 	double eta = targetDistance / ALIENSHOTSPEED;
@@ -164,7 +165,7 @@ void Alien::fire(Sprite *targets[], int nTargets, int wave)
 	if (eta > ALIENSHOTDUR)
 	    continue;
 
-	Vect predictedPos = targetPos + targetVel * eta;
+	Point predictedPos = targetPos + targetVel * eta;
 
 	// Compute unit vector in direction from alien to target
 	Vect u = predictedPos - fireOrigin;
@@ -258,7 +259,7 @@ void Alien::die(int score)
 	scoreOffset.unitize();
 	scoreOffset *= -PERCENT(250) * sprite->getRadius();
 
-	Vect scorePos = sprite->getPos() + scoreOffset;
+	Point scorePos = sprite->getPos() + scoreOffset;
 
 	// Center text on computed position
 

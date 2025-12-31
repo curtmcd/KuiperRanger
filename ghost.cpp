@@ -4,7 +4,7 @@ Ghost::Ghost()
 {
     text = new Text();
     ghostShip = new Ship(true);
-    font = new Linefont(PERCENT(500), 0, false);
+    font = new Linefont(PERCENT(500), false);
     text->setFont(font);
 }
 
@@ -25,7 +25,7 @@ void Ghost::start(int player)
 
     Vect textSize = text->getSize();
     Vect lineSpacing = font->getLineSpacing();
-    Vect textPos = ghostShip->getPos() + lineSpacing * 2 - textSize / 2;
+    Point textPos = ghostShip->getPos() + lineSpacing * 2 - textSize / 2;
     text->setPos(textPos);
 
     text->on();

@@ -5,10 +5,8 @@
 
 Extras::Extras(int startLives)
 {
-    Vect pos;
-
-    pos.x = (double)EXTRAX;
-    pos.y = (double)(SCOREBARH * 2 / 3);
+    Point pos((double)EXTRAX,
+	      (double)(SCOREBARH * 2 / 3));
 
     lives = startLives;
     show = false;

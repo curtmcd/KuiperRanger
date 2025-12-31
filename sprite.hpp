@@ -3,7 +3,7 @@
 
 #include "type.hpp"
 #include "shape.hpp"
-#include "vect.hpp"
+#include "point.hpp"
 #include "plot.hpp"
 
 struct SpriteState {
@@ -16,7 +16,7 @@ struct SpriteState {
     bool wrap;     	// Should wrap around when going out of plot window
     bool disappear;	// Should disappear when going out of plot window
 
-    Vect pos;
+    Point pos;
 };
 
 struct Sprite {
@@ -31,8 +31,8 @@ struct Sprite {
     void setWrap(bool w) { state.wrap = w; }
     void setDisappear(bool d) { state.disappear = d; }
 
-    void setPos(const Vect &pos) { state.pos = pos; }
-    Vect getPos() const { return state.pos; }
+    void setPos(const Point &pos) { state.pos = pos; }
+    Point getPos() const { return state.pos; }
 
     void setVel(const Vect &_vel) { vel = _vel; }
     Vect getVel() const { return vel; }

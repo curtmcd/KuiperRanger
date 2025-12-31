@@ -8,51 +8,51 @@
 
 // There are currently three different shapes.
 // Maybe new ones could be generated at random so each is unique.
-static Vect rockVec1[] = {
-    Vect(2, 20),
-    Vect(11, 25),
-    Vect(23, 6),
-    Vect(19, -5),
-    Vect(8, -7),
-    Vect(18, -11),
-    Vect(14, -19),
-    Vect(-8, -21),
-    Vect(-19, -15),
-    Vect(-24, 3),
-    Vect(-16, 19),
-    Vect(-9, 12),
-    Vect(-8, 26)
+static Point rockVec1[] = {
+    Point(2, 20),
+    Point(11, 25),
+    Point(23, 6),
+    Point(19, -5),
+    Point(8, -7),
+    Point(18, -11),
+    Point(14, -19),
+    Point(-8, -21),
+    Point(-19, -15),
+    Point(-24, 3),
+    Point(-16, 19),
+    Point(-9, 12),
+    Point(-8, 26)
 };
 
-static Vect rockVec2[] = {
-    Vect(10, -20),
-    Vect(21, -17),
-    Vect(18, -2),
-    Vect(23, 8),
-    Vect(13, 25),
-    Vect(1, 21),
-    Vect(-13, 24),
-    Vect(-24, 12),
-    Vect(-16, 0),
-    Vect(-22, -11),
-    Vect(-14, -23),
-    Vect(1, -15)
+static Point rockVec2[] = {
+    Point(10, -20),
+    Point(21, -17),
+    Point(18, -2),
+    Point(23, 8),
+    Point(13, 25),
+    Point(1, 21),
+    Point(-13, 24),
+    Point(-24, 12),
+    Point(-16, 0),
+    Point(-22, -11),
+    Point(-14, -23),
+    Point(1, -15)
 };
 
-static Vect rockVec3[] = {
-    Vect(5, -22),
-    Vect(14, -16),
-    Vect(16, -4),
-    Vect(23, 3),
-    Vect(17, 18),
-    Vect(2, 25),
-    Vect(-16, 22),
-    Vect(-26, 5),
-    Vect(-19, -5),
-    Vect(-15, -18)
+static Point rockVec3[] = {
+    Point(5, -22),
+    Point(14, -16),
+    Point(16, -4),
+    Point(23, 3),
+    Point(17, 18),
+    Point(2, 25),
+    Point(-16, 22),
+    Point(-26, 5),
+    Point(-19, -5),
+    Point(-15, -18)
 };
 
-static Vect *rockVecs[] = {
+static Point *rockVecs[] = {
     rockVec1,
     rockVec2,
     rockVec3
@@ -69,7 +69,7 @@ static int rockVecLens[] = {
 static Shape *rockShapes[3];
 
 // Create an individual rock
-Rock::Rock(int _size, Vect *pos, Vect *vel, double angularVelocity)
+Rock::Rock(int _size, Point *pos, Vect *vel, double angularVelocity)
 {
     size = _size;
     whole = true;
@@ -130,7 +130,7 @@ Rocks::~Rocks()
 // margin_frac is the fraction of the screen size along the
 // edges where rocks can initially occur.
 
-static void randomRock(Vect *pos, Vect *vel)
+static void randomRock(Point *pos, Vect *vel)
 {
     Vect screenSize = Plot::getSize();
     Vect margin = screenSize * ROCKMARGIN;
@@ -168,7 +168,8 @@ void Rocks::start()
     for (int i = 0; i < waveSize; i++) {
 	int size = 0;
 
-        Vect pos, vel;
+        Point pos;
+	Vect vel;
         randomRock(&pos, &vel);
 
 	Rock *r = new Rock(size, &pos, &vel, Rand::range(-MAXROCKROT, MAXROCKROT));
@@ -233,7 +234,7 @@ int Rocks::split(Rock *r)
 {
     if (r->size < ROCKSIZES - 1)
 	for (int i = 0; i < SPLITINTO; i++) {
-	    Vect newPos = r->sprite->getPos();
+	    Point newPos = r->sprite->getPos();
 	    Vect newVel = r->sprite->getVel();
 
 	    Vect v(Rand::range(-MAXROCKVEL, MAXROCKVEL),

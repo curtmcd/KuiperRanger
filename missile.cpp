@@ -3,7 +3,7 @@
 #include "param.hpp"
 
 static Line missileVec[] = {
-    { Vect(-1, 0), Vect(1, 0) }
+    { Point(-2, 0), Point(2, 0) }
 };
 
 static Shape *casing;

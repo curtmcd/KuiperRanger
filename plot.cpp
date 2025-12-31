@@ -46,6 +46,9 @@ static double deltaTime;
 static int frameNo;
 static bool pauseMode;
 
+// Input state
+static bool capsLockDown;
+
 void Plot::drawLetterbox()
 {
     // Use gray5 for letterbox regions (rgb 13,13,13)
@@ -196,8 +199,8 @@ bool Plot::init(int requestWidth, const char *windowTitle)
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     // Initial wrap area is full drawing area
-    Rect wa(Vect(0.0, 0.0),
-	    Vect(NOMINAL_WIDTH, NOMINAL_HEIGHT));
+    Rect wa(Point(0.0, 0.0),
+	    Point(NOMINAL_WIDTH, NOMINAL_HEIGHT));
     Plot::setWrapArea(wa);
     wrap = false;
 
@@ -591,120 +594,125 @@ void Plot::pollEvents()
 
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-            case SDL_QUIT:
-		Button::press(Button::quit);
-                break;
+	case SDL_QUIT:
+	    Button::press(Button::quit);
+	    break;
 
-            case SDL_WINDOWEVENT:
-                if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-                    clearBlack();
-                    handleResize(event.window.data1, event.window.data2);
-                }
-                break;
+	case SDL_WINDOWEVENT:
+	    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+		clearBlack();
+		handleResize(event.window.data1, event.window.data2);
+	    }
+	    break;
 
-            case SDL_KEYDOWN:
-            case SDL_KEYUP: {
-                // Ignore key repeat events
-                if (event.key.repeat)
-                    break;
+	case SDL_KEYDOWN:
+	case SDL_KEYUP: {
+	    // Ignore key repeat events
+	    if (event.key.repeat)
+		break;
 
-                bool keyDown = (event.type == SDL_KEYDOWN);
-                bool shiftDown = (event.key.keysym.mod & KMOD_SHIFT);
-                bool ctrlDown = (event.key.keysym.mod & KMOD_CTRL);
+	    // Allow CapsLock-as-Control
+	    if (event.key.keysym.sym == SDLK_CAPSLOCK)
+		capsLockDown = (event.type == SDL_KEYDOWN);
 
-                switch (event.key.keysym.sym) {
-                    case SDLK_z:
-                        if (keyDown && ctrlDown)
-                            Button::press(Button::suspend);
-                        else {
-                            if (keyDown)
-                                Button::press(Button::rotateLeft);
-                            else
-                                Button::release(Button::rotateLeft);
-                        }
-                        break;
+	    bool keyDown = (event.type == SDL_KEYDOWN);
+	    bool shiftDown = (event.key.keysym.mod & KMOD_SHIFT);
+	    bool ctrlDown = ((event.key.keysym.mod & KMOD_CTRL) ||
+			     capsLockDown);
 
-                    case SDLK_x:
-                        if (keyDown)
-                            Button::press(Button::rotateRight);
-                        else
-                            Button::release(Button::rotateRight);
-                        break;
+	    switch (event.key.keysym.sym) {
+	    case SDLK_z:
+		if (keyDown && ctrlDown)
+		    Button::press(Button::suspend);
+		else {
+		    if (keyDown)
+			Button::press(Button::rotateLeft);
+		    else
+			Button::release(Button::rotateLeft);
+		}
+		break;
 
-                    case SDLK_PERIOD:
-                        if (keyDown)
-                            Button::press(Button::thrust);
-                        else
-                            Button::release(Button::thrust);
-                        break;
+	    case SDLK_x:
+		if (keyDown)
+		    Button::press(Button::rotateRight);
+		else
+		    Button::release(Button::rotateRight);
+		break;
 
-                    case SDLK_SLASH:
-			if (keyDown) {
-			    if (shiftDown)
-				Button::press(Button::toggleHelp);
-			    else
-				Button::press(Button::fire);
-			}
-                        break;
+	    case SDLK_PERIOD:
+		if (keyDown)
+		    Button::press(Button::thrust);
+		else
+		    Button::release(Button::thrust);
+		break;
 
-                    case SDLK_h:
-                        if (keyDown)
-                            Button::press(Button::toggleHelp);
-                        break;
+	    case SDLK_SLASH:
+		if (keyDown) {
+		    if (shiftDown)
+			Button::press(Button::toggleHelp);
+		    else
+			Button::press(Button::fire);
+		}
+		break;
 
-                    case SDLK_SPACE:
-                        if (keyDown)
-                            Button::press(Button::hyperspace);
-                        break;
+	    case SDLK_h:
+		if (keyDown)
+		    Button::press(Button::toggleHelp);
+		break;
 
-                    case SDLK_p:
-                        if (keyDown)
-                            Button::press(Button::togglePause);
-                        break;
+	    case SDLK_SPACE:
+		if (keyDown)
+		    Button::press(Button::hyperspace);
+		break;
 
-                    case SDLK_ESCAPE:
-                    case SDLK_q:
-                        if (keyDown)
-                            Button::press(Button::quit);
-                        break;
+	    case SDLK_p:
+		if (keyDown)
+		    Button::press(Button::togglePause);
+		break;
 
-                    case SDLK_c:
-                        if (keyDown && ctrlDown)
-                            Button::press(Button::quit);
-                        break;
+	    case SDLK_ESCAPE:
+	    case SDLK_q:
+		if (keyDown)
+		    Button::press(Button::quit);
+		break;
 
-                    case SDLK_f:
-                        if (keyDown)
-                            Button::press(Button::fullScreen);
-                        break;
+	    case SDLK_c:
+		if (keyDown && ctrlDown)
+		    Button::press(Button::quit);
+		break;
 
-                    case SDLK_1:
-                        if (keyDown) {
-                            if (shiftDown)
-				// Exclamation mark prints average FPS
-				Button::press(Button::printFPS);
-			    else
-				Button::press(Button::start1);
-			}
-                        break;
+	    case SDLK_f:
+		if (keyDown)
+		    Button::press(Button::fullScreen);
+		break;
 
-                    case SDLK_2:
-                        if (keyDown)
-                            Button::press(Button::start2);
-                        break;
+	    case SDLK_1:
+		if (keyDown) {
+		    if (shiftDown)
+			// Exclamation mark prints average FPS
+			Button::press(Button::printFPS);
+		    else
+			Button::press(Button::start1);
+		}
+		break;
 
-                    case SDLK_3:
-                        if (keyDown)
-                            Button::press(Button::start3);
-                        break;
+	    case SDLK_2:
+		if (keyDown)
+		    Button::press(Button::start2);
+		break;
 
-                    case SDLK_s:
-                        if (keyDown)
-                            Button::press(Button::toggleSound);
-                        break;
-                }
-                break;
-            }
+	    case SDLK_3:
+		if (keyDown)
+		    Button::press(Button::start3);
+		break;
+
+	    case SDLK_s:
+		if (keyDown)
+		    Button::press(Button::toggleSound);
+		break;
+	    }
+	    break;
+	}
         }
     }
 }

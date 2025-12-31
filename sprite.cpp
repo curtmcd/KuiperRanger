@@ -11,7 +11,7 @@ static void InitState(SpriteState &sp)
 
     sp.wrap = false;
     sp.disappear = false;
-    sp.pos = Vect(0.0, 0.0);
+    sp.pos = Point(0.0, 0.0);
 }
 
 Sprite::Sprite()

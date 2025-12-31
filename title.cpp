@@ -12,21 +12,21 @@ namespace Title {
 	Vect screenSize = Plot::getSize();
 
 	titleText = new Text();
-	titleFont = new Linefont(PERCENT(800), 0, true);
+	titleFont = new Linefont(PERCENT(800), true);
 	titleText->setFont(titleFont);
 	titleText->set(title);
 
 	Vect titleTextSize = titleText->getSize();
-	Vect titleTextPos((screenSize.x - titleTextSize.x) / 2, screenSize.y * PERCENT(40));
+	Point titleTextPos((screenSize.x - titleTextSize.x) / 2, screenSize.y * PERCENT(40));
 	titleText->setPos(titleTextPos);
 
 	instrText = new Text();
-	instrFont = new Linefont(PERCENT(200), 0, false);
+	instrFont = new Linefont(PERCENT(200), false);
 	instrText->setFont(instrFont);
 	instrText->set("Press H for Commands");
 	Vect instrTextSize = instrText->getSize();
-	Vect instrTextPos((screenSize.x - instrTextSize.x) / 2,
-			  screenSize.y * PERCENT(95));
+	Point instrTextPos((screenSize.x - instrTextSize.x) / 2,
+			   screenSize.y * PERCENT(95));
 	instrText->setPos(instrTextPos);
     }
 

@@ -7,7 +7,7 @@
 #include "debris.hpp"
 
 struct Rock {
-    Rock(int size, Vect *pos, Vect *vel, double angularVelocity);
+    Rock(int size, Point *pos, Vect *vel, double angularVelocity);
     ~Rock();
 
     int size;

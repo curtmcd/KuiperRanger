@@ -18,7 +18,7 @@ struct Ship {
     void on();
     void off();
 
-    Vect getPos() { return sprite->getPos(); }
+    Point getPos() { return sprite->getPos(); }
     Vect getVel() { return sprite->getVel(); }
 
     MList *getMissiles() { return missiles; }

@@ -1,10 +1,10 @@
 #ifndef line_hpp
 #define line_hpp
 
-#include "vect.hpp"
+#include "point.hpp"
 
 struct Line {
-    Vect f, t;
+    Point f, t;
 
     bool intersects(const Line &other) const;
 };

@@ -174,11 +174,11 @@ namespace HighList {
     void init()
     {
 	Vect screenSize = Plot::getSize();
-	Vect scorePos(0, screenSize.y * PERCENT(55));
+	Point scorePos(0, screenSize.y * PERCENT(55));
 	Vect scoreSize(screenSize.x / (HIGHCOLS + 1),
 		       screenSize.y / 3 / HIGHROWS);
 
-	scoreFont = new Linefont(PERCENT(200), 0, false);
+	scoreFont = new Linefont(PERCENT(200), false);
 
 	load();
 
@@ -192,7 +192,7 @@ namespace HighList {
 	    highTexts[i] = new Text();
 	    highTexts[i]->setFont(scoreFont);
 
-	    Vect pos;
+	    Point pos;
 	    pos.x = (scorePos.x + ((col + 1) * scoreSize.x) -
 		     charSpacing.x * NICKMAXLEN);
 	    pos.y = scorePos.y + row * scoreSize.y;

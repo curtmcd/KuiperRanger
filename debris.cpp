@@ -7,7 +7,7 @@
 #include "param.hpp"
 
 static Line shardVec[] = {
-    { Vect(-2.0 / 3, 0), Vect(1.0 / 3, 0) }
+    { Point(-2.0 / 3, 0), Point(1.0 / 3, 0) }
 };
 
 static Shape *baseShardShape;
@@ -50,7 +50,7 @@ void Debris::start(Sprite *whatExploded)
 {
     for (int i = 0; i < numShards; i++) {
 	double objSize = whatExploded->getRadius();
-	Vect objPos = whatExploded->getPos();
+	Point objPos = whatExploded->getPos();
 	Vect objVel = whatExploded->getVel();
 
 	shards[i]->setPos(objPos);

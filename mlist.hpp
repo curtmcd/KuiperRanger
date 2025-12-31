@@ -17,7 +17,7 @@ struct MList {
 
     void update();
     void enumerate(bool (*proc)(Missile *, void *), void *rock);
-    void fire(const Vect& frompos, const Vect& vel, double timeout, double radius);
+    void fire(const Point& frompos, const Vect& vel, double timeout, double radius);
     void on();
     void off();
 

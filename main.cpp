@@ -12,7 +12,7 @@
 #include "button.hpp"
 #include "plot.hpp"
 #include "sound.hpp"
-#include "vect.hpp"
+#include "point.hpp"
 #include "rand.hpp"
 #include "ship.hpp"
 #include "alien.hpp"
@@ -21,6 +21,7 @@
 #include "score.hpp"
 #include "highlist.hpp"
 #include "speaker.hpp"
+#include "paused.hpp"
 #include "title.hpp"
 #include "help.hpp"
 #include "param.hpp"
@@ -139,6 +140,7 @@ int main(int argc, char **argv)
     Alien::init();
     Title::init(TITLE);
     Speaker::init();
+    Paused::init();
     Help::init();
     HighList::init();
     Machine::init();
@@ -147,8 +149,8 @@ int main(int argc, char **argv)
     {
 	Vect screenSize = Plot::getSize();
 
-	Rect wa(Vect(0.0, (double)SCOREBARH),
-		Vect(screenSize.x - 1.0, screenSize.y - 1.0));
+	Rect wa(Point(0.0, (double)SCOREBARH),
+		Point(screenSize.x - 1.0, screenSize.y - 1.0));
 	Plot::setWrapArea(wa);
     }
 
@@ -183,6 +185,7 @@ int main(int argc, char **argv)
     Machine::term();
     HighList::term();
     Help::term();
+    Paused::term();
     Speaker::term();
     Title::term();
     Alien::term();

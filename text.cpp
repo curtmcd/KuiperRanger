@@ -4,7 +4,7 @@
 static void InitState(TextState &ts)
 {
     ts.str[0] = '\0';
-    ts.pos = Vect(0.0, 0.0);
+    ts.pos = Point(0.0, 0.0);
     ts.on = false;
     ts.font = NULL;
 }
@@ -28,9 +28,9 @@ Vect Text::getSize()
     return size;
 }
 
-static void DrawString(Vect *pos, Linefont *font, const char *str)
+static void DrawString(Point *pos, Linefont *font, const char *str)
 {
-    Vect curpos = *pos;
+    Point curpos = *pos;
     Vect spacing = font->getCharSpacing();
 
     while (*str != '\0') {

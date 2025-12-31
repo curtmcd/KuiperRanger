@@ -7,7 +7,7 @@
 #define LINEFONT_SCALE1_CHAR_H	8
 
 struct Linefont {
-    Linefont(double scale, double angle, bool italic);
+    Linefont(double scale, bool italic);
     ~Linefont();
 
     Shape *getChar(int ch) { return ch < 0 || ch > 127 ? NULL : chars[ch]; }

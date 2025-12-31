@@ -6,18 +6,18 @@
 #include "rand.hpp"
 #include "sound.hpp"
 
-static Vect shipVec[] = {
-    Vect(-10, 10),
-    Vect(-5, 2),
-    Vect(-5, -2),
-    Vect(-10, -10),
-    Vect(20, 0)
+static Point shipVec[] = {
+    Point(-10, 10),
+    Point(-5, 2),
+    Point(-5, -2),
+    Point(-10, -10),
+    Point(20, 0)
 };
 
-static Vect flameVec[] = {
-    Vect(-5, 2),
-    Vect(-5, -2),
-    Vect(-15, 0)
+static Point flameVec[] = {
+    Point(-5, 2),
+    Point(-5, -2),
+    Point(-15, 0)
 };
 
 static Shape *shipShape;
@@ -85,8 +85,8 @@ void Ship::start()
     Rect wa;
     Plot::getWrapArea(&wa);
 
-    Vect pos((wa.ul.x + wa.lr.x) / 2.0,
-	     (wa.ul.y + wa.lr.y) / 2.0);
+    Point pos((wa.ul.x + wa.lr.x) / 2.0,
+	      (wa.ul.y + wa.lr.y) / 2.0);
 
     sprite->setPos(pos);
     flames->setPos(pos);
@@ -137,7 +137,7 @@ void Ship::_process()
         // Come out of hyperspace
 
         Vect screenSize = Plot::getSize();
-        Vect pos(Rand::range(0, screenSize.x), Rand::range(0, screenSize.y));
+        Point pos(Rand::range(0, screenSize.x), Rand::range(0, screenSize.y));
         sprite->setPos(pos);
         Vect vel(0.0, 0.0);
         sprite->setVel(vel);
@@ -182,7 +182,7 @@ void Ship::_process()
 	    flames->setVel(vel);
 	}
 
-	Vect pos = sprite->getPos();
+	Point pos = sprite->getPos();
 	flames->setPos(pos);
 	flames->setAngle(sprite->getAngle());
 
@@ -216,7 +216,7 @@ void Ship::_process()
 
     if (Button::isDown(Button::fire, true) && !paused) {
 	if (missiles->getCount() < MISSILELIMIT) {
-	    Vect shipPos = sprite->getPos();
+	    Point shipPos = sprite->getPos();
 	    Vect shipVel = sprite->getVel();
 
 	    Vect missileVel(SHIPSHOTSPEED, 0.0);

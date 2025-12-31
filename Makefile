@@ -1,43 +1,40 @@
 # Makefile for Kuiper Ranger
+#    Run "./prebuild.sh" before building from clean
+#    Run "make -j" to build native app
+#    Run "EMSDK=/../emsdk.git make -j" to build native AND Emscripten web app
 
 # Build configuration
 BUILD_DIR ?= build
 
-# Platforms: build native (gcc/SDL2) always
-PLATFORMS := native
-
 # Prefix includes DESTDIR to support distro package build
 PREFIX ?= $(DESTDIR)/usr
 
-# Platforms: build emscripten if EMSDK is set to an Emscripten root dir
-# If emsdk_env.sh has not yet been sourced, do that and restart recursively.
+# Build native always (gcc/SDL2)
+PLATFORMS := native
+
+# Build Emscripten if EMSDK is set to an Emscripten root dir
 ifdef EMSDK
-ifeq ($(shell which em++),)
-%:
-	@BASH_SOURCE=$(EMSDK)/emsdk_env.sh \
-		. $(EMSDK)/emsdk_env.sh && $(MAKE) $(MAKECMDGOALS)
-endif
 PLATFORMS += emscripten
 endif
 
 # Default: build all platforms
 .DEFAULT_GOAL := all
 
-MAKEFLAGS += --jobs=$(shell nproc)
-
 # Source files
 SRCS1 =	alien.cpp button.cpp debris.cpp extras.cpp \
 	machine.cpp game.cpp ghost.cpp help.cpp highlist.cpp \
 	line.cpp linefont.cpp main.cpp missile.cpp mlist.cpp \
-	persist.cpp plot.cpp rocks.cpp score.cpp shape.cpp \
-	ship.cpp sound.cpp speaker.cpp sprite.cpp text.cpp title.cpp
+	paused.cpp persist.cpp plot.cpp rocks.cpp score.cpp \
+	shape.cpp ship.cpp sound.cpp speaker.cpp sprite.cpp \
+	text.cpp title.cpp
 
 HDRS1 =	alien.hpp button.hpp debris.hpp extras.hpp \
 	machine.hpp game.hpp ghost.hpp help.hpp highlist.hpp \
 	linefont.hpp line.hpp missile.hpp mlist.hpp param.hpp \
-	persist.hpp plot.hpp rand.hpp rocks.hpp score.hpp \
-	shape.hpp ship.hpp sound.hpp speaker.hpp sprite.hpp \
-	text.hpp title.hpp type.hpp vect.hpp
+	paused.hpp persist.hpp plot.hpp point.hpp rand.hpp \
+	rocks.hpp score.hpp shape.hpp ship.hpp sound.hpp \
+	speaker.hpp sprite.hpp text.hpp title.hpp type.hpp \
+	vect.hpp
 
 # Sound test files
 SRCS2 = soundtest.cpp sound.cpp
@@ -94,13 +91,20 @@ $(EM_OBJ)/%.o: %.cpp
 	$(CXX_emscripten) $(CXXFLAGS_emscripten) -c $< -o $@
 
 # phony platform targets to build only one platform
-.PHONY: native emscripten build-all all
+.PHONY: native emscripten emscripten_check build-all all
 
 # Build native (gcc + SDL2) binaries under $(BUILD_DIR)/native/bin
 native: $(NATIVE_BIN)/kuiper-ranger $(NATIVE_BIN)/soundtest
 
 # Build emscripten target under $(BUILD_DIR)/emscripten/bin
-emscripten: $(EM_BIN)/kuiper-ranger.html
+# If emsdk_env.sh has not yet been sourced, do that and restart recursively
+emscripten:
+	if command -v $(CXX_emscripten) >/dev/null 2>&1; then \
+		$(MAKE) emscripten_aux; else \
+		export EMSDK_QUIET=1 && BASH_SOURCE=$(EMSDK)/emsdk_env.sh \
+		. $(EMSDK)/emsdk_env.sh && $(MAKE) emscripten_aux; fi
+
+emscripten_aux: $(EM_BIN)/kuiper-ranger.html
 
 build-all: $(PLATFORMS)
 

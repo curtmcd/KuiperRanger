@@ -21,7 +21,7 @@
 #define MARGINCOLOR	"grey5"		// Used for full-screen mode only
 
 // Ship
-#define SHIPSHOTSPEED	240.0		// Missile speed (pix/sec)
+#define SHIPSHOTSPEED	260.0		// Missile speed (pix/sec)
 #define SHIPSHOTDUR	1.50		// Duration of missiles (sec)
 #define MISSILELIMIT	6
 #define HYPERSPACETIME	1.5		// Duration of hyperspace (sec)
@@ -48,7 +48,7 @@
 #define ALIENSHOTSPEED	240.0		// Missile speed (pix/sec)
 #define ALIENSHOTDUR	1.5		// Missile duration (sec)
 #define ALIENWANDERING	3.0		// Mean time between changes
-                                        //  to alien vertical direction
+                                        //  to alien vertical direction (sec)
 #define ALIENSPAWNTIME	10.0		// Average time between aliens
 #define ALIENSIZES 	2
 #define ALIENSHARDS	16		// Number of shards in alien explosion

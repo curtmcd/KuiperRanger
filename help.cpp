@@ -1,4 +1,6 @@
+#include "param.hpp"
 #include "help.hpp"
+#include "text.hpp"
 #include "sound.hpp"
 
 #define HELPCOUNT	ARRAYSIZE(helpStrings)
@@ -19,8 +21,8 @@ namespace Help {
 	"   Three Player Start .... 3",
 	" ",
 	"   Pause ................. P",
-	"   Quit .................. Q",
 #ifndef __EMSCRIPTEN__
+	"   Quit .................. Q",
 	"   Suspend ............... Ctrl+Z",
 #endif // !__EMSCRIPTEN__
 	" ",
@@ -46,8 +48,8 @@ namespace Help {
     {
 	Vect screenSize = Plot::getSize();
 
-	helpFont = new Linefont(PERCENT(200), 0, false);
-	helpFontI = new Linefont(PERCENT(250), 0, true);
+	helpFont = new Linefont(PERCENT(200), false);
+	helpFontI = new Linefont(PERCENT(250), true);
 
 	Vect lineSpacing = helpFont->getLineSpacing();
 	Vect charSpacing = helpFont->getCharSpacing();
@@ -61,8 +63,8 @@ namespace Help {
 	if (!Sound::available())
 	    sizeY -= lineSpacing.y;
 
-	Vect txtPos((screenSize.x - sizeX) / 2,
-		    (screenSize.y - sizeY) / 2 + lineSpacing.y);
+	Point txtPos((screenSize.x - sizeX) / 2,
+		     (screenSize.y - sizeY) / 2 + lineSpacing.y);
 
 	helpListCount = 0;
 

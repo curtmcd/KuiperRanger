@@ -1,12 +1,12 @@
 #ifndef rect_hpp
 #define rect_hpp
 
-#include "vect.hpp"
+#include "point.hpp"
 
 struct Rect {
-    Rect() : ul(Vect()), lr(Vect()) {};
-    Rect(const Vect& _ul, const Vect& _lr) : ul(_ul), lr(_lr) {};
-    Vect ul, lr;
+    Rect() : ul(Point()), lr(Point()) {};
+    Rect(const Point& _ul, const Point& _lr) : ul(_ul), lr(_lr) {};
+    Point ul, lr;
 };
 
 #endif // !rect_hpp

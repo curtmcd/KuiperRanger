@@ -4,32 +4,32 @@
 #include "sprite.hpp"
 
 static Line onLines[] = {
-    { Vect(0, -10), Vect(0, 10) },
-    { Vect(0, -10), Vect(20, -10) },
-    { Vect(0, 10), Vect(20, 10) },
-    { Vect(20, -10), Vect(20, 10) },
-    { Vect(20, -10), Vect(40, -30) },
-    { Vect(20, 10), Vect(40, 30) },
-    { Vect(40, -30), Vect(40, 30) },
-    { Vect(55, -10), Vect(60, -5) },
-    { Vect(55, 10), Vect(60, 5) },
-    { Vect(60, -5), Vect(60, 5) },
-    { Vect(60, -20), Vect(67, -10) },
-    { Vect(60, 20), Vect(67, 10) },
-    { Vect(67, -10), Vect(70, 0) },
-    { Vect(67, 10), Vect(70, 0) }
+    { Point(0, -10), Point(0, 10) },
+    { Point(0, -10), Point(20, -10) },
+    { Point(0, 10), Point(20, 10) },
+    { Point(20, -10), Point(20, 10) },
+    { Point(20, -10), Point(40, -30) },
+    { Point(20, 10), Point(40, 30) },
+    { Point(40, -30), Point(40, 30) },
+    { Point(55, -10), Point(60, -5) },
+    { Point(55, 10), Point(60, 5) },
+    { Point(60, -5), Point(60, 5) },
+    { Point(60, -20), Point(67, -10) },
+    { Point(60, 20), Point(67, 10) },
+    { Point(67, -10), Point(70, 0) },
+    { Point(67, 10), Point(70, 0) }
 };
 
 static Line offLines[] = {
-    { Vect(0, -10), Vect(0, 10) },
-    { Vect(0, -10), Vect(20, -10) },
-    { Vect(0, 10), Vect(20, 10) },
-    { Vect(20, -10), Vect(20, 10) },
-    { Vect(20, -10), Vect(40, -30) },
-    { Vect(20, 10), Vect(40, 30) },
-    { Vect(40, -30), Vect(40, 30) },
-    { Vect(50, -10), Vect(70, 10) },
-    { Vect(50, 10), Vect(70, -10) }
+    { Point(0, -10), Point(0, 10) },
+    { Point(0, -10), Point(20, -10) },
+    { Point(0, 10), Point(20, 10) },
+    { Point(20, -10), Point(20, 10) },
+    { Point(20, -10), Point(40, -30) },
+    { Point(20, 10), Point(40, 30) },
+    { Point(40, -30), Point(40, 30) },
+    { Point(50, -10), Point(70, 10) },
+    { Point(50, 10), Point(70, -10) }
 };
 
 static Shape *onShape;
@@ -49,8 +49,8 @@ namespace Speaker {
 	offShape = new Shape(offLines, ARRAYSIZE(offLines));
 
 	Vect screenSize = Plot::getSize();
-	Vect speakerPos(screenSize.x - onShape->getRadius() * PERCENT(150),
-			screenSize.y - onShape->getRadius() * PERCENT(120));
+	Point speakerPos(screenSize.x - onShape->getRadius() * PERCENT(150),
+			 screenSize.y - onShape->getRadius() * PERCENT(120));
 
 	sprite = new Sprite;
 	sprite->setShape(onShape);

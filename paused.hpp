@@ -1,14 +1,13 @@
-#ifndef help_hpp
-#define help_hpp
+#ifndef paused_hpp
+#define paused_hpp
 
-namespace Help {
+namespace Paused {
     void init();
     void term();
 
     void on();
     void off();
-    bool isOn();
     void update();
 };
 
-#endif // !help_hpp
+#endif // !paused_hpp

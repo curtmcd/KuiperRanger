@@ -23,7 +23,7 @@ Score::Score()
     scoreHardLimit--;
 
     double fontScale = (double)SCOREBARH / 14.0;
-    font = new Linefont(fontScale, 0, false);
+    font = new Linefont(fontScale, false);
 
     points = 0;
     pointsText = new Text();
@@ -35,12 +35,12 @@ Score::Score()
 
     pointsText->setFont(font);
     Vect scoreSize = pointsText->getSize();
-    Vect scorePos(SCOREX, ((double)SCOREBARH + scoreSize.y) / 2);
+    Point scorePos(SCOREX, ((double)SCOREBARH + scoreSize.y) / 2);
     pointsText->setPos(scorePos);
 
     highText->setFont(font);
     Vect highSize = highText->getSize();
-    Vect highPos(HIGHX, ((double)SCOREBARH + highSize.y) / 2);
+    Point highPos(HIGHX, ((double)SCOREBARH + highSize.y) / 2);
     highText->setPos(highPos);
 }
 
