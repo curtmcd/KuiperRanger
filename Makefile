@@ -3,6 +3,9 @@
 #    Run "make -j" to build native app
 #    Run "EMSDK=/../emsdk.git make -j" to build native AND Emscripten web app
 
+vpath %.cpp src
+vpath %.hpp src
+
 # Build configuration
 BUILD_DIR ?= build
 
