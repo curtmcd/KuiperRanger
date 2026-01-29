@@ -5,37 +5,32 @@
 
 #define MAXTEXT 80
 
-struct TextState {
-    char str[MAXTEXT];
-    Point pos;
-    bool on;
-    Linefont *font;
-};
-
 struct Text {
     Text();
-    ~Text();
 
-    void on() { state.on = true; }
-    void off() { state.on = false; }
-    bool isOn() { return state.on; }
+    void on() { enabled = true; }
+    void off() { enabled = false; }
+    bool isOn() { return enabled; }
 
     Vect getSize();	// (unrotated) text size
 
-    void set(const char *str) {
-	strncpy(state.str, str, MAXTEXT);
-	state.str[MAXTEXT - 1] = '\0';
+    void set(const char *_str) {
+	strncpy(str, _str, MAXTEXT);
+	str[MAXTEXT - 1] = '\0';
     }
 
-    void setPos(const Point& pos) { state.pos = pos; }
-    Point getPos() { return state.pos; }
+    void setPos(const Point& _pos) { pos = _pos; }
+    Point getPos() { return pos; }
 
-    void setFont(Linefont *lf) { state.font = lf; }
+    void setFont(Linefont *lf) { font = lf; }
 
     void update();
 
 private:
-    TextState state, oldState;
+    char str[MAXTEXT];
+    Point pos;
+    bool enabled;
+    Linefont *font;
 };
 
 #endif // !text_hpp

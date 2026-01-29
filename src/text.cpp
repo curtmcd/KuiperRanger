@@ -1,59 +1,31 @@
 #include "text.hpp"
 #include "plot.hpp"
 
-static void InitState(TextState &ts)
-{
-    ts.str[0] = '\0';
-    ts.pos = Point(0.0, 0.0);
-    ts.on = false;
-    ts.font = NULL;
-}
-
 Text::Text()
 {
-    InitState(state);
-    InitState(oldState);
-}
-
-Text::~Text()
-{
-    off();
-    update();
+    str[0] = '\0';
+    pos = Point(0.0, 0.0);
+    enabled = false;
+    font = NULL;
 }
 
 Vect Text::getSize()
 {
-    Vect size = state.font->getCharSize();
-    size.x = size.x * (double)strlen(state.str);
+    Vect size = font->getCharSize();
+    size.x = size.x * (double)strlen(str);
     return size;
-}
-
-static void DrawString(Point *pos, Linefont *font, const char *str)
-{
-    Point curpos = *pos;
-    Vect spacing = font->getCharSpacing();
-
-    while (*str != '\0') {
-	Shape *s = font->getChar(*str);
-	s->draw(curpos, 0.0, 1.0);
-	curpos += spacing;
-	str++;
-    }
 }
 
 void Text::update()
 {
-    if (oldState.on && oldState.font != NULL &&
-	(!state.on ||
-	 (memcmp(&oldState, &state, sizeof (TextState)) != 0))) {
-	Plot::setMode(Plot::RES);
-	DrawString(&oldState.pos, oldState.font, oldState.str);
-    }
+    if (enabled && font != NULL) {
+	Point curpos = pos;
+	Vect spacing = font->getCharSpacing();
 
-    if (state.on && state.font != NULL) {
-	Plot::setMode(Plot::SET);
-	DrawString(&state.pos, state.font, state.str);
+	for (const char *cp = str; *cp != '\0'; cp++) {
+	    Shape *s = font->getChar(*cp);
+	    s->draw(curpos, 0.0, 1.0);
+	    curpos += spacing;
+	}
     }
-
-    oldState = state;
 }

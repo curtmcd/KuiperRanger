@@ -18,11 +18,6 @@
 #include "type.hpp"
 
 namespace Plot {
-    enum Mode {
-        SET,                    // drawing
-        RES,                    // erasing
-    };
-
     static const int INIT_WIDTH_FULLSCREEN = 0;
     static const int INIT_WIDTH_DEFAULT = -1;
 
@@ -39,11 +34,6 @@ namespace Plot {
                                 //   updated once/frame
     double frameTime();		// long-term average of frame time
     void printFPS();		// secret debugging feature
-
-    void setMode(enum Mode mode);
-
-    void clearBlack();
-    void clearWhite();
 
     // All of the following functions use virtual (nominal) coordinates.
     // Clip/wrap control:

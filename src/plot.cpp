@@ -35,9 +35,6 @@ static int renderX, renderY;        // Render area offset for letterboxing
 static bool wrap;
 static Rect wrapFrac;
 
-// Drawing state
-static SDL_Color drawColor;
-
 // Presentation pacing
 static double startTime;
 static double prevTime;
@@ -99,8 +96,6 @@ static void handleResize(int newWidth, int newHeight)
         renderX = 0;
         renderY = 0;
     }
-
-    drawLetterbox();
 
     // Thicken lines according to display resolution
     lineThickness = 1 + MIN(windowW / 1280, 2);
@@ -204,8 +199,8 @@ bool Plot::init(int requestWidth, const char *windowTitle)
     Plot::setWrapArea(wa);
     wrap = false;
 
-    // Initial drawing color
-    drawColor = {255, 255, 255, 255};  // White
+    // Leave drawing color White, normally
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     // Start time accounting
     counterFrequency = (double)SDL_GetPerformanceFrequency();
@@ -309,6 +304,15 @@ void Plot::sync()
 
     deltaTime = curTime - prevTime;
     prevTime = curTime;
+
+    // Clear new frame buffer to black (with letterbox, if any)
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    drawLetterbox();
+
+    // Leave drawing color White, normally
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
 // Return elapsed time between previous and current update.
@@ -331,33 +335,6 @@ double Plot::frameTime()
 void Plot::printFPS()
 {
     printf("Average over %d frames is %.2lf FPS\n", frameNo, 1.0 / frameTime());
-}
-
-void Plot::setMode(enum Mode mode)
-{
-    switch (mode) {
-    case SET:
-        drawColor = {255, 255, 255, 255};  // White
-        break;
-    case RES:
-        drawColor = {0, 0, 0, 255};        // Black
-        break;
-    }
-
-    SDL_SetRenderDrawColor(renderer, drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-}
-
-void Plot::clearBlack()
-{
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-}
-
-void Plot::clearWhite()
-{
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, drawColor.r, drawColor.g, drawColor.b, drawColor.a);
 }
 
 Vect Plot::getSize()
@@ -599,10 +576,8 @@ void Plot::pollEvents()
 	    break;
 
 	case SDL_WINDOWEVENT:
-	    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-		clearBlack();
+	    if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 		handleResize(event.window.data1, event.window.data2);
-	    }
 	    break;
 
 	case SDL_KEYDOWN:

@@ -150,10 +150,12 @@ ID:
 
 # Dependency generation
 .PHONY: depend
-depend: $(SRCS1) $(SRCS2) $(HDRS1)
+depend: $(addprefix src/,$(SRCS1)) \
+	  $(addprefix src/,$(SRCS2)) \
+	  $(addprefix src/,$(HDRS1))
 	@# Generate dependency file mapping each source to both native and emscripten object paths
 	@# Use the native compiler to produce header lists, then rewrite the target names.
-	$(CXX_native) -MM $(SRCS1) $(SRCS2) | \
+	$(CXX_native) -MM $(addprefix src/,$(SRCS1)) $(addprefix src/,$(SRCS2)) | \
 		sed -E 's|^([^.]+)\.o:|$(NATIVE_OBJ)/\1.o $(EM_OBJ)/\1.o:|' > .depend
 
 # Include dependencies if they exist

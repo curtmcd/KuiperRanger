@@ -36,10 +36,7 @@
 void cleanup(int sig)
 {
     Sound::term();
-
-    Plot::clearBlack();
     Plot::term();
-
     Button::term();
 
     if (sig != 0) {
@@ -154,9 +151,7 @@ int main(int argc, char **argv)
 	Plot::setWrapArea(wa);
     }
 
-    Plot::clearBlack();
-
-    // Plot::flush() governs the frame rate based on monitor vsync rate.
+    // Plot::sync() governs the frame rate based on monitor vsync rate.
     // Valocities and accelerations must use Plot::dt in order
     // to update distances and velocities proportionately.
 
