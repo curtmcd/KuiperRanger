@@ -1,4 +1,4 @@
-.TH kuiper-ranger 6 "March 1998 - December 2025" "Kuiper Ranger version 2.5" "Games"
+.TH kuiper-ranger 6 "March 1998 - February 2026" "Kuiper Ranger version 2.5" "Games"
 .SH NAME
 kuiper-ranger \- Space rocks shooting game using SDL2 cross-platform graphics
 .SH SYNOPSIS

@@ -4,28 +4,28 @@
 Text::Text()
 {
     str[0] = '\0';
-    pos = Point(0.0, 0.0);
+    pos = Point();
     enabled = false;
     font = NULL;
 }
 
+// Bounding box of drawn string
 Vect Text::getSize()
 {
-    Vect size = font->getCharSize();
-    size.x = size.x * (double)strlen(str);
-    return size;
+    return (font->getCharSpacing() * (double)strlen(str) +
+	    font->getLineSpacing() * 1.0);
 }
 
 void Text::update()
 {
     if (enabled && font != NULL) {
-	Point curpos = pos;
 	Vect spacing = font->getCharSpacing();
+	Point cursor = pos;
 
 	for (const char *cp = str; *cp != '\0'; cp++) {
 	    Shape *s = font->getChar(*cp);
-	    s->draw(curpos, 0.0, 1.0);
-	    curpos += spacing;
+	    s->draw(cursor);
+	    cursor += spacing;
 	}
     }
 }

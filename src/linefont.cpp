@@ -1,21 +1,17 @@
 #include "param.hpp"
 #include "linefont.hpp"
 
-// Font character spaces are 7 by 11 units.  These
-// numbers are the appropriate char and line spacings.
-// Uppercase characters are drawn in a 6 by 8
-// area in the upper left of the character space.
-// Lowercase characters are drawn in a 6 by 10
-// area in the upper left, due to descenders.
-//
-// Descenders hang down an additional 2 units.
-// The font character is drawn with the left side
-// of the char at the specified x, and the baseline
-// at the specified y.
-//
-// Chars are Shapes which may be used as Sprite
-// shapes.  Thus chars may be scaled up, moving with,
-// a constant velocity, rotated or spinning, etc.
+// Each character is defined in a grid of points (0..6, 0..8), where (0,
+// 0) is at the lower left and (6, 8) is at the upper right.  Everything
+// is uppercase so there are no descenders (if there were, they'd drop
+// down an additional 2 grid units).
+
+#define GRID_W		6
+#define GRID_H		8
+
+// Character and line spacing are multiplied by grid size and scale.
+#define SPACING_CHAR	PERCENT(145)
+#define SPACING_LINE	PERCENT(174)
 
 static Line C_unknown[] = {
 };
@@ -709,43 +705,52 @@ static struct lineCharEntry {
     { C_block, ARRAYSIZE(C_block) },
 };
 
-static Shape *GenShape(int ch, double scale, bool italic)
+// Shapes are generated with the left side of the character at the
+// specified x and the baseline at the specified y, in the vertically
+// flipped Shape coordinate system.
+static Shape *GenShape(int ch, double scale, bool bold, bool italic)
 {
     Shape *s;
     lineCharEntry *ce = &lineChar[ch];
 
-    s = new Shape(ce->nStroke);
+    s = new Shape();
 
     for (int i = 0; i < ce->nStroke; i++) {
-        Line l;
-	l.f = ce->stroke[i].f;
-        l.t = ce->stroke[i].t;
+        Line l = ce->stroke[i];
+
 	if (italic) {
 	    l.f.x += l.f.y * ITALICSLOPE;
 	    l.t.x += l.t.y * ITALICSLOPE;
 	}
+
 	l.f.x *= scale;
 	l.f.y *= -scale;
 	l.t.x *= scale;
 	l.t.y *= -scale;
+
         s->append(l);
+
+	if (bold) {
+	    s->append(l + Vect(1.0, 0.0));
+	    s->append(l + Vect(1.0, 1.0));
+	    s->append(l + Vect(0.0, 1.0));
+	}
     }
 
     return s;
 }
 
-Linefont::Linefont(double scale, bool italic)
+Linefont::Linefont(double scale, bool bold, bool italic)
 {
     for (int ch = 0; ch < 128; ch++)
-        chars[ch] = GenShape(ch, scale, italic);
+        chars[ch] = GenShape(ch, scale, bold, italic);
 
-    // Char spacing as percent of char width
-    double spaceMul = scale * PERCENT(145);
+    // Calculated character and line spacing
+    Vect charSize(GRID_W * scale * SPACING_CHAR,
+		  GRID_H * scale * SPACING_LINE);
 
-    charSize = spaceMul * Vect((double)LINEFONT_SCALE1_CHAR_W,
-			       (double)LINEFONT_SCALE1_CHAR_H);
-    charSpacing = spaceMul * Vect((double)LINEFONT_SCALE1_CHAR_W, 0.0);
-    lineSpacing = spaceMul * Vect(0.0, (double)LINEFONT_SCALE1_CHAR_H);
+    charSpacing = Vect(charSize.x, 0.0);
+    lineSpacing = Vect(0.0, charSize.y);
 }
 
 Linefont::~Linefont()

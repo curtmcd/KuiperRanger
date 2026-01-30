@@ -3,7 +3,7 @@
 
 #include "linefont.hpp"
 
-#define MAXTEXT 80
+#define TEXT_MAXLEN 80
 
 struct Text {
     Text();
@@ -12,11 +12,11 @@ struct Text {
     void off() { enabled = false; }
     bool isOn() { return enabled; }
 
-    Vect getSize();	// (unrotated) text size
+    Vect getSize();
 
     void set(const char *_str) {
-	strncpy(str, _str, MAXTEXT);
-	str[MAXTEXT - 1] = '\0';
+	strncpy(str, _str, TEXT_MAXLEN);
+	str[TEXT_MAXLEN] = '\0';
     }
 
     void setPos(const Point& _pos) { pos = _pos; }
@@ -27,7 +27,7 @@ struct Text {
     void update();
 
 private:
-    char str[MAXTEXT];
+    char str[TEXT_MAXLEN + 1];
     Point pos;
     bool enabled;
     Linefont *font;

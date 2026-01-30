@@ -4,7 +4,7 @@ Ghost::Ghost()
 {
     text = new Text();
     ghostShip = new Ship(true);
-    font = new Linefont(PERCENT(500), false);
+    font = new Linefont(PERCENT(500));
     text->setFont(font);
 }
 
@@ -36,10 +36,7 @@ void Ghost::start(int player)
 void Ghost::stop()
 {
     ghostShip->off();
-    ghostShip->update();
-
     text->off();
-    text->update();
 }
 
 void Ghost::update()
@@ -47,12 +44,13 @@ void Ghost::update()
     text->update();
 
     ghostClock += Plot::dt();
-    if (ghostClock < GHOSTBLINK * GHOSTDUTY)
+
+    if (ghostClock < GHOSTBLINK * GHOSTDUTY) {
 	ghostShip->on();
-    else
+	ghostShip->update();
+    } else
 	ghostShip->off();
+
     if (ghostClock >= GHOSTBLINK)
 	ghostClock = 0.0;
-
-    ghostShip->update();
 }

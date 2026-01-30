@@ -32,6 +32,7 @@ namespace Plot {
     void sync();		// flush and vsync wait
     double dt();		// sec that passed between frames,
                                 //   updated once/frame
+    double runTime();		// time since startup
     double frameTime();		// long-term average of frame time
     void printFPS();		// secret debugging feature
 

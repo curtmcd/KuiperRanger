@@ -178,7 +178,7 @@ namespace HighList {
 	Vect scoreSize(screenSize.x / (HIGHCOLS + 1),
 		       screenSize.y / 3 / HIGHROWS);
 
-	scoreFont = new Linefont(PERCENT(200), false);
+	scoreFont = new Linefont(PERCENT(200));
 
 	load();
 

@@ -8,30 +8,34 @@ struct Vect {
 
     Vect(double _x = 0.0, double _y = 0.0) : x(_x), y(_y) {}
 
+    double cross(const Vect& other) const {
+	return x * other.y - y * other.x;
+    }
+
+    double magnitudeSquared() const {
+	return x * x + y * y;
+    }
+
     double magnitude() const {
-	return std::sqrt(x * x + y * y);
+	return std::sqrt(magnitudeSquared());
     }
 
     double argument() const {
 	return std::atan2(y, x) * 180.0 / PI;
     }
 
-    void unitize() {
+    Vect unitize() const {
 	double mag = magnitude();
-	if (mag > 0.01) {
-	    x /= mag;
-	    y /= mag;
-	}
+	if (mag < 0.01)
+	    mag = 0.01;
+	return Vect(x / mag, y / mag);
     }
 
-    void rotate(double degrees) {
+    Vect rotate(double degrees) {
 	double rad = degrees * PI / 180.0;
 	double s = -std::sin(rad);
 	double c = std::cos(rad);
-	double new_x = x * c - y * s;
-	double new_y = x * s + y * c;
-	x = new_x;
-	y = new_y;
+	return Vect(x * c - y * s, x * s + y * c);
     }
 
     Vect& operator+=(const Vect& other) {

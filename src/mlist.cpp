@@ -50,11 +50,11 @@ void MList::fire(const Point &fromPos, const Vect& vel, double timeout, double r
     MListElement *me = new MListElement;
 
     // Start missile at outside radius of the firing object, less a
-    // frame's distance to account for sprite not being on yet.  Well,
+    // frame's distance to account for sprite not being on yet. Well,
     // maybe half a frame's distance so it doesn't touch the ship's tip.
-    Vect u = vel;
-    u.unitize();
-    me->missile->setPos(fromPos + u * radius - vel * (Plot::frameTime() / 2));
+    me->missile->setPos(fromPos +
+			vel.unitize() * radius -
+			vel * (Plot::frameTime() / 2));
 
     me->missile->setVel(vel);
     me->missile->setTimeout(timeout);
@@ -67,13 +67,6 @@ void MList::fire(const Point &fromPos, const Vect& vel, double timeout, double r
     me->next = queue;
     queue = me;
     count++;
-}
-
-void MList::enumerate(bool (*proc)(Missile *, void *), void *rock)
-{
-    for (MListElement *me = queue; me != NULL; me = me->next)
-	if (!(*proc)(me->missile, rock))
-	    break;
 }
 
 void MList::on()

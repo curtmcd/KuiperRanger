@@ -26,7 +26,7 @@ static Linefont *pointsFont;
 void Alien::init()
 {
     alienShape = new Shape(alienVec, ARRAYSIZE(alienVec));
-    pointsFont = new Linefont(PERCENT(130), false);
+    pointsFont = new Linefont(PERCENT(130));
 }
 
 void Alien::term()
@@ -130,12 +130,9 @@ void Alien::off()
     } else if (state == State::DEBRIS)
 	debris->off();
 
-    missiles->off();
-
     if (pointsText->isOn()) {
 	pointsTimeout = 0.0;
 	pointsText->off();
-	pointsText->update();
     }
 }
 
@@ -145,8 +142,8 @@ void Alien::fire(Sprite *targets[], int nTargets, int wave)
 
     // Pick a random direction to fire by default, in case no targets
     // are suitable.
-    Vect fireVel(ALIENSHOTSPEED, 0.0);
-    fireVel.rotate(Rand::range(0, 360));
+    Vect fireVel =
+	Vect(ALIENSHOTSPEED, 0.0).rotate(Rand::range(0, 360));
 
     for (int tryTarget = 0; tryTarget < nTargets; tryTarget++) {
 	if (targets[tryTarget] == NULL)
@@ -165,19 +162,18 @@ void Alien::fire(Sprite *targets[], int nTargets, int wave)
 	if (eta > ALIENSHOTDUR)
 	    continue;
 
+	// Aim toward target, with a random deviation that decreases as
+	// the wave number goes up (wave might be 0 briefly during the
+	// start of the first wave).
+	double maxDeviation = 45.0 / (wave ? wave : 1);
+	double deviation = Rand::range(-maxDeviation, maxDeviation);
+
 	Point predictedPos = targetPos + targetVel * eta;
 
 	// Compute unit vector in direction from alien to target
-	Vect u = predictedPos - fireOrigin;
-	u.unitize();
+	Vect u = (predictedPos - fireOrigin).unitize();
 
-	fireVel = u * ALIENSHOTSPEED;
-
-	// Add random deviation that goes down as the wave goes up.
-	// wave might be 0 briefly during the start of the first wave.
-	double maxDeviation = 45.0 / (wave ? wave : 1);
-	fireVel.rotate(Rand::range(-maxDeviation, maxDeviation));
-
+	fireVel = (u * ALIENSHOTSPEED).rotate(deviation);
 	break;
     }
 
@@ -227,17 +223,17 @@ void Alien::update(bool inhibitNew, Sprite *targets[], int nTargets, int wave)
     // Check if alien went off edge of screen
     if (wasOn && !sprite->isOn()) {
 	Sound::stop(Sound::alienMotor);		// Track sprite state
-
 	state = State::GONE;
     }
 
-    missiles->update();
+    missiles->update();				// Even if alien gone/off
 
     if (pointsText->isOn()) {
 	pointsTimeout -= Plot::dt();
 	if (pointsTimeout <= 0.0)
 	    pointsText->off();
-	pointsText->update();
+	else
+	    pointsText->update();
     }
 }
 
@@ -255,9 +251,8 @@ void Alien::die(int score)
 	// opposite to which alien was moving, where it is less likely
 	// to interfere with the debris.
 
-	Vect scoreOffset = sprite->getVel();
-	scoreOffset.unitize();
-	scoreOffset *= -PERCENT(250) * sprite->getRadius();
+	Vect scoreOffset =
+	    -sprite->getVel().unitize() * sprite->getRadius() * PERCENT(250);
 
 	Point scorePos = sprite->getPos() + scoreOffset;
 
@@ -287,44 +282,14 @@ int Alien::hitMissile(Missile *m)
     return 0;
 }
 
-struct checkMissileData {
-    Rocks *rocks;
-    Ship *ship;
-    bool shipHit;
-};
-
-static bool checkMissile(Missile *m, void *rock)
-{
-    checkMissileData *md = (checkMissileData *)rock;
-
-    if (md->rocks->hitMissile(m) != 0) {
-	m->off();
-	return true;
-    }
-
-    if (!md->shipHit &&
-	md->ship != NULL &&
-	md->ship->isOn() &&
-	m->hitSprite(md->ship->getSprite())) {
-	m->off();
-	md->shipHit = true;
-    }
-
-    return true;
-}
-
 bool Alien::checkCollisions(Rocks *rocks, Ship *ship, int *score)
 {
-    checkMissileData md;
-
-    md.rocks = rocks;
-    md.ship = ship;
-    md.shipHit = false;
+    bool shipHit = false;
 
     if (state == State::ALIVE) {
 	if (ship != NULL && ship->isOn()) {
 	    if (sprite->collision(ship->getSprite())) {
-		md.shipHit = true;
+		shipHit = true;
 		*score = BASEALIENSCORE + MULALIENSCORE * size;
 		die(*score);
 		Sound::play(Sound::alienPoints);
@@ -337,6 +302,17 @@ bool Alien::checkCollisions(Rocks *rocks, Ship *ship, int *score)
 	}
     }
 
-    missiles->enumerate(checkMissile, (void *)&md);
-    return md.shipHit;
+    missiles->enumerate([&](Missile *m) {
+	if (rocks->hitMissile(m) != 0)
+	    m->off();
+	else if (!shipHit &&
+		 ship != NULL &&
+		 ship->isOn() &&
+		 m->hitSprite(ship->getSprite())) {
+	    m->off();
+	    shipHit = true;
+	}
+    });
+
+    return shipHit;
 }

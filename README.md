@@ -1,6 +1,6 @@
 # Kuiper Ranger version 2.5
 
-*Dec 18, 1999 - Nov 18, 2025*
+*Dec 18, 1999 - Feb 1, 2026*
 
 ## Authors
 
@@ -73,9 +73,9 @@ in which your ship shoots down rocks and flying saucers to gain points.
 
 This game originally ran using exclusively integer arithmetic directly
 on the bitmapped displays of machines at the time, including aiws,
-apa16, sunbw, suncg6, mipscolor, and mega.  Eventually, development swung
-toward supporting X11 only.  In 2025, Curt ported it to C++, rebased it
-onto the SDL2 graphics and sound library and added sound effects.  Now
-in theory it can run on a variety of platforms including Unix (X11 or
-Wayland), Windows, and macOS.  It can also be run in a web browser using
-Emscripten.
+apa16, sunbw, suncg6, mipscolor, and mega. Eventually, development swung
+toward supporting X11 only. In 2025, Curt ported it to C++, rebased it
+onto the SDL2 graphics and sound library and added sound effects. Now in
+theory it can run on a variety of platforms including Unix (X11 or
+Wayland), Windows, and macOS (it has not yet been tried on the latter
+two). It can also be run in a web browser using Emscripten.

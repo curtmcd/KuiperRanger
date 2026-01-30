@@ -23,10 +23,12 @@ struct Point {
 	return *this;
     }
 
-    double distance(const Point& other) const {
-	return (other - *this).magnitude();
-    }
+    //double distance(const Point& other) const {
+    //	return (other - *this).magnitude();
+    //}
 };
+
+const Point Origin = Point(0.0, 0.0);
 
 inline Point operator+(const Point& p, const Vect& v) {
     Point result = p;

@@ -5,8 +5,8 @@ namespace Paused {
     void init();
     void term();
 
-    void on();
-    void off();
+    void start();
+    void stop();
     void update();
 };
 

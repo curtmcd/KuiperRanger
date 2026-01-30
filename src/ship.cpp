@@ -169,12 +169,15 @@ void Ship::_process()
     {
 	Vect vel = sprite->getVel();
 	vel *= std::pow(1.0 - SHIPFRICTION, Plot::dt());
+	// Below a certain speed, come to a stop
+	if (vel.magnitude() < SHIPSPEEDMIN)
+	    vel = Vect(0.0, 0.0);
 	sprite->setVel(vel);
     }
 
     if (Button::isDown(Button::thrust) && !paused) {
-	Vect acl(SHIPACCEL * Plot::dt(), 0.0);
-	acl.rotate(sprite->getAngle());
+	Vect acl =
+	    Vect(SHIPACCEL * Plot::dt(), 0.0).rotate(sprite->getAngle());
 
 	Vect vel = sprite->getVel() + acl;
 	if (vel.magnitude() < SHIPSPEEDMAX) {
@@ -219,9 +222,8 @@ void Ship::_process()
 	    Point shipPos = sprite->getPos();
 	    Vect shipVel = sprite->getVel();
 
-	    Vect missileVel(SHIPSHOTSPEED, 0.0);
-	    missileVel.rotate(sprite->getAngle());
-	    missileVel += shipVel;
+	    Vect missileVel =
+		Vect(SHIPSHOTSPEED, 0.0).rotate(sprite->getAngle()) + shipVel;
 
 	    missiles->fire(shipPos, missileVel, SHIPSHOTDUR,
 			   sprite->getRadius());

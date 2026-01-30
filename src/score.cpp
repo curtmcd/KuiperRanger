@@ -23,7 +23,7 @@ Score::Score()
     scoreHardLimit--;
 
     double fontScale = (double)SCOREBARH / 14.0;
-    font = new Linefont(fontScale, false);
+    font = new Linefont(fontScale);
 
     points = 0;
     pointsText = new Text();

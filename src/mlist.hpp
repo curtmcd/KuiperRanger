@@ -16,10 +16,15 @@ struct MList {
     ~MList();
 
     void update();
-    void enumerate(bool (*proc)(Missile *, void *), void *rock);
     void fire(const Point& frompos, const Vect& vel, double timeout, double radius);
     void on();
     void off();
+
+    template <typename Callback>
+    void enumerate(Callback proc) {
+	for (MListElement *me = queue; me != NULL; me = me->next)
+	    proc(me->missile);
+    }
 
     int getCount() const { return count; }
     bool empty() const { return count == 0; }

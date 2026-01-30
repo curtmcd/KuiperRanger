@@ -4,9 +4,16 @@
 #include "point.hpp"
 
 struct Line {
-    Point f, t;
+    Line() = default;
+    Line(const Point& _f, const Point& _t) : f(_f), t(_t) {}
 
-    bool intersects(const Line &other) const;
+    bool intersects(const Line& other) const;
+
+    Point f, t;
 };
+
+inline Line operator+(const Line& l, const Vect& v) {
+    return Line(l.f + v, l.t + v);
+}
 
 #endif // !line_hpp

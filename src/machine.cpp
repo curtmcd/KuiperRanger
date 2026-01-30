@@ -79,13 +79,8 @@ static void stopAttract()
     attractGame = NULL;
 
     Title::off();
-    Title::update();
-
     HighList::off();
-    HighList::update();
-
     Help::off();
-    Help::update();
 
     Speaker::stayOn(false);
 
@@ -165,7 +160,7 @@ static void updateTurn()
 
     if (Button::isDown(Button::quit, true)) {
 	Plot::setPauseMode(false);
-	Paused::off();
+	Paused::stop();
 
 	turnOver = true;
 	playerOut = true;
@@ -237,12 +232,12 @@ bool Machine::update()
     if (Button::isDown(Button::togglePause, true)) {
 	if (Plot::getPauseMode()) {
 	    Plot::setPauseMode(false);
-	    Paused::off();
+	    Paused::stop();
 	    if (soundIsOn && !soundOverride)
 		Sound::on();
 	} else {
 	    Plot::setPauseMode(true);
-	    Paused::on();
+	    Paused::start();
 	    // Mute all sound (including continuous ones like alienMotor)
 	    Sound::off();
 	}

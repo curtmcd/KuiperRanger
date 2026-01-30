@@ -33,29 +33,6 @@ Game::~Game()
     delete score;
 }
 
-struct missileCollData {
-    int score;
-    Alien *alien;
-    Rocks *rocks;
-};
-
-static bool missileColl(Missile *m, void *rock)
-{
-    missileCollData *md = (missileCollData *)rock;
-
-    int score = md->rocks->hitMissile(m);
-
-    if (score == 0 && md->alien->alive())
-	score = md->alien->hitMissile(m);
-
-    if (score != 0) {
-	m->off();
-	md->score += score;
-    }
-
-    return true;
-}
-
 void Game::startAttract()
 {
     state = State::ATTRACT;
@@ -70,10 +47,7 @@ void Game::startAttract()
 void Game::stopAttract()
 {
     rocks->off();
-    (void)rocks->update();
-
     alien->off();
-    alien->update(true, NULL, 0, wave);
 }
 
 // Returns false when ship dies
@@ -117,20 +91,23 @@ bool Game::update()
 	break;
 
     case State::ACTIVE:
-	missileCollData md;
-
 	ship->update();
 
 	// Check for ship collisions
 
-	md.score = 0;
-	md.alien = alien;
-	md.rocks = rocks;
-
 	MList *ml = ship->getMissiles();
-	ml->enumerate(missileColl, (void *)&md);
 
-	score->inc(md.score);
+	ml->enumerate([&](Missile *m) {
+	    int points = rocks->hitMissile(m);
+
+	    if (points == 0 && alien->alive())
+		points = alien->hitMissile(m);
+
+	    if (points != 0) {
+		m->off();
+		score->inc(points);
+	    }
+	});
 
 	if (ship->isOn()) {
 	    bool shipHit = false;
@@ -203,20 +180,9 @@ void Game::startTurn()
 void Game::stopTurn()
 {
     score->off();
-    score->update();
-
     ghost->stop();
-
     ship->off();
-    ship->update();
-
     extras->off();
-    extras->update();
-
     rocks->off();
-    if (rocks->update())
-	wave++;
-
     alien->off();
-    alien->update(true, NULL, 0, wave);
 }

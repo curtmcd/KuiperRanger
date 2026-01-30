@@ -65,7 +65,5 @@ void Extras::update()
 
 	if (sh->isOn())
 	    sh->off();
-
-	sh->update();
     }
 }

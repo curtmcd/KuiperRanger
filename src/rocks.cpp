@@ -253,7 +253,6 @@ int Rocks::split(Rock *r)
     r->whole = false;
 
     r->sprite->off();
-    r->sprite->update();
 
     r->debris->start(r->sprite);
 

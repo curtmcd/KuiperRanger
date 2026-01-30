@@ -7,8 +7,6 @@
 #include "plot.hpp"
 
 struct Sprite {
-    Sprite();
-
     void setShape(Shape *s) { shape = s; }
     Shape *getShape() { return shape; }
 
@@ -17,10 +15,10 @@ struct Sprite {
     void setWrap(bool w) { wrap = w; }
     void setDisappear(bool d) { disappear = d; }
 
-    void setPos(const Point &_pos) { pos = _pos; }
+    void setPos(const Point& _pos) { pos = _pos; }
     Point getPos() const { return pos; }
 
-    void setVel(const Vect &_vel) { vel = _vel; }
+    void setVel(const Vect& _vel) { vel = _vel; }
     Vect getVel() const { return vel; }
 
     void setAngle(double _angle) { angle = _angle; }
@@ -39,29 +37,24 @@ struct Sprite {
 
     void update();
 
-    bool lineTouches(const Line& l) const {
-	return shape->lineTouches(pos, angle, scale, l);
-    }
-
-    bool collision(const Sprite *other) const {
-	return shape->collision(pos, angle, scale,
-				other->shape,
-				other->pos, other->angle, other->scale);
-    }
+    bool collision(const Sprite *other) const;
+    bool lineTouches(const Line& line) const;
 
 private:
-    bool enabled;
+    void draw() const;
 
-    Shape *shape;
-    double angle;
-    double scale;
+    Shape *shape = NULL;
 
-    bool wrap;     	// Should wrap around when going out of plot area
-    bool disappear;	// Should disappear when going out of plot area
+    bool enabled = false;
+    bool wrap = false;		// Should wrap around when leaving plot area
+    bool disappear = false;	// Should disappear when leaving plot area
 
     Point pos;
+    double angle = 0.0;
+    double scale = 1.0;
+
     Vect vel;
-    double angularVelocity;
+    double angularVelocity = 0.0;
 };
 
 #endif // !sprite_hpp

@@ -4,7 +4,6 @@
 //      Miles Bader
 //      William Lott
 
-#include <signal.h>
 #include <getopt.h>
 
 #include "type.hpp"
@@ -32,37 +31,6 @@
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
-
-void cleanup(int sig)
-{
-    Sound::term();
-    Plot::term();
-    Button::term();
-
-    if (sig != 0) {
-	(void)fprintf(stderr, "%s received signal %d.\n", TITLE, sig);
-	exit(128 + sig);
-    }
-
-    // Manual says to call SDL_Quit even after quitting all subsystems
-    SDL_Quit();
-
-    exit(0);
-}
-
-void cleanupInit()
-{
-#ifndef TESTMODE
-    signal(SIGINT, cleanup);
-    signal(SIGQUIT, cleanup);
-    signal(SIGHUP, cleanup);
-    signal(SIGILL, cleanup);
-    signal(SIGBUS, cleanup);
-    signal(SIGSEGV, cleanup);
-    signal(SIGTERM, cleanup);
-    signal(SIGFPE, cleanup);
-#endif
-}
 
 static void usage(const char *progName)
 {
@@ -126,10 +94,6 @@ int main(int argc, char **argv)
     }
 
     Sound::init();
-
-    // Cleanup handles termination of Button, Plot and Sound
-    cleanupInit();
-
     Missile::init();
     Rocks::init();
     Ship::init();
@@ -188,10 +152,12 @@ int main(int argc, char **argv)
     Ship::term();
     Rocks::term();
     Missile::term();
+    Sound::term();
+    Plot::term();
+    Button::term();
 
-    // Cleanup handles termination of Button, Plot and Sound
-    cleanup(0);
+    // Manual says to call SDL_Quit even after quitting all subsystems
+    SDL_Quit();
 
-    //NOTREACHED
     return 0;
 }

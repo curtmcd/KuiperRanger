@@ -3,11 +3,13 @@
 #include "text.hpp"
 #include "sound.hpp"
 
+#include <vector>
+
 #define HELPCOUNT	ARRAYSIZE(helpStrings)
 
 namespace Help {
     // The first character of each line is a property.
-    // '~' for italic, '!' for sound-availability.
+    // '~' for bold-italic, '!' for sound-availability.
     static const char *helpStrings[] = {
 	"~Welcome to " TITLE " " VERSION,
 	" ",
@@ -40,16 +42,15 @@ namespace Help {
     };
 
     static Linefont *helpFont = NULL;
-    static Linefont *helpFontI = NULL;
-    static Text *helpList[HELPCOUNT];
-    static int helpListCount;
+    static Linefont *helpFontBI = NULL;
+    static std::vector<Text *> helpList;
 
     void init()
     {
 	Vect screenSize = Plot::getSize();
 
-	helpFont = new Linefont(PERCENT(200), false);
-	helpFontI = new Linefont(PERCENT(250), true);
+	helpFont = new Linefont(PERCENT(170));
+	helpFontBI = new Linefont(PERCENT(220), true, true);
 
 	Vect lineSpacing = helpFont->getLineSpacing();
 	Vect charSpacing = helpFont->getCharSpacing();
@@ -64,9 +65,7 @@ namespace Help {
 	    sizeY -= lineSpacing.y;
 
 	Point txtPos((screenSize.x - sizeX) / 2,
-		     (screenSize.y - sizeY) / 2 + lineSpacing.y);
-
-	helpListCount = 0;
+		     screenSize.y * PERCENT(30));
 
 	for (int i = 0; i < HELPCOUNT; i++) {
 	    if (helpStrings[i][0] == '!' && !Sound::available())
@@ -76,34 +75,36 @@ namespace Help {
 
 	    t->set(helpStrings[i] + 1);
 	    t->setFont(helpStrings[i][0] == '~' ?
-		       helpFontI :
+		       helpFontBI :
 		       helpFont);
 	    t->setPos(txtPos);
 	    txtPos += lineSpacing;
 
-	    helpList[helpListCount++] = t;
+	    helpList.push_back(t);
 	}
     }
 
     void term()
     {
-	for (int i = 0; i < helpListCount; i++)
-	    delete helpList[i];
+	for (auto h : helpList)
+	    delete h;
+
+	helpList.clear();
 
 	delete helpFont;
-	delete helpFontI;
+	delete helpFontBI;
     }
 
     void on()
     {
-	for (int i = 0; i < helpListCount; i++)
-	    helpList[i]->on();
+	for (auto h : helpList)
+	    h->on();
     }
 
     void off()
     {
-	for (int i = 0; i < helpListCount; i++)
-	    helpList[i]->off();
+	for (auto h : helpList)
+	    h->off();
     }
 
     bool isOn()
@@ -113,7 +114,7 @@ namespace Help {
 
     void update()
     {
-	for (int i = 0; i < helpListCount; i++)
-	    helpList[i]->update();
+	for (auto h : helpList)
+	    h->update();
     }
 };

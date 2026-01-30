@@ -324,12 +324,15 @@ double Plot::dt()
     return pauseMode ? 0.0 : deltaTime;
 }
 
-double Plot::frameTime()
+double Plot::runTime()
 {
     double curTime = (double)SDL_GetPerformanceCounter() / counterFrequency;
-    double runTime = curTime - startTime;
+    return curTime - startTime;
+}
 
-    return runTime / (double)frameNo;
+double Plot::frameTime()
+{
+    return Plot::runTime() / (double)frameNo;
 }
 
 void Plot::printFPS()

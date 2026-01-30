@@ -22,63 +22,59 @@ void Debris::term()
     delete baseShardShape;
 }
 
-Debris::Debris(int _numShards)
+Debris::Debris(int numShards)
 {
-    if (_numShards > MAXDEBRIS)
-	_numShards = MAXDEBRIS;
-
-    numShards = _numShards;
-
     for (int i = 0; i < numShards; i++) {
-	shards[i] = new Sprite();
-	shards[i]->setShape(baseShardShape);
+	Sprite *s = new Sprite();
+	s->setShape(baseShardShape);
 #if 0
-	shards[i]->setDisappear(true);
+	s->setDisappear(true);
 #else
-	shards[i]->setWrap(true);
+	s->setWrap(true);
 #endif
+	shards.push_back(s);
     }
 }
 
 Debris::~Debris()
 {
-    for (int i = 0; i < numShards; i++)
-	delete shards[i];
+    for (auto s : shards)
+	delete s;
 }
 
 void Debris::start(Sprite *whatExploded)
 {
-    for (int i = 0; i < numShards; i++) {
+    for (auto s : shards) {
 	double objSize = whatExploded->getRadius();
 	Point objPos = whatExploded->getPos();
 	Vect objVel = whatExploded->getVel();
 
-	shards[i]->setPos(objPos);
+	s->setPos(objPos);
 
 	// Extra shard velocity relative to center of moving object
 	Vect shardVel(Rand::range(0, SHARDVEL),
 		      Rand::range(0, SHARDVEL));
-	shards[i]->setVel(objVel + shardVel * objSize);
+	s->setVel(objVel + shardVel * objSize);
 
 	double initialSize = objSize * Rand::range(SHARDSIZE, SHARDSIZE * 2);
-	shards[i]->setScale(initialSize);
-	shards[i]->setAngle(Rand::range(0, 360));
-	shards[i]->setAngularVelocity(Rand::range(0.0, SHARDMAXROT));
+	s->setScale(initialSize);
+	s->setAngle(Rand::range(0, 360));
+	s->setAngularVelocity(Rand::range(0.0, SHARDMAXROT));
 
-	shards[i]->on();
+	s->on();
     }
 }
 
 void Debris::off()
 {
-    for (int i = 0; i < numShards; i++)
-	shards[i]->off();
+    for (auto s : shards)
+	s->off();
 }
 
 bool Debris::isClear()
 {
-    for (int i = 0; i < numShards; i++)
-	if (shards[i]->isOn())
+    for (auto s : shards)
+	if (s->isOn())
 	    return false;
 
     return true;
@@ -86,9 +82,7 @@ bool Debris::isClear()
 
 void Debris::update()
 {
-    for (int i = 0; i < numShards; i++) {
-	Sprite *s = shards[i];
-
+    for (auto s : shards)
 	if (s->isOn()) {
 	    if (s->getScale() <= 1.0)
 		s->off();
@@ -100,5 +94,4 @@ void Debris::update()
 
 	    s->update();
 	}
-    }
 }

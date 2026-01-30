@@ -1,9 +1,9 @@
 #ifndef debris_hpp
 #define debris_hpp
 
-#include "sprite.hpp"
+#include <vector>
 
-#define MAXDEBRIS 25
+#include "sprite.hpp"
 
 struct Debris {
     static void init();
@@ -18,9 +18,8 @@ struct Debris {
     bool isClear();
 
 private:
-    int numShards;
     double decayFactor;
-    Sprite *shards[MAXDEBRIS];
+    std::vector<Sprite *> shards;
 };
 
 #endif // !debris_hpp

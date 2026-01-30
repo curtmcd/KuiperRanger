@@ -19,6 +19,8 @@
 #define ENVVAR_WIDTH	"PLOT_WIDTH"
 #define MAXPLAYERS	3
 #define MARGINCOLOR	"grey5"		// Used for full-screen mode only
+#define PAUSEDBLINK	1.5		// Blink period (sec)
+#define PAUSEDDUTY	PERCENT(85)	// Blink duty cycle
 
 // Ship
 #define SHIPSHOTSPEED	260.0		// Missile speed (pix/sec)
@@ -32,6 +34,7 @@
 #define EXTRAROTSPEED	180.0		// Extra ship rotation speed (deg/sec)
 #define SHIPACCEL	500.0		// Ship acceleration (pix/sec^2)
 #define SHIPSPEEDMAX	900.0		// Maximum ship speed (pix/sec)
+#define SHIPSPEEDMIN	5.0		// Minimum speed before stop (pix/sec)
 #define SHIPFRICTION	PERCENT(20)	// Ship speed reduction factor (%/sec)
 #define SHIPFLAMEBLINK	0.2		// Blink period (sec)
 #define SHIPFLAMEDUTY	PERCENT(75)	// Blink duty cycle
@@ -43,14 +46,14 @@
 #define GHOSTDUTY	PERCENT(66)	// Blink duty cycle
 
 // Alien
+#define ALIENSIZES 	2
+#define ALIENSPAWNTIME	10.0		// Average time between aliens
+#define ALIENWANDERING	3.0		// Mean time between changes
+                                        //  to alien vertical direction (sec)
 #define ALIENSPEED	60.0		// Alien speed (pix/sec)
 #define ALIENSPEEDINC	30.0		// Add'l speed per smaller alien (pix/sec)
 #define ALIENSHOTSPEED	240.0		// Missile speed (pix/sec)
 #define ALIENSHOTDUR	1.5		// Missile duration (sec)
-#define ALIENWANDERING	3.0		// Mean time between changes
-                                        //  to alien vertical direction (sec)
-#define ALIENSPAWNTIME	10.0		// Average time between aliens
-#define ALIENSIZES 	2
 #define ALIENSHARDS	16		// Number of shards in alien explosion
 
 // Rocks

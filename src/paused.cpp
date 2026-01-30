@@ -1,5 +1,7 @@
+#include "plot.hpp"
 #include "paused.hpp"
 #include "text.hpp"
+#include "param.hpp"
 
 namespace Paused {
     static Linefont *pausedFont1 = NULL;
@@ -11,12 +13,17 @@ namespace Paused {
     static Text *pausedText1;
     static Text *pausedText2;
 
+    static bool enabled;
+
+    static double blinkOffTime;
+    static double blinkOnTime;
+
     void init()
     {
 	Vect screenSize = Plot::getSize();
 
-	pausedFont1 = new Linefont(PERCENT(300), false);
-	pausedFont2 = new Linefont(PERCENT(200), false);
+	pausedFont1 = new Linefont(PERCENT(300));
+	pausedFont2 = new Linefont(PERCENT(200), false, true);
 
 	Vect charSpacing1 = pausedFont1->getCharSpacing();
 	Vect charSpacing2 = pausedFont2->getCharSpacing();
@@ -47,21 +54,43 @@ namespace Paused {
 	delete pausedFont2;
     }
 
-    void on()
+    void start()
     {
+	enabled = true;
+
+	double now = Plot::runTime();
+
+	// Use system clock for timing (Plot::dt() returns 0 while paused)
+	blinkOffTime = now + PAUSEDBLINK * PAUSEDDUTY;
+	blinkOnTime = now + PAUSEDBLINK;
+
 	pausedText1->on();
 	pausedText2->on();
     }
 
-    void off()
+    void stop()
     {
+	enabled = false;
+
 	pausedText1->off();
 	pausedText2->off();
     }
 
     void update()
     {
-	pausedText1->update();
-	pausedText2->update();
+	if (enabled) {
+	    pausedText1->update();
+
+	    double now = Plot::runTime();
+
+	    if (now > blinkOnTime) {
+		blinkOffTime = now + PAUSEDBLINK * PAUSEDDUTY;
+		blinkOnTime = now + PAUSEDBLINK;
+		pausedText2->on();
+	    } else if (now > blinkOffTime)
+		pausedText2->off();
+
+	    pausedText2->update();
+	}
     }
 };
