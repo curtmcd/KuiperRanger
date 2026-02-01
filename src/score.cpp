@@ -22,33 +22,29 @@ Score::Score()
 	scoreHardLimit *= 10;
     scoreHardLimit--;
 
-    double fontScale = (double)SCOREBARH / 14.0;
-    font = new Linefont(fontScale);
-
     points = 0;
     pointsText = new Text();
+    pointsText->setJustify(Text::LEFT, Text::MIDDLE);
 
     high = HighList::getBest();
     highText = new Text();
+    highText->setJustify(Text::LEFT, Text::MIDDLE);
 
     setText();
 
-    pointsText->setFont(font);
-    Vect scoreSize = pointsText->getSize();
-    Point scorePos(SCOREX, ((double)SCOREBARH + scoreSize.y) / 2);
+    Point scorePos(SCOREX, (double)SCOREBARH / 2);
     pointsText->setPos(scorePos);
+    pointsText->setScale((double)SCOREBARH / 14.0);
 
-    highText->setFont(font);
-    Vect highSize = highText->getSize();
-    Point highPos(HIGHX, ((double)SCOREBARH + highSize.y) / 2);
+    Point highPos(HIGHX, (double)SCOREBARH / 2);
     highText->setPos(highPos);
+    highText->setScale((double)SCOREBARH / 14.0);
 }
 
 Score::~Score()
 {
     delete pointsText;
     delete highText;
-    delete font;
 }
 
 void Score::inc(int _points)

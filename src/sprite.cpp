@@ -3,7 +3,7 @@
 
 void Sprite::draw() const
 {
-    double rad = angle * PI / 180.0;
+    double rad = angle * M_PI / 180.0;
     double sin_a = -std::sin(rad);	// negative because Y axis upside-down
     double cos_a = std::cos(rad);
 
@@ -19,7 +19,7 @@ void Sprite::update()
     if (enabled && shape != NULL) {
 	// Update position and rotation
 	pos += vel * Plot::dt();
-	angle += angularVelocity * Plot::dt();
+	angle += omega * Plot::dt();
 
 	Rect wa;
 	Plot::getWrapArea(&wa);
@@ -39,12 +39,10 @@ void Sprite::update()
 	}
 
 	if (disappear) {
-	    double rad = shape->getRadius() * scale;
+	    double r = shape->getRadius() * scale;
 
-	    if (pos.x - rad < wa.ul.x ||
-		pos.x + rad >= wa.lr.x ||
-		pos.y - rad < wa.ul.y ||
-		pos.y + rad >= wa.lr.y)
+	    if (pos.x - r < wa.ul.x || pos.x + r >= wa.lr.x ||
+		pos.y - r < wa.ul.y || pos.y + r >= wa.lr.y)
 		enabled = false;
 	}
 

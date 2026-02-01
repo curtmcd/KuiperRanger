@@ -4,20 +4,36 @@
 #include "text.hpp"
 #include "param.hpp"
 
-namespace HighList {
-    int getBest();
+struct HighList {
+    static int getBest();
 
     // Insert a score into high score list if it is a top score
-    void record(const char *name, int score);
+    static void record(const char *name, int score);
 
     // High score graphics
-    void init();
-    void term();
+    static void init();
+    static void term();
 
-    void on();
-    void off();
-    void update();
+    static void on();
+    static void off();
+    static void update();
 
+    struct highEntry {
+	char name[NICKMAXLEN + 1];
+	int score;
+	time_t timeStamp;
+	bool operator<(const highEntry& other) const {
+	    return score > other.score;
+	}
+    };
+
+private:
+    static std::vector<highEntry> highs;
+    static std::vector<Text *> texts;
+    static bool modified;
+
+    static void load();
+    static void save();
 };
 
 #endif // !highlist_hpp

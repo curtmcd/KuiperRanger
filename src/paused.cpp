@@ -1,96 +1,79 @@
 #include "plot.hpp"
 #include "paused.hpp"
-#include "text.hpp"
 #include "param.hpp"
 
-namespace Paused {
-    static Linefont *pausedFont1 = NULL;
-    static Linefont *pausedFont2 = NULL;
+static const char *string1 = "PAUSED";
+static const char *string2 = "Press P to Resume";
 
-    static const char *pausedString1 = "PAUSED";
-    static const char *pausedString2 = "Press P to Resume";
+Text *Paused::text1;
+Text *Paused::text2;
 
-    static Text *pausedText1;
-    static Text *pausedText2;
+bool Paused::enabled;
 
-    static bool enabled;
+double Paused::blinkOffTime;
+double Paused::blinkOnTime;
 
-    static double blinkOffTime;
-    static double blinkOnTime;
+void Paused::init()
+{
+    Vect screenSize = Plot::getSize();
 
-    void init()
-    {
-	Vect screenSize = Plot::getSize();
+    text1 = new Text();
+    text1->set(string1);
+    text1->setFont(Font::fontBold);
+    text1->setScale(PERCENT(300));
+    text1->setPos(Point(screenSize.x / 2.0,
+			screenSize.y * PERCENT(15)));
 
-	pausedFont1 = new Linefont(PERCENT(300));
-	pausedFont2 = new Linefont(PERCENT(200), false, true);
+    text2 = new Text();
+    text2->set(string2);
+    text2->setFont(Font::fontItalic);
+    text2->setScale(PERCENT(200));
+    text2->setPos(Point(screenSize.x / 2.0,
+			screenSize.y * PERCENT(20)));
+}
 
-	Vect charSpacing1 = pausedFont1->getCharSpacing();
-	Vect charSpacing2 = pausedFont2->getCharSpacing();
+void Paused::term()
+{
+    delete text1;
+    delete text2;
+}
 
-	double size1 = (double)strlen(pausedString1) * charSpacing1.x;
-	double size2 = (double)strlen(pausedString2) * charSpacing2.x;
+void Paused::start()
+{
+    enabled = true;
 
-	Point txtPos1((screenSize.x - size1) / 2.0, (screenSize.y * PERCENT(15)));
-	Point txtPos2((screenSize.x - size2) / 2.0, (screenSize.y * PERCENT(20)));
+    double now = Plot::runTime();
 
-	pausedText1 = new Text();
-	pausedText1->set(pausedString1);
-	pausedText1->setFont(pausedFont1);
-	pausedText1->setPos(txtPos1);
+    // Use system clock for timing (Plot::dt() returns 0 while paused)
+    blinkOffTime = now + PAUSEDBLINK * PAUSEDDUTY;
+    blinkOnTime = now + PAUSEDBLINK;
 
-	pausedText2 = new Text();
-	pausedText2->set(pausedString2);
-	pausedText2->setFont(pausedFont2);
-	pausedText2->setPos(txtPos2);
-    }
+    text1->on();
+    text2->on();
+}
 
-    void term()
-    {
-	delete pausedText1;
-	delete pausedText2;
+void Paused::stop()
+{
+    enabled = false;
 
-	delete pausedFont1;
-	delete pausedFont2;
-    }
+    text1->off();
+    text2->off();
+}
 
-    void start()
-    {
-	enabled = true;
+void Paused::update()
+{
+    if (enabled) {
+	text1->update();
 
 	double now = Plot::runTime();
 
-	// Use system clock for timing (Plot::dt() returns 0 while paused)
-	blinkOffTime = now + PAUSEDBLINK * PAUSEDDUTY;
-	blinkOnTime = now + PAUSEDBLINK;
+	if (now > blinkOnTime) {
+	    blinkOffTime = now + PAUSEDBLINK * PAUSEDDUTY;
+	    blinkOnTime = now + PAUSEDBLINK;
+	    text2->on();
+	} else if (now > blinkOffTime)
+	    text2->off();
 
-	pausedText1->on();
-	pausedText2->on();
+	text2->update();
     }
-
-    void stop()
-    {
-	enabled = false;
-
-	pausedText1->off();
-	pausedText2->off();
-    }
-
-    void update()
-    {
-	if (enabled) {
-	    pausedText1->update();
-
-	    double now = Plot::runTime();
-
-	    if (now > blinkOnTime) {
-		blinkOffTime = now + PAUSEDBLINK * PAUSEDDUTY;
-		blinkOnTime = now + PAUSEDBLINK;
-		pausedText2->on();
-	    } else if (now > blinkOffTime)
-		pausedText2->off();
-
-	    pausedText2->update();
-	}
-    }
-};
+}

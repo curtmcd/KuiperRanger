@@ -10,8 +10,6 @@
 #include "param.hpp"
 #include "button.hpp"
 
-using namespace Plot;
-
 #define DECORATION_HEIGHT	90	// guessed titlebar height
 #define WINDOW_WIDTH_MIN	512	// 512 x 384
 #define FPS_DEFAULT		30.0	// only used if vsync unavailable
@@ -98,7 +96,7 @@ static void handleResize(int newWidth, int newHeight)
     }
 
     // Thicken lines according to display resolution
-    lineThickness = 1 + MIN(windowW / 1280, 2);
+    lineThickness = 1 + std::min(windowW / 1280, 2);
 }
 
 bool Plot::init(int requestWidth, const char *windowTitle)

@@ -9,7 +9,8 @@ Vect operator-(const Point& p1, const Point& p2);
 struct Point {
     double x, y;
 
-    Point(double _x = 0.0, double _y = 0.0) : x(_x), y(_y) {}
+    Point() : x(0), y(0) {}
+    Point(double _x, double _y) : x(_x), y(_y) {}
 
     Point& operator+=(const Vect& v) {
 	x += v.x;
@@ -23,9 +24,9 @@ struct Point {
 	return *this;
     }
 
-    //double distance(const Point& other) const {
-    //	return (other - *this).magnitude();
-    //}
+    double distance(const Point& other) const {
+    	return (other - *this).magnitude();
+    }
 };
 
 const Point Origin = Point(0.0, 0.0);

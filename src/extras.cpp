@@ -21,8 +21,8 @@ Extras::Extras(int startLives)
 
 	sp = sh->getSprite();
 
-	sp->setAngle(270);
-	sp->setAngularVelocity(-EXTRAROTSPEED);
+	sp->setAngle(270.0);
+	sp->setOmega(-EXTRAROTSPEED);
         sp->setPos(pos);
 	sp->setWrap(false);
 

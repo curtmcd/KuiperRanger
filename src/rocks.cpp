@@ -7,7 +7,6 @@
 #include "sound.hpp"
 
 // There are currently three different shapes.
-// Maybe new ones could be generated at random so each is unique.
 static Point rockVec1[] = {
     Point(2, 20),
     Point(11, 25),
@@ -58,33 +57,33 @@ static Point *rockVecs[] = {
     rockVec3
 };
 
+#define NUM_SHAPES	std::size(rockVecs)
+
 static int rockVecLens[] = {
-    ARRAYSIZE(rockVec1),
-    ARRAYSIZE(rockVec2),
-    ARRAYSIZE(rockVec3)
+    std::size(rockVec1),
+    std::size(rockVec2),
+    std::size(rockVec3)
 };
 
-#define NUM_ROCK_SHAPES	ARRAYSIZE(rockVecs)
-
-static Shape *rockShapes[3];
+static Shape *rockShapes[NUM_SHAPES];
 
 // Create an individual rock
-Rock::Rock(int _size, Point *pos, Vect *vel, double angularVelocity)
+Rock::Rock(int _size, const Point& pos, const Vect& vel, double omega)
 {
     size = _size;
     whole = true;
 
     sprite = new Sprite();
-    int shapeNo = Rand::natural(NUM_ROCK_SHAPES);
+    int shapeNo = Rand::natural(NUM_SHAPES);
     sprite->setShape(rockShapes[shapeNo]);
     sprite->setAngle(Rand::range(0, 360));
-    sprite->setAngularVelocity(angularVelocity);
-    sprite->setPos(*pos);
-    sprite->setVel(*vel);
+    sprite->setOmega(omega);
+    sprite->setPos(pos);
+    sprite->setVel(vel);
     sprite->setScale(ROCKBASESIZE * (double)(ROCKSIZES - size) / ROCKSIZES);
     sprite->setWrap(true);
 
-    int numShards = MAX(2, 11 - size * 2);
+    int numShards = std::max(2, 11 - size * 2);
     debris = new Debris(numShards);
 
     sprite->on();
@@ -98,14 +97,14 @@ Rock::~Rock()
 
 void Rocks::init()
 {
-    for (int i = 0; i < NUM_ROCK_SHAPES; i++)
+    for (size_t i = 0; i < NUM_SHAPES; i++)
         rockShapes[i] = new Shape(rockVecs[i], rockVecLens[i]);
 }
 
 void Rocks::term()
 {
-    for (int i = 0; i < NUM_ROCK_SHAPES; i++)
-	delete(rockShapes[i]);
+    for (size_t i = 0; i < NUM_SHAPES; i++)
+	delete rockShapes[i];
 }
 
 Rocks::Rocks()
@@ -130,7 +129,7 @@ Rocks::~Rocks()
 // margin_frac is the fraction of the screen size along the
 // edges where rocks can initially occur.
 
-static void randomRock(Point *pos, Vect *vel)
+static void randomRock(Point& pos, Vect& vel)
 {
     Vect screenSize = Plot::getSize();
     Vect margin = screenSize * ROCKMARGIN;
@@ -139,26 +138,26 @@ static void randomRock(Point *pos, Vect *vel)
 
     switch (Rand::natural(4)) {
     case 0:		// top
-	pos->x = Rand::range(0, screenSize.x);
-	pos->y = Rand::range(0, margin.y);
+	pos = Point(Rand::range(0, screenSize.x),
+		    Rand::range(0, margin.y));
 	break;
     case 1:		// bottom
-	pos->x = Rand::range(0, screenSize.x);
-	pos->y = Rand::range(screenSize.y - margin.y, screenSize.y);
+	pos = Point(Rand::range(0, screenSize.x),
+		    Rand::range(screenSize.y - margin.y, screenSize.y));
 	break;
     case 2:		// left
-	pos->x = Rand::range(0, margin.x);
-	pos->y = Rand::range(0, screenSize.y);
+	pos = Point(Rand::range(0, margin.x),
+		    Rand::range(0, screenSize.y));
 	break;
     case 3:		// right
     default:
-	pos->x = Rand::range(screenSize.x - margin.x, screenSize.x);
-	pos->y = Rand::range(0, screenSize.y);
+	pos = Point(Rand::range(screenSize.x - margin.x, screenSize.x),
+		    Rand::range(0, screenSize.y));
 	break;
     }
 
-    vel->x = Rand::range(-MAXROCKVEL, MAXROCKVEL);
-    vel->y = Rand::range(-MAXROCKVEL, MAXROCKVEL);
+    vel = Vect(Rand::range(-MAXROCKVEL, MAXROCKVEL),
+	       Rand::range(-MAXROCKVEL, MAXROCKVEL));
 }
 
 void Rocks::start()
@@ -170,9 +169,10 @@ void Rocks::start()
 
         Point pos;
 	Vect vel;
-        randomRock(&pos, &vel);
+        randomRock(pos, vel);
 
-	Rock *r = new Rock(size, &pos, &vel, Rand::range(-MAXROCKROT, MAXROCKROT));
+	Rock *r = new Rock(size, pos, vel,
+			   Rand::range(-MAXROCKROT, MAXROCKROT));
 	r->next = queue;
 	queue = r;
     }
@@ -235,17 +235,15 @@ int Rocks::split(Rock *r)
     if (r->size < ROCKSIZES - 1)
 	for (int i = 0; i < SPLITINTO; i++) {
 	    Point newPos = r->sprite->getPos();
-	    Vect newVel = r->sprite->getVel();
 
-	    Vect v(Rand::range(-MAXROCKVEL, MAXROCKVEL),
-		   Rand::range(-MAXROCKVEL, MAXROCKVEL));
+	    Vect newVel = (r->sprite->getVel() +
+			   Vect(Rand::range(-MAXROCKVEL, MAXROCKVEL),
+				Rand::range(-MAXROCKVEL, MAXROCKVEL)));
 
-	    newVel += v;
+	    double newOmega = (r->sprite->getOmega() +
+			       Rand::range(-MAXROCKROT, MAXROCKROT));
 
-	    double oldAv = r->sprite->getAngularVelocity();
-	    double newAv = oldAv + Rand::range(-MAXROCKROT, MAXROCKROT);
-
-	    Rock *nr = new Rock(r->size + 1, &newPos, &newVel, newAv);
+	    Rock *nr = new Rock(r->size + 1, newPos, newVel, newOmega);
 	    nr->next = queue;
 	    queue = nr;
 	}

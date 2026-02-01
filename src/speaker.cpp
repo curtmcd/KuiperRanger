@@ -32,80 +32,77 @@ static Line offLines[] = {
     { Point(50, 10), Point(70, -10) }
 };
 
-static Shape *onShape;
-static Shape *offShape;
+Shape *Speaker::onShape;
+Shape *Speaker::offShape;
 
-static Sprite *sprite;
+Sprite *Speaker::sprite;
 
-static bool alwaysOn;
+bool Speaker::alwaysOn;
 
-static double timer;
+double Speaker::timer;
 
-namespace Speaker {
+void Speaker::init()
+{
+    onShape = new Shape(onLines, std::size(onLines));
+    offShape = new Shape(offLines, std::size(offLines));
 
-    void init()
-    {
-	onShape = new Shape(onLines, ARRAYSIZE(onLines));
-	offShape = new Shape(offLines, ARRAYSIZE(offLines));
+    Vect screenSize = Plot::getSize();
+    Point speakerPos(screenSize.x - onShape->getRadius() * PERCENT(150),
+		     screenSize.y - onShape->getRadius() * PERCENT(120));
 
-	Vect screenSize = Plot::getSize();
-	Point speakerPos(screenSize.x - onShape->getRadius() * PERCENT(150),
-			 screenSize.y - onShape->getRadius() * PERCENT(120));
+    sprite = new Sprite;
+    sprite->setShape(onShape);
+    sprite->setWrap(false);
+    sprite->setPos(speakerPos);
 
-	sprite = new Sprite;
+    alwaysOn = false;
+    timer = 0.0;
+}
+
+void Speaker::term()
+{
+    delete sprite;
+
+    delete onShape;
+    delete offShape;
+}
+
+void Speaker::setStyle(enum Style style)
+{
+    if (style == soundOn)
 	sprite->setShape(onShape);
-	sprite->setWrap(false);
-	sprite->setPos(speakerPos);
+    else
+	sprite->setShape(offShape);
+}
 
-	alwaysOn = false;
+void Speaker::stayOn(bool enable)
+{
+    if (enable) {
+	if (Sound::available())
+	    sprite->on();
+    } else {
+	sprite->off();
 	timer = 0.0;
     }
 
-    void term()
-    {
-	delete sprite;
+    alwaysOn = enable;
+}
 
-	delete onShape;
-	delete offShape;
-    }
+void Speaker::flash(double duration)
+{
+    if (Sound::available())
+	sprite->on();
 
-    void setStyle(enum Style style)
-    {
-	if (style == soundOn)
-	    sprite->setShape(onShape);
-	else
-	    sprite->setShape(offShape);
-    }
+    timer = duration;
+}
 
-    void stayOn(bool enable)
-    {
-	if (enable) {
-	    if (Sound::available())
-		sprite->on();
-	} else {
+void Speaker::update()
+{
+    if (!alwaysOn && sprite->isOn()) {
+	timer -= Plot::dt();
+	if (timer <= 0.0)
 	    sprite->off();
-	    timer = 0.0;
-	}
-
-	alwaysOn = enable;
     }
 
-    void flash(double duration)
-    {
-	if (Sound::available())
-	    sprite->on();
-
-	timer = duration;
-    }
-
-    void update()
-    {
-	if (!alwaysOn && sprite->isOn()) {
-	    timer -= Plot::dt();
-	    if (timer <= 0.0)
-		sprite->off();
-	}
-
-	sprite->update();
-    }
-};
+    sprite->update();
+}

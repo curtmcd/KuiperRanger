@@ -21,18 +21,15 @@ static Line alienVec[] = {
 };
 
 static Shape *alienShape;
-static Linefont *pointsFont;
 
 void Alien::init()
 {
-    alienShape = new Shape(alienVec, ARRAYSIZE(alienVec));
-    pointsFont = new Linefont(PERCENT(130));
+    alienShape = new Shape(alienVec, std::size(alienVec));
 }
 
 void Alien::term()
 {
     delete alienShape;
-    delete pointsFont;
 }
 
 static double getSpeed(int size)
@@ -48,9 +45,9 @@ Alien::Alien()
     missiles = new MList();
     debris = new Debris(ALIENSHARDS);
     pointsText = new Text();
+    pointsText->setFont(Font::fontRegular);
+    pointsText->setJustify(Text::LEFT, Text::BOTTOM);
     pointsTimeout = 0.0;
-
-    pointsText->setFont(pointsFont);
 
     sprite->setShape(alienShape);
     sprite->setWrap(false);
@@ -263,6 +260,7 @@ void Alien::die(int score)
 	pointsText->set(scoreText);
 	Vect textOffset = pointsText->getSize();
 	pointsText->setPos(scorePos - textOffset / 2.0);
+	pointsText->setScale(PERCENT(130));
 
 	pointsText->on();
 	pointsTimeout = ASCORETIMEOUT;

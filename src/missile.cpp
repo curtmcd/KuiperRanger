@@ -10,7 +10,7 @@ static Shape *casing;
 
 void Missile::init()
 {
-    casing = new Shape(missileVec, ARRAYSIZE(missileVec));
+    casing = new Shape(missileVec, std::size(missileVec));
 }
 
 void Missile::term()

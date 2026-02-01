@@ -3,10 +3,7 @@
 
 #include "type.hpp"
 
-namespace Button {
-    void init();
-    void term();
-
+struct Button {
     enum Code {
 	togglePause,
 	toggleSound,
@@ -24,14 +21,20 @@ namespace Button {
 	rotateLeft,		// not cleared on read
 	rotateRight,		// not cleared on read
 	printFPS,
-	COUNT
+	NUM_BUTTON
     };
 
-    void press(enum Code b);
-    void release(enum Code b);
-    bool isDown(enum Code b, bool clear = false);
-    void clear(enum Code b);
-    void clearAll();
+    static void press(enum Code b);
+    static void release(enum Code b);
+    static bool isDown(enum Code b, bool clear = false);
+    static void clear(enum Code b);
+    static void clearAll();
+
+    static void init();
+    static void term();
+
+private:
+    static bool state[NUM_BUTTON];
 };
 
 #endif // !button_hpp

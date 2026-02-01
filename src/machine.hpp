@@ -3,10 +3,10 @@
 
 #include "type.hpp"
 
-namespace Machine {
-    void init();
-    void term();
-    bool update();
+struct Machine {
+    static void init();
+    static void term();
+    static bool update();
 };
 
 #endif // !!machine_hpp

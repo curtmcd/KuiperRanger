@@ -21,8 +21,9 @@ struct Game {
     void stopTurn();
 
     double deetInterval() {	// current interval in sec
-	double t = DEETINITPERIOD * std::pow(DEETSPEEDUP, (double)MAX(wave - 1, 0));
-	return MAX(t, DEETMINPERIOD);
+	double t = DEETINITPERIOD * std::pow(DEETSPEEDUP,
+					     (double)std::max(wave - 1, 0));
+	return std::max(t, DEETMINPERIOD);
     };
 
     int livesRemaining() { return extras->get(); }

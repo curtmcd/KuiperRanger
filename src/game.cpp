@@ -64,7 +64,7 @@ bool Game::update()
     targets[1] = rocks->getRandom();
 
     bool inhibitNew = (state != State::ATTRACT && !ship->isOn());
-    alien->update(inhibitNew, targets, ARRAYSIZE(targets), wave);
+    alien->update(inhibitNew, targets, std::size(targets), wave);
     alien->checkCollisions(rocks, NULL, NULL);
 
     extras->update();

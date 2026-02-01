@@ -8,12 +8,12 @@
 // platform-specific generic store capable of storing and retrieving a
 // long C++ string.
 
-namespace Persist {
+struct Persist {
     // On success, return true with valid buf; else return false
-    bool load(std::string& buf);
+    static bool load(std::string& buf);
 
     // Return true on success
-    bool save(const std::string& buf);
+    static bool save(const std::string& buf);
 };
 
 #endif // !persist_hpp

@@ -1,18 +1,17 @@
 #ifndef shape_hpp
 #define shape_hpp
 
-#include <vector>
-
 #include "type.hpp"
 #include "line.hpp"
-#include "plot.hpp"
 
 struct Shape {
     Shape() {};
     Shape(const Point *verts, int numVerts);
     Shape(const Line *lines, int numLines);
 
+    void clear() { segs.clear(); }
     void append(const Line& l);
+    void append(const Shape *sh, const Vect& offset);
     double getRadius() const { return radius; }
 
     void draw(const Point& pos) const;

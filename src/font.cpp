@@ -1,5 +1,5 @@
 #include "param.hpp"
-#include "linefont.hpp"
+#include "font.hpp"
 
 // Each character is defined in a grid of points (0..6, 0..8), where (0,
 // 0) is at the lower left and (6, 8) is at the upper right.  Everything
@@ -9,15 +9,9 @@
 #define GRID_W		6
 #define GRID_H		8
 
-// Character and line spacing are multiplied by grid size and scale.
+// Character and line spacing as percent of grid size
 #define SPACING_CHAR	PERCENT(145)
 #define SPACING_LINE	PERCENT(174)
-
-static Line C_unknown[] = {
-};
-
-static Line C_space[] = {
-};
 
 static Line C_exclam[] = {
     { Point(3, 8), Point(3, 2) },
@@ -575,140 +569,140 @@ static struct lineCharEntry {
     Line *stroke;
     int nStroke;
 } lineChar[128] = {
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_unknown, ARRAYSIZE(C_unknown) },
-    { C_space, ARRAYSIZE(C_space) },
-    { C_exclam, ARRAYSIZE(C_exclam) },
-    { C_dquote, ARRAYSIZE(C_dquote) },
-    { C_pound, ARRAYSIZE(C_pound) },
-    { C_dollar, ARRAYSIZE(C_dollar) },
-    { C_percent, ARRAYSIZE(C_percent) },
-    { C_amper, ARRAYSIZE(C_amper) },
-    { C_squote, ARRAYSIZE(C_squote) },
-    { C_lparen, ARRAYSIZE(C_lparen) },
-    { C_rparen, ARRAYSIZE(C_rparen) },
-    { C_aster, ARRAYSIZE(C_aster) },
-    { C_plus, ARRAYSIZE(C_plus) },
-    { C_comma, ARRAYSIZE(C_comma) },
-    { C_minus, ARRAYSIZE(C_minus) },
-    { C_period, ARRAYSIZE(C_period) },
-    { C_slash, ARRAYSIZE(C_slash) },
-    { C_0, ARRAYSIZE(C_0) },
-    { C_1, ARRAYSIZE(C_1) },
-    { C_2, ARRAYSIZE(C_2) },
-    { C_3, ARRAYSIZE(C_3) },
-    { C_4, ARRAYSIZE(C_4) },
-    { C_5, ARRAYSIZE(C_5) },
-    { C_6, ARRAYSIZE(C_6) },
-    { C_7, ARRAYSIZE(C_7) },
-    { C_8, ARRAYSIZE(C_8) },
-    { C_9, ARRAYSIZE(C_9) },
-    { C_colon, ARRAYSIZE(C_colon) },
-    { C_semi, ARRAYSIZE(C_semi) },
-    { C_less, ARRAYSIZE(C_less) },
-    { C_equal, ARRAYSIZE(C_equal) },
-    { C_greater, ARRAYSIZE(C_greater) },
-    { C_ques, ARRAYSIZE(C_ques) },
-    { C_at, ARRAYSIZE(C_at) },
-    { C_A, ARRAYSIZE(C_A) },
-    { C_B, ARRAYSIZE(C_B) },
-    { C_C, ARRAYSIZE(C_C) },
-    { C_D, ARRAYSIZE(C_D) },
-    { C_E, ARRAYSIZE(C_E) },
-    { C_F, ARRAYSIZE(C_F) },
-    { C_G, ARRAYSIZE(C_G) },
-    { C_H, ARRAYSIZE(C_H) },
-    { C_I, ARRAYSIZE(C_I) },
-    { C_J, ARRAYSIZE(C_J) },
-    { C_K, ARRAYSIZE(C_K) },
-    { C_L, ARRAYSIZE(C_L) },
-    { C_M, ARRAYSIZE(C_M) },
-    { C_N, ARRAYSIZE(C_N) },
-    { C_O, ARRAYSIZE(C_O) },
-    { C_P, ARRAYSIZE(C_P) },
-    { C_Q, ARRAYSIZE(C_Q) },
-    { C_R, ARRAYSIZE(C_R) },
-    { C_S, ARRAYSIZE(C_S) },
-    { C_T, ARRAYSIZE(C_T) },
-    { C_U, ARRAYSIZE(C_U) },
-    { C_V, ARRAYSIZE(C_V) },
-    { C_W, ARRAYSIZE(C_W) },
-    { C_X, ARRAYSIZE(C_X) },
-    { C_Y, ARRAYSIZE(C_Y) },
-    { C_Z, ARRAYSIZE(C_Z) },
-    { C_lbrack, ARRAYSIZE(C_lbrack) },
-    { C_bslash, ARRAYSIZE(C_bslash) },
-    { C_rbrack, ARRAYSIZE(C_rbrack) },
-    { C_caret, ARRAYSIZE(C_caret) },
-    { C_uscore, ARRAYSIZE(C_uscore) },
-    { C_bquote, ARRAYSIZE(C_bquote) },
-    { C_A, ARRAYSIZE(C_A) },
-    { C_B, ARRAYSIZE(C_B) },
-    { C_C, ARRAYSIZE(C_C) },
-    { C_D, ARRAYSIZE(C_D) },
-    { C_E, ARRAYSIZE(C_E) },
-    { C_F, ARRAYSIZE(C_F) },
-    { C_G, ARRAYSIZE(C_G) },
-    { C_H, ARRAYSIZE(C_H) },
-    { C_I, ARRAYSIZE(C_I) },
-    { C_J, ARRAYSIZE(C_J) },
-    { C_K, ARRAYSIZE(C_K) },
-    { C_L, ARRAYSIZE(C_L) },
-    { C_M, ARRAYSIZE(C_M) },
-    { C_N, ARRAYSIZE(C_N) },
-    { C_O, ARRAYSIZE(C_O) },
-    { C_P, ARRAYSIZE(C_P) },
-    { C_Q, ARRAYSIZE(C_Q) },
-    { C_R, ARRAYSIZE(C_R) },
-    { C_S, ARRAYSIZE(C_S) },
-    { C_T, ARRAYSIZE(C_T) },
-    { C_U, ARRAYSIZE(C_U) },
-    { C_V, ARRAYSIZE(C_V) },
-    { C_W, ARRAYSIZE(C_W) },
-    { C_X, ARRAYSIZE(C_X) },
-    { C_Y, ARRAYSIZE(C_Y) },
-    { C_Z, ARRAYSIZE(C_Z) },
-    { C_lbrace, ARRAYSIZE(C_lbrace) },
-    { C_vbar, ARRAYSIZE(C_vbar) },
-    { C_rbrace, ARRAYSIZE(C_rbrace) },
-    { C_tilde, ARRAYSIZE(C_tilde) },
-    { C_block, ARRAYSIZE(C_block) },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },
+    { NULL, 0 },	// space
+    { C_exclam, std::size(C_exclam) },
+    { C_dquote, std::size(C_dquote) },
+    { C_pound, std::size(C_pound) },
+    { C_dollar, std::size(C_dollar) },
+    { C_percent, std::size(C_percent) },
+    { C_amper, std::size(C_amper) },
+    { C_squote, std::size(C_squote) },
+    { C_lparen, std::size(C_lparen) },
+    { C_rparen, std::size(C_rparen) },
+    { C_aster, std::size(C_aster) },
+    { C_plus, std::size(C_plus) },
+    { C_comma, std::size(C_comma) },
+    { C_minus, std::size(C_minus) },
+    { C_period, std::size(C_period) },
+    { C_slash, std::size(C_slash) },
+    { C_0, std::size(C_0) },
+    { C_1, std::size(C_1) },
+    { C_2, std::size(C_2) },
+    { C_3, std::size(C_3) },
+    { C_4, std::size(C_4) },
+    { C_5, std::size(C_5) },
+    { C_6, std::size(C_6) },
+    { C_7, std::size(C_7) },
+    { C_8, std::size(C_8) },
+    { C_9, std::size(C_9) },
+    { C_colon, std::size(C_colon) },
+    { C_semi, std::size(C_semi) },
+    { C_less, std::size(C_less) },
+    { C_equal, std::size(C_equal) },
+    { C_greater, std::size(C_greater) },
+    { C_ques, std::size(C_ques) },
+    { C_at, std::size(C_at) },
+    { C_A, std::size(C_A) },
+    { C_B, std::size(C_B) },
+    { C_C, std::size(C_C) },
+    { C_D, std::size(C_D) },
+    { C_E, std::size(C_E) },
+    { C_F, std::size(C_F) },
+    { C_G, std::size(C_G) },
+    { C_H, std::size(C_H) },
+    { C_I, std::size(C_I) },
+    { C_J, std::size(C_J) },
+    { C_K, std::size(C_K) },
+    { C_L, std::size(C_L) },
+    { C_M, std::size(C_M) },
+    { C_N, std::size(C_N) },
+    { C_O, std::size(C_O) },
+    { C_P, std::size(C_P) },
+    { C_Q, std::size(C_Q) },
+    { C_R, std::size(C_R) },
+    { C_S, std::size(C_S) },
+    { C_T, std::size(C_T) },
+    { C_U, std::size(C_U) },
+    { C_V, std::size(C_V) },
+    { C_W, std::size(C_W) },
+    { C_X, std::size(C_X) },
+    { C_Y, std::size(C_Y) },
+    { C_Z, std::size(C_Z) },
+    { C_lbrack, std::size(C_lbrack) },
+    { C_bslash, std::size(C_bslash) },
+    { C_rbrack, std::size(C_rbrack) },
+    { C_caret, std::size(C_caret) },
+    { C_uscore, std::size(C_uscore) },
+    { C_bquote, std::size(C_bquote) },
+    { C_A, std::size(C_A) },
+    { C_B, std::size(C_B) },
+    { C_C, std::size(C_C) },
+    { C_D, std::size(C_D) },
+    { C_E, std::size(C_E) },
+    { C_F, std::size(C_F) },
+    { C_G, std::size(C_G) },
+    { C_H, std::size(C_H) },
+    { C_I, std::size(C_I) },
+    { C_J, std::size(C_J) },
+    { C_K, std::size(C_K) },
+    { C_L, std::size(C_L) },
+    { C_M, std::size(C_M) },
+    { C_N, std::size(C_N) },
+    { C_O, std::size(C_O) },
+    { C_P, std::size(C_P) },
+    { C_Q, std::size(C_Q) },
+    { C_R, std::size(C_R) },
+    { C_S, std::size(C_S) },
+    { C_T, std::size(C_T) },
+    { C_U, std::size(C_U) },
+    { C_V, std::size(C_V) },
+    { C_W, std::size(C_W) },
+    { C_X, std::size(C_X) },
+    { C_Y, std::size(C_Y) },
+    { C_Z, std::size(C_Z) },
+    { C_lbrace, std::size(C_lbrace) },
+    { C_vbar, std::size(C_vbar) },
+    { C_rbrace, std::size(C_rbrace) },
+    { C_tilde, std::size(C_tilde) },
+    { C_block, std::size(C_block) },
 };
 
 // Shapes are generated with the left side of the character at the
-// specified x and the baseline at the specified y, in the vertically
+// specified x and the baseline at the specified y, from the vertically
 // flipped Shape coordinate system.
-static Shape *GenShape(int ch, double scale, bool bold, bool italic)
+static Shape *GenShape(int ch, bool bold, bool italic)
 {
     Shape *s;
     lineCharEntry *ce = &lineChar[ch];
@@ -723,38 +717,55 @@ static Shape *GenShape(int ch, double scale, bool bold, bool italic)
 	    l.t.x += l.t.y * ITALICSLOPE;
 	}
 
-	l.f.x *= scale;
-	l.f.y *= -scale;
-	l.t.x *= scale;
-	l.t.y *= -scale;
+	l.f.y = -l.f.y;
+	l.t.y = -l.t.y;
 
         s->append(l);
 
 	if (bold) {
-	    s->append(l + Vect(1.0, 0.0));
-	    s->append(l + Vect(1.0, 1.0));
-	    s->append(l + Vect(0.0, 1.0));
+	    double shift = 0.15;
+
+	    s->append(l + Vect(shift, 0.0));
+	    s->append(l + Vect(shift, shift));
+	    s->append(l + Vect(0.0, shift));
 	}
     }
 
     return s;
 }
 
-Linefont::Linefont(double scale, bool bold, bool italic)
+Font::Font(bool bold, bool italic)
 {
     for (int ch = 0; ch < 128; ch++)
-        chars[ch] = GenShape(ch, scale, bold, italic);
+	chars.push_back(GenShape(ch, bold, italic));
 
-    // Calculated character and line spacing
-    Vect charSize(GRID_W * scale * SPACING_CHAR,
-		  GRID_H * scale * SPACING_LINE);
-
-    charSpacing = Vect(charSize.x, 0.0);
-    lineSpacing = Vect(0.0, charSize.y);
+    spacing = Vect(GRID_W * SPACING_CHAR,
+		   GRID_H * SPACING_LINE);
 }
 
-Linefont::~Linefont()
+Font::~Font()
 {
-    for (int ch = 0; ch < 128; ch++)
-	delete(chars[ch]);
+    for (auto s : chars)
+	delete s;
+}
+
+Font *Font::fontRegular;
+Font *Font::fontBold;
+Font *Font::fontItalic;
+Font *Font::fontBoldItalic;
+
+void Font::init()
+{
+    fontRegular = new Font(false, false);
+    fontBold = new Font(true, false);
+    fontItalic = new Font(false, true);
+    fontBoldItalic = new Font(true, true);
+}
+
+void Font::term()
+{
+    delete fontBoldItalic;
+    delete fontItalic;
+    delete fontBold;
+    delete fontRegular;
 }

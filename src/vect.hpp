@@ -6,7 +6,8 @@
 struct Vect {
     double x, y;
 
-    Vect(double _x = 0.0, double _y = 0.0) : x(_x), y(_y) {}
+    Vect() : x(0.0), y(.0) {}
+    Vect(double _x, double _y) : x(_x), y(_y) {}
 
     double cross(const Vect& other) const {
 	return x * other.y - y * other.x;
@@ -21,7 +22,7 @@ struct Vect {
     }
 
     double argument() const {
-	return std::atan2(y, x) * 180.0 / PI;
+	return std::atan2(y, x) * 180.0 / M_PI;
     }
 
     Vect unitize() const {
@@ -32,7 +33,7 @@ struct Vect {
     }
 
     Vect rotate(double degrees) {
-	double rad = degrees * PI / 180.0;
+	double rad = degrees * M_PI / 180.0;
 	double s = -std::sin(rad);
 	double c = std::cos(rad);
 	return Vect(x * c - y * s, x * s + y * c);

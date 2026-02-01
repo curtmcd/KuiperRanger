@@ -1,36 +1,63 @@
 #ifndef text_hpp
 #define text_hpp
 
-#include "linefont.hpp"
+#include "font.hpp"
+#include "sprite.hpp"
 
 #define TEXT_MAXLEN 80
 
 struct Text {
-    Text();
+    enum Justify {
+	LEFT = 0, TOP = 0,
+	CENTER = 1, MIDDLE = 1,
+	RIGHT = 2, BOTTOM = 2
+    };
 
-    void on() { enabled = true; }
-    void off() { enabled = false; }
-    bool isOn() { return enabled; }
+    Text();
+    ~Text();
+
+    void on() { sprite->on(); }
+    void off() { sprite->off(); }
+    bool isOn() { return sprite->isOn(); }
+
+    void set(const char *_str) {
+	if (strcmp(_str, str) != 0) {
+	    strncpy(str, _str, TEXT_MAXLEN);
+	    str[TEXT_MAXLEN] = '\0';
+	    modified = true;
+	}
+    };
+
+    void setFont(Font *_font) {
+	font = _font;
+	modified = true;
+    }
+
+    void setJustify(Justify jh, Justify jv) {
+	justifyH = jh;
+	justifyV = jv;
+	modified = true;
+    }
 
     Vect getSize();
 
-    void set(const char *_str) {
-	strncpy(str, _str, TEXT_MAXLEN);
-	str[TEXT_MAXLEN] = '\0';
-    }
+    void setPos(const Point& pos) { sprite->setPos(pos); }
+    Point getPos() { return sprite->getPos(); }
 
-    void setPos(const Point& _pos) { pos = _pos; }
-    Point getPos() { return pos; }
-
-    void setFont(Linefont *lf) { font = lf; }
+    void setScale(double scale) { sprite->setScale(scale); }
+    double getScale() { return sprite->getScale(); }
 
     void update();
 
 private:
+    Font *font;
+    Justify justifyH;
+    Justify justifyV;
     char str[TEXT_MAXLEN + 1];
-    Point pos;
-    bool enabled;
-    Linefont *font;
+    bool modified;
+
+    Shape *shape;
+    Sprite *sprite;
 };
 
 #endif // !text_hpp

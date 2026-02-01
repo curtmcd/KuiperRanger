@@ -1,37 +1,54 @@
 #include "line.hpp"
 
-// Determine if two line segments intersect in any way.
+bool Line::intersects(const Line& other) const {
+    Vect d1 = t - f;
+    Vect d2 = other.t - other.f;
 
-#define SAME_SIGN(a, b) \
-	(((a) < 0 && (b) < 0) || ((a) > 0 && (b) > 0))
+    double cp1 = d1.cross(other.f - f);
+    double cp2 = d1.cross(other.t - f);
 
-bool Line::intersects(const Line &other) const
-{
-    double a1, a2, b1, b2, c1, c2;
-    double r1, r2, r3, r4;
+    // If both points of other line are on same side, no intersection
+    if (cp1 * cp2 > 0)
+	return false;
 
-    a1 = t.y - f.y;
-    b1 = f.x - t.x;
-    c1 = t.x * f.y - f.x * t.y;
+    double cp3 = d2.cross(f - other.f);
+    double cp4 = d2.cross(t - other.f);
 
-    r3 = a1 * other.f.x + b1 * other.f.y + c1;
-    r4 = a1 * other.t.x + b1 * other.t.y + c1;
+    // If both points of this are on the same side of other, no intersection
+    if (cp3 * cp4 > 0)
+	return false;
 
-    if (r3 != 0 && r4 != 0 && SAME_SIGN(r3, r4))
+    // Parallel/Collinear check:
+    // This is the determinant of the 2D matrix formed by the two direction vectors.
+    double det = d1.x * d2.y - d1.y * d2.x;
+    if (std::abs(det) < 1e-9)
         return false;
-
-    a2 = other.t.y - other.f.y;
-    b2 = other.f.x - other.t.x;
-    c2 = other.t.x * other.f.y - other.f.x * other.t.y;
-
-    r1 = a2 * f.x + b2 * f.y + c2;
-    r2 = a2 * t.x + b2 * t.y + c2;
-
-    if (r1 != 0 && r2 != 0 && SAME_SIGN(r1, r2))
-        return false;
-
-    if (fabs(a1 * b2 - a2 * b1) < 1e-9)
-        return false;	// Consider colinear to be non-intersecting
 
     return true;
+}
+
+bool Line::intersection(const Line& other, Point& intersect) const {
+    Vect d1 = t - f;
+    Vect d2 = other.t - other.f;
+
+    double det = d1.cross(d2);
+
+    // Collinear/Parallel check
+    if (std::abs(det) < 1e-9)
+	return false;
+
+    // Use the cross product of the vector between the starts
+    // and the direction vectors to find the 't' parameter.
+    Vect startDiff = other.f - f;
+    double tParam = (startDiff.x * d2.y - startDiff.y * d2.x) / det;
+    double uParam = (startDiff.x * d1.y - startDiff.y * d1.x) / det;
+
+    // Intersection occurs if both parameters are between 0 and 1
+    if (tParam >= 0.0 && tParam <= 1.0 && uParam >= 0.0 && uParam <= 1.0) {
+        intersect.x = f.x + tParam * d1.x;
+        intersect.y = f.y + tParam * d1.y;
+        return true;
+    }
+
+    return false;
 }

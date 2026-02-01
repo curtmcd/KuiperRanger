@@ -3,7 +3,6 @@
 #include "sound.hpp"
 #include "rand.hpp"
 
-#include <vector>
 #include <map>
 #include <mutex>
 #include <atomic>
@@ -11,8 +10,6 @@
 #include <iostream>
 
 #include <SDL2/SDL.h>
-
-using namespace Sound;
 
 // This module uses only floats, since that's the audio sample type
 static const float PIf = 3.1415927f;
@@ -262,12 +259,12 @@ static std::atomic<bool> enabled{false};
 static std::atomic<bool> initialized{false};
 
 struct Playing {
-    Effect effect;
+    Sound::Effect effect;
     size_t pos;
     bool loop;
 };
 
-static std::map<Effect, Waveform> sounds;
+static std::map<Sound::Effect, Waveform> sounds;
 static std::vector<Playing> playing;
 
 // SDL audio callback

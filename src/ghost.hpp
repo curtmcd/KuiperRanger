@@ -3,7 +3,6 @@
 
 #include "text.hpp"
 #include "ship.hpp"
-#include "linefont.hpp"
 
 struct Ghost {
     Ghost();
@@ -16,7 +15,6 @@ struct Ghost {
 
 private:
     Text *text;
-    Linefont *font;
     Ship *ghostShip;
     double ghostClock;
 };

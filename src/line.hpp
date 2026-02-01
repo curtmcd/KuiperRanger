@@ -8,6 +8,7 @@ struct Line {
     Line(const Point& _f, const Point& _t) : f(_f), t(_t) {}
 
     bool intersects(const Line& other) const;
+    bool intersection(const Line& other, Point& intersect) const;
 
     Point f, t;
 };

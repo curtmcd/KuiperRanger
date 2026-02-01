@@ -1,7 +1,5 @@
 #include "shape.hpp"
 
-#include <cmath>
-
 void Shape::append(const Line& l)
 {
     segs.push_back(l);
@@ -17,6 +15,12 @@ void Shape::append(const Line& l)
 	radius = r;
 }
 
+void Shape::append(const Shape *sh, const Vect &offset)
+{
+    for (const auto& l : sh->segs)
+	append(l + offset);
+}
+
 Shape::Shape(const Point *verts, int numVerts)
 {
     for (int i = 0; i < numVerts; i++) {
@@ -30,13 +34,6 @@ Shape::Shape(const Line *lines, int numLines)
 {
     for (int i = 0; i < numLines; i++)
 	append(lines[i]);
-}
-
-void Shape::draw(const Point& pos) const
-{
-    for (const auto& l : segs)
-	Plot::line(pos.x + l.f.x, pos.y + l.f.y,
-		   pos.x + l.t.x, pos.y + l.t.y);
 }
 
 // Determine if a point in the shape's coordinate system is inside the

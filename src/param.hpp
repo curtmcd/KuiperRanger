@@ -64,7 +64,7 @@
 #define ROCKSIZES	3
 #define SPLITINTO	2
 #define MAXROCKVEL	150.0		// Max velocity for new rocks (pix/sec)
-#define MAXROCKROT	90.0		// Max angular velocity (deg/sec)
+#define MAXROCKROT	90.0		// Max angular vel for new rocks (deg/sec)
 #define ROCKMARGIN	PERCENT(20)	// Window margin in which rocks may appear
 
 // Explosions
@@ -95,7 +95,7 @@
 #define NICKMAXLEN	8		// max chars in high score nicknames
 #define HIGHROWS	5		// # rows of high scores
 #define HIGHCOLS	3		// # cols of high scores
-#define HIGHTIMEOUT	(4 * WEEK_SEC)	// # sec before other high scores time out
+#define HIGHTIMEOUT	(30 * 86400)	// # sec before other high scores time out
 #define HIGHPERMANENT	(HIGHCOLS * 2)	// # highest scores that never time out
 
 // Font

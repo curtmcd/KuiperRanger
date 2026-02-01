@@ -25,8 +25,8 @@ static Shape *flameShape;
 
 void Ship::init()
 {
-    shipShape = new Shape(shipVec, ARRAYSIZE(shipVec));
-    flameShape = new Shape(flameVec, ARRAYSIZE(flameVec));
+    shipShape = new Shape(shipVec, std::size(shipVec));
+    flameShape = new Shape(flameVec, std::size(flameVec));
 }
 
 void Ship::term()
@@ -94,8 +94,8 @@ void Ship::start()
     Vect vel(0.0, 0.0);
     sprite->setVel(vel);
     flames->setVel(vel);
-    sprite->setAngularVelocity(0.0);
-    flames->setAngularVelocity(0.0);
+    sprite->setOmega(0.0);
+    flames->setOmega(0.0);
     sprite->setAngle(90.0);
     flames->setAngle(90.0);
 

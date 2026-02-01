@@ -5,212 +5,226 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
-#define HIGHCOUNT (HIGHCOLS * HIGHROWS)
+#define HIGHLIMIT (HIGHCOLS * HIGHROWS)
 
-namespace HighList {
-    struct highEntry {
-	char name[NICKMAXLEN + 1];
-	int score;
-	time_t timeStamp;
-    };
+std::vector<HighList::highEntry> HighList::highs;
+std::vector<Text *> HighList::texts;
 
-    static struct highEntry highs[HIGHCOUNT];
-    static int highCount;		// non-decreasing
+bool HighList::modified;
 
-    static Text *highTexts[HIGHCOUNT];
+void HighList::load()
+{
+    std::string buf;
 
-    static Linefont *scoreFont = NULL;
+    if (!Persist::load(buf)) {
+	fprintf(stderr,
+		"Unable to save high scores (see kuiper-ranger(6))\n");
+    }
 
-    void load()
-    {
-	for (int i = 0; i < HIGHCOUNT; i++) {
-	    highs[i].name[0] = 0;
-	    highs[i].score = 0;
-	    highs[i].timeStamp = (time_t)0;
+    std::istringstream iss(buf);
+    std::string line;
+
+    while (std::getline(iss, line)) {
+	const char *s = line.c_str();
+
+	highEntry he;
+
+	size_t i;
+	for (i = 0; *s != ':' && *s != '\0'; )
+	    if (i < NICKMAXLEN)		// buffer size is +1
+		he.name[i++] = *s++;
+	he.name[i] = '\0';
+
+	if (*s++ != ':')
+	    continue;	// ignore bad line
+
+	he.score = 0;
+	while (*s >= '0' && *s <= '9')
+	    he.score = he.score * 10 + (*s++ - '0');
+
+	if (*s++ != ':' || he.score < 1)
+	    continue;
+
+	he.timeStamp  = (time_t)0;
+	while (*s >= '0' && *s <= '9')
+	    he.timeStamp = he.timeStamp * 10 + (*s++ - '0');
+
+	if (*s != '\0')
+	    continue;
+
+	highs.push_back(he);
+    }
+
+    // Sort in case they're out of order
+    std::sort(highs.begin(), highs.end());
+
+    // Delete scores from the future
+    for (auto it = highs.begin(); it != highs.end(); ) {
+	if (it->timeStamp > time(NULL))
+	    it = highs.erase(it);
+	else
+	    it++;
+    }
+
+    // Delete timed-out scores, except for the top HIGHPERMANENT scores
+    if (highs.size() > HIGHPERMANENT)
+	for (auto it = highs.begin() + HIGHPERMANENT; it != highs.end(); ) {
+	    if (it->timeStamp + HIGHTIMEOUT < time(NULL))
+		it = highs.erase(it);
+	    else
+		it++;
 	}
 
-	std::string buf;
+    // Limit total number
+    if (highs.size() > HIGHLIMIT)
+	highs.erase(highs.begin() + HIGHLIMIT,
+		    highs.end());
 
-	if (!Persist::load(buf)) {
-	    printf("Unable to save high scores (see kuiper-ranger(6))\n");
-	}
+    modified = true;
+}
 
-	std::istringstream iss(buf);
-	std::string line;
+void HighList::save()
+{
+    std::ostringstream buf;
 
-	time_t now = time(NULL);
+    for (const auto& he : highs)
+	buf << he.name
+	    << ":"
+	    << he.score
+	    << ":"
+	    << he.timeStamp
+	    << std::endl;
 
-	for (highCount = 0; highCount < HIGHCOUNT; ) {
-	    if (!std::getline(iss, line))
+    if (!Persist::save(buf.str()))
+	printf("Unable to save high scores (see kuiper-ranger(6)\n");
+}
+
+int HighList::getBest()
+{
+    return (highs.size() > 0) ? highs[0].score : 0;
+}
+
+void HighList::record(const char *name, int score)
+{
+    if (score <= 0)
+	return;
+
+    highEntry he;
+
+    strncpy(he.name, name, NICKMAXLEN);
+    he.name[NICKMAXLEN] = '\0';
+    he.score = score;
+    he.timeStamp = time(NULL);
+
+    auto insert_pos = std::upper_bound(highs.begin(),
+				       highs.end(),
+				       he);
+
+    highs.insert(insert_pos, he);
+
+    // If there are now too many high scores, delete one to make room.
+    // Try to delete the lowest score whose user has more than one
+    // entry. That will allow up to HIGHLIMIT users to be represented
+    // while still allowing the better players to have multiple entries
+    // if there's room.
+    for (int i = (int)highs.size() - 1; i >= 1; i--)
+	for (int j = i - 1; j >= 0; j--)
+	    if (highs.size() > HIGHLIMIT &&
+		strcmp(highs[i].name, highs[j].name) == 0) {
+		highs.erase(highs.begin() + i);
 		break;
-
-	    const char *s = line.c_str();
-
-	    highEntry *he = &highs[highCount];
-
-	    int i = 0;
-	    while (*s != ':' && *s != '\0')
-		if (i < NICKMAXLEN)
-		    he->name[i++] = *s++;
-
-	    he->name[i] = '\0';
-
-	    if (*s++ != ':')
-		continue;	// ignore bad line
-
-	    he->score = 0;
-	    while (*s >= '0' && *s <= '9')
-		he->score = he->score * 10 + (*s++ - '0');
-
-	    if (*s++ != ':' || he->score < 1)
-		continue;
-
-	    he->timeStamp  = (time_t)0;
-	    while (*s >= '0' && *s <= '9')
-		he->timeStamp = he->timeStamp * 10 + (*s++ - '0');
-
-	    if (*s != '\0')
-		continue;
-
-	    // Ignore highs from the future
-	    if (he->timeStamp > now)
-		continue;
-
-	    // Ignore highs that have timed out (except top HIGHPERMANENT scores)
-	    if (highCount >= HIGHPERMANENT && he->timeStamp < now - HIGHTIMEOUT)
-		continue;
-
-	    highCount++;
-	}
-    }
-
-    void save()
-    {
-	std::ostringstream buf;
-
-	for (int i = 0; i < highCount; i++)
-	    buf << highs[i].name
-		<< ":"
-		<< highs[i].score
-		<< ":"
-		<< highs[i].timeStamp
-		<< std::endl;
-
-	if (!Persist::save(buf.str()))
-	    printf("Unable to save high scores (see kuiper-ranger(6)\n");
-    }
-
-    int getBest()
-    {
-	if (highCount == 0)
-	    return 0;
-
-	return highs[0].score;
-    }
-
-    void record(const char *name, int score)
-    {
-	int i;
-
-	if (score <= 0)
-	    return;
-
-	for (i = 0; i < highCount; i++)
-	    if (score > highs[i].score)
-		break;
-
-	// 0 <= (i = insertion point) <= highCount
-	if (i == HIGHCOUNT)
-	    return;
-
-	for (int j = MIN(highCount, HIGHCOUNT - 1); j > i; j--)
-	    highs[j] = highs[j - 1];
-
-	strncpy(highs[i].name, name, NICKMAXLEN);
-	highs[i].name[NICKMAXLEN] = '\0';
-	highs[i].score = score;
-	highs[i].timeStamp = time(NULL);
-
-	if (highCount < HIGHCOUNT)
-	    highCount++;
-
-	save();
-    }
-
-    // Routines dealing with the graphics
-
-    void on()
-    {
-	for (int i = 0; i < highCount; i++) {
-	    char scorebuf[SCOREDIGITS + 1];
-	    sprintf(scorebuf, "%d", highs[i].score);
-
-	    char buf[80];
-	    sprintf(buf,
-		    "%*.*s%.*s%s", NICKMAXLEN, NICKMAXLEN, highs[i].name,
-		    (int)(SCOREDIGITS + 1 - strlen(scorebuf)),
-		    ".........................",
-		    scorebuf);
-
-	    highTexts[i]->set(buf);
-	    highTexts[i]->on();
-	    highTexts[i]->update();
-	}
-    }
-
-    void off()
-    {
-	for (int i = 0; i < highCount; i++)
-	    highTexts[i]->off();
-    }
-
-    void update()
-    {
-	for (int i = 0; i < highCount; i++)
-	    highTexts[i]->update();
-    }
-
-    void init()
-    {
-	Vect screenSize = Plot::getSize();
-	Point scorePos(0, screenSize.y * PERCENT(55));
-	Vect scoreSize(screenSize.x / (HIGHCOLS + 1),
-		       screenSize.y / 3 / HIGHROWS);
-
-	scoreFont = new Linefont(PERCENT(200));
-
-	load();
-
-	Vect charSpacing = scoreFont->getCharSpacing();
-
-	// Lay out the screen locations for high score entries
-	int row = 0;
-	int col = 0;
-
-	for (int i = 0; i < HIGHCOUNT; i++) {
-	    highTexts[i] = new Text();
-	    highTexts[i]->setFont(scoreFont);
-
-	    Point pos;
-	    pos.x = (scorePos.x + ((col + 1) * scoreSize.x) -
-		     charSpacing.x * NICKMAXLEN);
-	    pos.y = scorePos.y + row * scoreSize.y;
-
-	    highTexts[i]->setPos(pos);
-
-	    if (++col == HIGHCOLS) {
-		col = 0;
-		row++;
 	    }
+
+    // Failing that, delete the lowest scoring entry.
+    if (highs.size() > HIGHLIMIT)
+	highs.pop_back();
+
+    save();
+
+    modified = true;
+}
+
+// Routines dealing with the graphics
+
+void HighList::on()
+{
+    for (int i = 0; i < HIGHLIMIT; i++)
+	texts[i]->on();
+}
+
+void HighList::off()
+{
+    for (int i = 0; i < HIGHLIMIT; i++)
+	texts[i]->off();
+}
+
+void HighList::update()
+{
+    if (modified) {
+	// Update the content for each high score Text
+
+	for (int i = 0; i < HIGHLIMIT; i++) {
+	    char buf[80];
+
+	    if (i < (int)highs.size()) {
+		highEntry &he = highs[i];
+
+		char scorebuf[SCOREDIGITS + 1];
+		sprintf(scorebuf, "%d", he.score);
+
+		sprintf(buf,
+			"%*.*s%.*s%s",
+			(int)NICKMAXLEN, (int)NICKMAXLEN, he.name,
+			(int)(SCOREDIGITS + 1 - strlen(scorebuf)),
+			".........................",
+			scorebuf);
+	    } else
+		buf[0] = 0;
+
+	    texts[i]->set(buf);
 	}
+
+	modified = false;
     }
 
-    void term()
-    {
-	for (int i = 0; i < HIGHCOUNT; i++)
-	    delete(highTexts[i]);
+    for (int i = 0; i < HIGHLIMIT; i++)
+	texts[i]->update();
+}
 
-	delete scoreFont;
+void HighList::init()
+{
+    load();
+
+    // Lay out high score texts in rows and columns
+    Vect screenSize = Plot::getSize();
+    Point basePos(screenSize.x * PERCENT(12),
+		  screenSize.y * PERCENT(50));
+    Vect spacingX(screenSize.x / (HIGHCOLS + 1), 0.0);
+    Vect spacingY(0.0, (screenSize.y / 3) / HIGHROWS);
+
+    int row = 0;
+    int col = 0;
+
+    for (int i = 0; i < HIGHLIMIT; i++) {
+	Text *t = new Text();
+
+	t->setJustify(Text::LEFT, Text::BOTTOM);
+	t->setPos(basePos + row * spacingY + col * spacingX);
+	t->setScale(PERCENT(200));
+
+	if (++col == HIGHCOLS) {
+	    col = 0;
+	    row++;
+	}
+
+	texts.push_back(t);
     }
-};
+}
+
+void HighList::term()
+{
+    for (int i = 0; i < HIGHLIMIT; i++)
+	delete texts[i];
+}

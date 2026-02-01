@@ -28,7 +28,7 @@ struct Score {
 private:
     void setText();
 
-    Linefont *font;
+    Font *font;
 
     int points;
     Text *pointsText;

@@ -3,7 +3,7 @@
 
 #include "type.hpp"
 
-namespace Sound {
+struct Sound {
     enum Effect {
 	shipFire,	// middle-high frequency decaying "pew"
 	alienFire,	// high frequency decaying "ping"
@@ -11,39 +11,39 @@ namespace Sound {
 	shipExplode,	// louder explosion with long decay
 	alienPoints,	// quick ascending bee-bee-beep
 	alienExplode,	// explosion with medium-quick decay
-	alienMotor,	// one cycle of siren, centered around ~1000 Hz, modulating at ~5 Hz
+	alienMotor,	// one cycle of siren, ~1000 Hz, modulating at ~5 Hz
 	extraShip,	// loud, high frequency "beep beep beep"
 	lowDeet,	// the background noise (low-freq short beep)
 	highDeet,	// the background noise (middle-low short beep)
-	shipThrust,	// one cycle of ship thrust consisting of subdued white noise
+	shipThrust,	// one cycle of ship thrust (subdued white noise)
 	inHyperspace,	// ship goes into hyperspace
 	outHyperspace,	// ship exits hyperspace
     };
 
     // Init sound driver resources and pre-calculate waveforms
-    void init();
+    static void init();
 
     // Stop playing all sounds, release data and driver resources
-    void term();
+    static void term();
 
     // Check whether sound is available (valid after init)
-    bool available();
+    static bool available();
 
     // Immediately mute all sound (even if they are still being
     // generated) (this is the default after init).
-    void off();
+    static void off();
 
     // Enable the generation of sound (unmute).
-    void on();
-    bool isOn();
+    static void on();
+    static bool isOn();
 
     // Begin background writing of the audio samples for a specified
     // Effect (e.g. Sound::shipFire) into the sound device buffer. If
     // loop is true, the sound repeats until stopped.
-    void play(enum Effect effect, bool loop = false);
+    static void play(enum Effect effect, bool loop = false);
 
     // If the specified Effect sound is playing, stop it immediately.
-    void stop(enum Effect effect);
+    static void stop(enum Effect effect);
 };
 
 #endif // !sound_hpp

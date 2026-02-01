@@ -94,6 +94,7 @@ int main(int argc, char **argv)
     }
 
     Sound::init();
+    Font::init();
     Missile::init();
     Rocks::init();
     Ship::init();
@@ -152,6 +153,7 @@ int main(int argc, char **argv)
     Ship::term();
     Rocks::term();
     Missile::term();
+    Font::term();
     Sound::term();
     Plot::term();
     Button::term();

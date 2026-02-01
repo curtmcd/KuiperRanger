@@ -28,8 +28,8 @@ struct Sprite {
     void setScale(double _scale) { scale = _scale; }
     double getScale() const { return scale; }
 
-    void setAngularVelocity(double w) { angularVelocity = w; }
-    double getAngularVelocity() { return angularVelocity; }
+    void setOmega(double _omega) { omega = _omega; }
+    double getOmega() { return omega; }
 
     void on() { enabled = true; }
     void off() { enabled = false; }
@@ -54,7 +54,7 @@ private:
     double scale = 1.0;
 
     Vect vel;
-    double angularVelocity = 0.0;
+    double omega = 0.0;
 };
 
 #endif // !sprite_hpp

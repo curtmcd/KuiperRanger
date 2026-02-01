@@ -1,8 +1,6 @@
 #ifndef debris_hpp
 #define debris_hpp
 
-#include <vector>
-
 #include "sprite.hpp"
 
 struct Debris {

@@ -1,14 +1,19 @@
 #ifndef help_hpp
 #define help_hpp
 
-namespace Help {
-    void init();
-    void term();
+#include "text.hpp"
 
-    void on();
-    void off();
-    bool isOn();
-    void update();
+struct Help {
+    static void init();
+    static void term();
+
+    static void on();
+    static void off();
+    static bool isOn();
+    static void update();
+
+private:
+    static std::vector<Text *> helpList;
 };
 
 #endif // !help_hpp

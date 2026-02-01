@@ -1,60 +1,49 @@
 #include "title.hpp"
 
-static Linefont *titleFont;
-static Text *titleText;
+Text *Title::titleText;
+Text *Title::instrText;
 
-static Linefont *instrFont;
-static Text *instrText;
+void Title::init(const char *title)
+{
+    Vect screenSize = Plot::getSize();
 
-namespace Title {
-    void init(const char *title)
-    {
-	Vect screenSize = Plot::getSize();
+    titleText = new Text();
+    titleText->set(title);
+    titleText->setFont(Font::fontBoldItalic);
 
-	titleText = new Text();
-	titleFont = new Linefont(PERCENT(800), true, true);
-	titleText->setFont(titleFont);
-	titleText->set(title);
+    Point titleTextPos(screenSize.x / 2, screenSize.y * PERCENT(30));
+    titleText->setPos(titleTextPos);
+    titleText->setScale(PERCENT(800));
 
-	Vect titleTextSize = titleText->getSize();
-	Point titleTextPos((screenSize.x - titleTextSize.x) / 2,
-			   screenSize.y * PERCENT(40));
-	titleText->setPos(titleTextPos);
+    instrText = new Text();
+    instrText->set("Press H for Commands");
+    instrText->setFont(Font::fontItalic);
 
-	instrText = new Text();
-	instrFont = new Linefont(PERCENT(200), false, true);
-	instrText->setFont(instrFont);
-	instrText->set("Press H for Commands");
-	Vect instrTextSize = instrText->getSize();
-	Point instrTextPos((screenSize.x - instrTextSize.x) / 2,
-			   screenSize.y * PERCENT(95));
-	instrText->setPos(instrTextPos);
-    }
+    Point instrTextPos(screenSize.x / 2, screenSize.y * PERCENT(92));
+    instrText->setPos(instrTextPos);
+    instrText->setScale(PERCENT(200));
+}
 
-    void term()
-    {
-	delete titleText;
-	delete instrText;
+void Title::term()
+{
+    delete titleText;
+    delete instrText;
+}
 
-	delete titleFont;
-	delete instrFont;
-    }
+void Title::on()
+{
+    titleText->on();
+    instrText->on();
+}
 
-    void on()
-    {
-	titleText->on();
-	instrText->on();
-    }
+void Title::off()
+{
+    titleText->off();
+    instrText->off();
+}
 
-    void off()
-    {
-	titleText->off();
-	instrText->off();
-    }
-
-    void update()
-    {
-	titleText->update();
-	instrText->update();
-    }
-};
+void Title::update()
+{
+    titleText->update();
+    instrText->update();
+}

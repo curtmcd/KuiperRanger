@@ -14,7 +14,7 @@ static Shape *baseShardShape;
 
 void Debris::init()
 {
-    baseShardShape = new Shape(shardVec, ARRAYSIZE(shardVec));
+    baseShardShape = new Shape(shardVec, std::size(shardVec));
 }
 
 void Debris::term()
@@ -59,7 +59,7 @@ void Debris::start(Sprite *whatExploded)
 	double initialSize = objSize * Rand::range(SHARDSIZE, SHARDSIZE * 2);
 	s->setScale(initialSize);
 	s->setAngle(Rand::range(0, 360));
-	s->setAngularVelocity(Rand::range(0.0, SHARDMAXROT));
+	s->setOmega(Rand::range(0.0, SHARDMAXROT));
 
 	s->on();
     }

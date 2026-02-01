@@ -1,24 +1,34 @@
 #ifndef speaker_hpp
 #define speaker_hpp
 
-#include "type.hpp"
+#include "sprite.hpp"
 
-namespace Speaker {
-    void init();
-    void term();
+struct Speaker {
+    static void init();
+    static void term();
 
     enum Style {
 	soundOff, soundOn
     };
 
-    void setStyle(enum Style style);
+    static void setStyle(enum Style style);
 
-    void stayOn(bool enable);
+    static void stayOn(bool enable);
 
     // Flashing the speaker when stayOn is enabled just leaves it on
-    void flash(double duration);
+    static void flash(double duration);
 
-    void update();
+    static void update();
+
+private:
+    static Shape *onShape;
+    static Shape *offShape;
+
+    static Sprite *sprite;
+
+    static bool alwaysOn;
+
+    static double timer;
 };
 
 #endif // !speaker_hpp

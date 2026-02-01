@@ -4,15 +4,19 @@
 #include "text.hpp"
 #include "param.hpp"
 
-namespace Title {
-    void init(const char *title);
-    void term();
+struct Title {
+    static void init(const char *title);
+    static void term();
 
-    void display();
-    void undisplay();
-    void update();
-    void on();
-    void off();
+    static void display();
+    static void undisplay();
+    static void update();
+    static void on();
+    static void off();
+
+private:
+    static Text *titleText;
+    static Text *instrText;
 };
 
 #endif // !title_hpp

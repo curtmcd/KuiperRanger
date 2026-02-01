@@ -17,37 +17,37 @@
 #include "rect.hpp"
 #include "type.hpp"
 
-namespace Plot {
+struct Plot {
     static const int INIT_WIDTH_FULLSCREEN = 0;
     static const int INIT_WIDTH_DEFAULT = -1;
 
-    bool init(int plotWidth, const char *windowTitle);
-    void setFullScreen(bool enable);
-    bool getFullScreen();
-    void setPauseMode(bool enabble);
-    bool getPauseMode();
-    void term();
+    static bool init(int plotWidth, const char *windowTitle);
+    static void setFullScreen(bool enable);
+    static bool getFullScreen();
+    static void setPauseMode(bool enabble);
+    static bool getPauseMode();
+    static void term();
 
-    void suspend();
-    void sync();		// flush and vsync wait
-    double dt();		// sec that passed between frames,
+    static void suspend();
+    static void sync();		// flush and vsync wait
+    static double dt();		// sec that passed between frames,
                                 //   updated once/frame
-    double runTime();		// time since startup
-    double frameTime();		// long-term average of frame time
-    void printFPS();		// secret debugging feature
+    static double runTime();		// time since startup
+    static double frameTime();		// long-term average of frame time
+    static void printFPS();		// secret debugging feature
 
     // All of the following functions use virtual (nominal) coordinates.
     // Clip/wrap control:
     //   If wrap is on, drawn lines will wrap based on the wrap area.
     //   If wrap is off, drawn lines will be clipped to the full drawing area.
-    Vect getSize();
-    void setWrapArea(const Rect& wrapArea);
-    void getWrapArea(Rect *wrapArea);
-    void setWrap(bool w);
-    void line(double fx, double fy, double tx, double ty);
-    void drawLetterbox();
+    static Vect getSize();
+    static void setWrapArea(const Rect& wrapArea);
+    static void getWrapArea(Rect *wrapArea);
+    static void setWrap(bool w);
+    static void line(double fx, double fy, double tx, double ty);
+    static void drawLetterbox();
 
-    void pollEvents();
+    static void pollEvents();
 };
 
 #endif // !plot_hpp
