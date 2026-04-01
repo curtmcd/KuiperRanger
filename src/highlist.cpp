@@ -19,8 +19,7 @@ void HighList::load()
     std::string buf;
 
     if (!Persist::load(buf)) {
-	fprintf(stderr,
-		"Unable to save high scores (see kuiper-ranger(6))\n");
+	std::cerr << "Unable to save high scores (see kuiper-ranger(6))\n";
     }
 
     std::istringstream iss(buf);
@@ -98,7 +97,7 @@ void HighList::save()
 	    << std::endl;
 
     if (!Persist::save(buf.str()))
-	printf("Unable to save high scores (see kuiper-ranger(6)\n");
+	std::cerr << "Unable to save high scores (see kuiper-ranger(6)\n";
 }
 
 int HighList::getBest()

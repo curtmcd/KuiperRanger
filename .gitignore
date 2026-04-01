@@ -39,3 +39,10 @@
 
 # debug information files
 *.dwo
+
+@ Linux build results
+build/
+
+# Visual Studio cache and build results
+.vs/
+x64/

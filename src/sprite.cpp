@@ -3,7 +3,7 @@
 
 void Sprite::draw() const
 {
-    double rad = angle * M_PI / 180.0;
+    double rad = angle * PI / 180.0;
     double sin_a = -std::sin(rad);	// negative because Y axis upside-down
     double cos_a = std::cos(rad);
 

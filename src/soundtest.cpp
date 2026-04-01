@@ -3,7 +3,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+
+#include <SDL2/SDL.h>
+
+#define SDL2_MAIN_HANDLED
+
+#ifdef _WIN32
+#include <windows.h>		// Sleep
+#else
+#include <unistd.h>		// usleep
+#endif
 
 #include "sound.hpp"
 
@@ -51,13 +60,21 @@ void rapidFire()
 {
     for (int i = 0; i < 20; i++) {
 	Sound::play(Sound::shipFire);
+
+#ifdef _WIN32
+	Sleep((250000 + 999) / 1000);
+#else
 	usleep(250000);
+#endif
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     Sound::init();
+
+    (void)argc;
+    (void)argv;
 
     if (!Sound::available()) {
 	fprintf(stderr, "Could not initialize for sound output\n");

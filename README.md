@@ -45,11 +45,11 @@ in which your ship shoots down rocks and flying saucers to gain points.
 	    stored in `$HOME/.local/state/kuiper-ranger/scores` if `$HOME/.local` exists,
 		otherwise `$HOME/.kr-scores`. 
 
-## Build Instructions
+## Build Instructions for Linux
 
 ### Native (SDL2) Version
 
-1.  Install `libsdl2-dev` 
+1.  Install `libsdl2-dev`, `libsdl2-image-dev`, and `libpng16`
 2.  Run `./prebuild.sh` 
 3.  Run `make native` (parallel build is default) 
 4.  Optionally run `./makehigh.sh` 
@@ -68,6 +68,10 @@ in which your ship shoots down rocks and flying saucers to gain points.
 3.  Run `make emscripten` 
 4.  Run `python3 -m http.server --directory build/emscripten/bin` 
 5.  Open web browser and go to `http://localhost:8000/kuiper-ranger.html` 
+
+## Build Instructions for Windows
+
+Please see the separate `README.md` under the `msvc/` directory.
 
 ## History
 

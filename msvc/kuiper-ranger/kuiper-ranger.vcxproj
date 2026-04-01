@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{5c422110-88f9-48fc-a7dd-9f2d6929d299}</ProjectGuid>
+    <RootNamespace>kuiperranger</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\bin\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\obj\</IntDir>
+    <LibraryPath>C:\vcpkg\installed\x64-windows\debug\lib;C:\vcpkg\installed\x64-windows\debug\lib\manual-link;$(LibraryPath);%(AdditionalLibraryDirectories)</LibraryPath>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\bin\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\obj\</IntDir>
+    <LibraryPath>C:\vcpkg\installed\x64-windows\lib;C:\vcpkg\installed\x64-windows\lib\manual-link;$(LibraryPath);%(AdditionalLibraryDirectories)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>C:\vcpkg\installed\x64-windows\lib;C:\vcpkg\installed\x64-windows\lib\manual-link;$(LibraryPath);%(AdditionalLibraryDirectories)</LibraryPath>
+    <ReferencePath />
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\bin\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LibraryPath>C:\vcpkg\installed\x64-windows\lib;C:\vcpkg\installed\x64-windows\lib\manual-link;$(LibraryPath);%(AdditionalLibraryDirectories)</LibraryPath>
+    <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
+    <ReferencePath />
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\bin\</OutDir>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\obj\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\vcpkg\installed\x64-windows\include\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\vcpkg\installed\x64-windows\include\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\vcpkg\installed\x64-windows\include\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2d.lib;SDL2_imaged.lib;SDL2maind.lib;shell32.lib;user32.lib;ole32.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Message>Copy DLLs and assets next to output binary</Message>
+      <Command>xcopy /y "C:\vcpkg\installed\x64-windows\debug\bin\SDL2d.dll" "$(OutDir)"
+xcopy /y "C:\vcpkg\installed\x64-windows\debug\bin\SDL2_imaged.dll" "$(OutDir)"
+xcopy /y "C:\vcpkg\installed\x64-windows\debug\bin\libpng16d.dll" "$(OutDir)"
+xcopy /y "C:\vcpkg\installed\x64-windows\debug\bin\zlibd1.dll" "$(OutDir)"
+xcopy /y "$(SolutionDir)..\icons\32x32.png" "$(OutDir)"</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\vcpkg\installed\x64-windows\include\</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26819</DisableSpecificWarnings>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <OmitFramePointers>true</OmitFramePointers>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;shell32.lib;user32.lib;ole32.lib</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Message>Copy DLLs and assets next to output binary</Message>
+      <Command>xcopy /y "C:\vcpkg\installed\x64-windows\bin\SDL2.dll" "$(OutDir)"
+xcopy /y "C:\vcpkg\installed\x64-windows\bin\SDL2_image.dll" "$(OutDir)"
+xcopy /y "C:\vcpkg\installed\x64-windows\bin\libpng16.dll" "$(OutDir)"
+xcopy /y "C:\vcpkg\installed\x64-windows\bin\zlib1.dll" "$(OutDir)"
+xcopy /y "$(SolutionDir)..\icons\32x32.png" "$(OutDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\alien.cpp" />
+    <ClCompile Include="..\..\src\button.cpp" />
+    <ClCompile Include="..\..\src\debris.cpp" />
+    <ClCompile Include="..\..\src\extras.cpp" />
+    <ClCompile Include="..\..\src\font.cpp" />
+    <ClCompile Include="..\..\src\game.cpp" />
+    <ClCompile Include="..\..\src\getopt_win.cpp" />
+    <ClCompile Include="..\..\src\ghost.cpp" />
+    <ClCompile Include="..\..\src\help.cpp" />
+    <ClCompile Include="..\..\src\highlist.cpp" />
+    <ClCompile Include="..\..\src\line.cpp" />
+    <ClCompile Include="..\..\src\machine.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\missile.cpp" />
+    <ClCompile Include="..\..\src\mlist.cpp" />
+    <ClCompile Include="..\..\src\paused.cpp" />
+    <ClCompile Include="..\..\src\persist_win.cpp" />
+    <ClCompile Include="..\..\src\plot.cpp" />
+    <ClCompile Include="..\..\src\rand.cpp" />
+    <ClCompile Include="..\..\src\rocks.cpp" />
+    <ClCompile Include="..\..\src\score.cpp" />
+    <ClCompile Include="..\..\src\shape.cpp" />
+    <ClCompile Include="..\..\src\ship.cpp" />
+    <ClCompile Include="..\..\src\sound.cpp" />
+    <ClCompile Include="..\..\src\speaker.cpp" />
+    <ClCompile Include="..\..\src\sprite.cpp" />
+    <ClCompile Include="..\..\src\text.cpp" />
+    <ClCompile Include="..\..\src\title.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\alien.hpp" />
+    <ClInclude Include="..\..\src\button.hpp" />
+    <ClInclude Include="..\..\src\debris.hpp" />
+    <ClInclude Include="..\..\src\extras.hpp" />
+    <ClInclude Include="..\..\src\font.hpp" />
+    <ClInclude Include="..\..\src\game.hpp" />
+    <ClInclude Include="..\..\src\getopt_win.hpp" />
+    <ClInclude Include="..\..\src\ghost.hpp" />
+    <ClInclude Include="..\..\src\help.hpp" />
+    <ClInclude Include="..\..\src\highlist.hpp" />
+    <ClInclude Include="..\..\src\line.hpp" />
+    <ClInclude Include="..\..\src\machine.hpp" />
+    <ClInclude Include="..\..\src\math_consts.h" />
+    <ClInclude Include="..\..\src\missile.hpp" />
+    <ClInclude Include="..\..\src\mlist.hpp" />
+    <ClInclude Include="..\..\src\param.hpp" />
+    <ClInclude Include="..\..\src\paused.hpp" />
+    <ClInclude Include="..\..\src\persist.hpp" />
+    <ClInclude Include="..\..\src\plot.hpp" />
+    <ClInclude Include="..\..\src\point.hpp" />
+    <ClInclude Include="..\..\src\rand.hpp" />
+    <ClInclude Include="..\..\src\rect.hpp" />
+    <ClInclude Include="..\..\src\rocks.hpp" />
+    <ClInclude Include="..\..\src\score.hpp" />
+    <ClInclude Include="..\..\src\shape.hpp" />
+    <ClInclude Include="..\..\src\ship.hpp" />
+    <ClInclude Include="..\..\src\sound.hpp" />
+    <ClInclude Include="..\..\src\speaker.hpp" />
+    <ClInclude Include="..\..\src\sprite.hpp" />
+    <ClInclude Include="..\..\src\text.hpp" />
+    <ClInclude Include="..\..\src\title.hpp" />
+    <ClInclude Include="..\..\src\type.hpp" />
+    <ClInclude Include="..\..\src\vect.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

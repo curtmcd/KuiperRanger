@@ -1,5 +1,7 @@
+#ifndef _WIN32
 #include <unistd.h>
 #include <pwd.h>
+#endif // !_WIN32
 
 #include "machine.hpp"
 #include "game.hpp"
@@ -17,7 +19,6 @@ static bool soundOverride = false;
 
 static void getNickname(char name[NICKMAXLEN + 1], int player)
 {
-    struct passwd *pwd;
     const char *s = NULL;
 
     switch (player) {
@@ -37,9 +38,14 @@ static void getNickname(char name[NICKMAXLEN + 1], int player)
     if (s == NULL)
 	s = getenv("USER");
     if (s == NULL)
+	s = getenv("USERNAME");		// Windows
+    if (s == NULL)
 	s = getenv("LOGNAME");
-    if (s == NULL && (pwd = getpwuid(getuid())) != NULL)
+#ifndef _WIN32
+	struct passwd *pwd;
+	if (s == NULL && (pwd = getpwuid(getuid())) != NULL)
 	s = pwd->pw_name;
+#endif
     if (s == NULL)
 	s = "anon";
 

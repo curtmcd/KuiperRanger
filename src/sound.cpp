@@ -1,18 +1,17 @@
 // SDL2-based sound module
 
 #include "sound.hpp"
-#include "rand.hpp"
 
 #include <map>
 #include <mutex>
 #include <atomic>
 #include <algorithm>
 #include <iostream>
+#include <random>
 
 #include <SDL2/SDL.h>
 
 // This module uses only floats, since that's the audio sample type
-static const float PIf = 3.1415927f;
 
 static const int SAMPLE_RATE = 44100;
 static const int SAMPLE_BUFFER_DEFAULT = 1024;
@@ -239,8 +238,11 @@ Waveform noise(float seconds)
     size_t samples = size_t(seconds * SAMPLE_RATE);
     Waveform w(samples);
 
+    static std::minstd_rand gen(std::random_device{}());
+    std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+
     for (size_t i = 0; i < samples; i++)
-	w.buf[i] = Rand::rangef(-1.0f, 1.0f);
+	w.buf[i] = dist(gen);
 
     return w;
 }
@@ -339,7 +341,7 @@ void Sound::init()
 
     dev = SDL_OpenAudioDevice(nullptr, 0, &want, &spec, 0);
     if (!dev) {
-	fprintf(stderr, "Failed to open audio: %s\n", SDL_GetError());
+	std::cerr << "Failed to open audio: " << SDL_GetError() << std::endl;
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	return;
     }

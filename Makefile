@@ -27,9 +27,9 @@ endif
 SRCS1 =	alien.cpp button.cpp debris.cpp extras.cpp font.cpp \
 	game.cpp ghost.cpp help.cpp highlist.cpp \
 	line.cpp machine.cpp main.cpp missile.cpp mlist.cpp \
-	paused.cpp persist.cpp plot.cpp rocks.cpp score.cpp \
-	shape.cpp ship.cpp sound.cpp speaker.cpp sprite.cpp \
-	text.cpp title.cpp
+	paused.cpp persist.cpp plot.cpp rand.cpp rocks.cpp \
+	score.cpp shape.cpp ship.cpp sound.cpp speaker.cpp \
+	sprite.cpp text.cpp title.cpp
 
 HDRS1 =	alien.hpp button.hpp debris.hpp extras.hpp font.hpp \
 	game.hpp ghost.hpp help.hpp highlist.hpp \
@@ -57,7 +57,7 @@ CXX_native := g++
 DEBUG_native = -O2 -fno-strict-aliasing
 
 CXXFLAGS_native := $(DEBUG_native) -D_REENTRANT -Wall -Wextra -Wconversion -Wshadow -Werror
-LIBS_native := -lSDL2 -lm -lstdc++
+LIBS_native := -lSDL2 -lSDL2_image -lm -lstdc++
 
 NATIVE_BIN := $(BUILD_DIR)/native/bin
 NATIVE_OBJ := $(BUILD_DIR)/native/obj

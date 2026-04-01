@@ -1,6 +1,7 @@
 #include <signal.h>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -158,6 +159,15 @@ bool Plot::init(int requestWidth, const char *windowTitle)
         return false;
     }
 
+    // Set window icon
+    if (IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) {
+	SDL_Surface *icon = IMG_Load("32x32.png");
+	if (icon) {
+	    SDL_SetWindowIcon(window, icon);
+	    SDL_FreeSurface(icon);
+	}
+    }
+
     // Set minimum window size to maintain aspect ratio
     SDL_SetWindowMinimumSize(window,
 			     WINDOW_WIDTH_MIN,
@@ -257,8 +267,11 @@ void Plot::term()
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
+// Suspend progam upon entry; return when user resumes program
+// Not supported on Windows
 void Plot::suspend()
 {
+#ifndef _WIN32
     // Temporarily hide window
     SDL_HideWindow(window);
 
@@ -271,6 +284,7 @@ void Plot::suspend()
 
     // RaiseWindow alone doesn't get back focus
     SDL_SetWindowInputFocus(window);
+#endif // !_WIN32
 }
 
 // In vsync mode, SDL_RenderPresent() returns synchronously to vsync.

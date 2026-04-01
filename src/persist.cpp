@@ -5,6 +5,8 @@
 #include <time.h>
 #include <sys/stat.h>
 
+// This file is for Linux systems only
+
 #include "persist.hpp"
 
 #define STORE1		"/var/games/kuiper-ranger/scores"

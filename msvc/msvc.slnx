@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="kuiper-ranger/kuiper-ranger.vcxproj" Id="5c422110-88f9-48fc-a7dd-9f2d6929d299" />
+  <Project Path="sound-test/sound-test.vcxproj" Id="ba46a57b-febe-4dc0-86c5-ec47845f0880" />
+</Solution>
