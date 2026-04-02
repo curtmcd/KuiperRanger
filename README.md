@@ -49,7 +49,7 @@ in which your ship shoots down rocks and flying saucers to gain points.
 
 ### Native (SDL2) Version
 
-1.  Install `libsdl2-dev`, `libsdl2-image-dev`, and `libpng16`
+1.  Install `libsdl2-dev`
 2.  Run `./prebuild.sh` 
 3.  Run `make native` (parallel build is default) 
 4.  Optionally run `./makehigh.sh` 

@@ -16,6 +16,7 @@
 // Game
 #define TITLE		"Kuiper Ranger"
 #define VERSION		"2.5"
+#define ICON_FNAME	"32x32.png"
 #define ENVVAR_WIDTH	"PLOT_WIDTH"
 #define MAXPLAYERS	3
 #define MARGINCOLOR	"grey5"		// Used for full-screen mode only

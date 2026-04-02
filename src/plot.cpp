@@ -1,7 +1,9 @@
 #include <signal.h>
 
 #include <SDL2/SDL.h>
+#ifdef _WIN32
 #include <SDL2/SDL_image.h>
+#endif
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -159,14 +161,16 @@ bool Plot::init(int requestWidth, const char *windowTitle)
         return false;
     }
 
-    // Set window icon
+#ifdef _WIN32
+    // Set window task bar icon (Windows only; Linux desktops get it from desktop icon)
     if (IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) {
-	SDL_Surface *icon = IMG_Load("32x32.png");
+	SDL_Surface *icon = IMG_Load(ICON_FNAME);
 	if (icon) {
 	    SDL_SetWindowIcon(window, icon);
 	    SDL_FreeSurface(icon);
 	}
     }
+#endif // _WIN32
 
     // Set minimum window size to maintain aspect ratio
     SDL_SetWindowMinimumSize(window,

@@ -57,7 +57,9 @@ CXX_native := g++
 DEBUG_native = -O2 -fno-strict-aliasing
 
 CXXFLAGS_native := $(DEBUG_native) -D_REENTRANT -Wall -Wextra -Wconversion -Wshadow -Werror
-LIBS_native := -lSDL2 -lSDL2_image -lm -lstdc++
+
+# (Leaving out -lSDL2_image because it's not actually used on Linux)
+LIBS_native := -lSDL2 -lm -lstdc++
 
 NATIVE_BIN := $(BUILD_DIR)/native/bin
 NATIVE_OBJ := $(BUILD_DIR)/native/obj
