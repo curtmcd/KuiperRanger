@@ -1,8 +1,12 @@
-Windows build instructions for Kuiper Ranger
+# Windows Build Instructions for Kuiper Ranger
 
-Recommended: use vcpkg to install SDL2 then build in Visual Studio
+It is very easy to build in Visual Studio or at the Command Prompt if you use `vcpkg` to
+install the SDL2 libraries. The provided Solution file `msvc\msvc.slnx` is set up to
+build the project using the `vcpkg` method.
 
-1) Install vcpkg (if you don't have it)
+Not recommended: using `cmake`, or manually installing libraries in random directories.
+
+## Install vcpkg (if you don't already have it)
 
 As Administrator:
 
@@ -10,9 +14,19 @@ As Administrator:
 git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
 cd C:\vcpkg
 .\bootstrap-vcpkg.bat
+C:\vcpkg integrate install
 ```
 
-2) Install SDL2 via vcpkg
+Be sure to run `C:\vcpkg integrate install` as above. It makes all of the following
+automatic. Otherwise there are many settings and commands needed in the MS build project files.
+
+- Detects and sets up #include paths for C++ libraries being used
+- Detects which libraries are being used, sets up the library paths and dependencies
+  (although it misses SDL2main.lib)
+- As part of the build, automatically copies the needed .dll files to the output directory
+  alongside the .exe files
+
+## Install SDL2 libraries via vcpkg
 
 As Administrator:
 
@@ -21,54 +35,51 @@ C:\vcpkg\vcpkg.exe install sdl2
 C:\vcpkg\vcpkg.exe install sdl2-image
 ```
 
-3) Double-click `msvc\msvc.slnx` in File Explorer or open it in Visual Studio.
+The `sdl2-image` library is currently used only for setting the task bar icon.
 
-The location of the SDL2 include files and libraries is configured in the kuiper-ranger.vcxproj file.
+## Build
 
-For Debug Build (SDL2d.lib and SDL2maind.lib):
-	C:\vcpkg\installed\x64-windows\include
-	C:\vcpkg\installed\x64-windows\debug\lib
-	C:\vcpkg\installed\x64-windows\debug\lib\manual-link
+Build is easy from within Visual Studio or via the Command Prompt.
 
-For Release Build (SDL2.lib and SDL2main.lib):
-	C:\vcpkg\installed\x64-windows\include
-	C:\vcpkg\installed\x64-windows\lib
-	C:\vcpkg\installed\x64-windows\lib\manual-link
+### Visual Studio
 
-4) Build
+Double-click `msvc\msvc.slnx` in File Explorer or open it in Visual Studio.
 
-Select build option at the top (configuration Debug or Release and platform x64).
+Select whether you want a `Release` or `Debug` build from the drop-downs at the top of the screen.
 
-Execute Build -> Build Solution
+Select the desired platform (likely `x64`) at the top of the screen.
 
-For Debug build, output is placed in
-	msvc/x64/Debug/obj/						<== intermediate files
- 	msvc/x64/Debug/bin/kuiper-ranger.exe
-	msvc/x64/Debug/bin/SDL2d.dll
+Run `Build` -> `Build Solution`
 
-For Release build, output is placed in
-	msvc/x64/Debug/obj/						<== intermediate files
-	msvc/x64/Release/bin/kuiper-ranger.exe
-	msvc/x64/Release/bin/SDL2.dll
+All output files are placed in `msvc\x64\...`
 
-Example building the Release version from the command line:
+### Command Prompt
 
-p:\KuiperRanger>"C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" msvc\msvc.slnx /p:Configuration=Release /p:Platform=x64
+Use msbuild.
 
-A sample batch file `build.bat` is included.
-- use `build.bat` to build Release
-- use `build.bat debug` to build Debug
+To make it easy, a simple batch file `build.bat` is included:
+- Use `build.bat` to build Release
+- Use `build.bat debug` to build Debug
 
-5) Run the binary
+## Execute
 
-The `SDL2.dll` must be in the same directory as the .exe file or in your PATH.
+You can run Kuiper Ranger from within Visual Studio after building it
+by using `Debug` -> `Start Debugging` or `Debug` -> `Start Without Debugging`.
 
-Go to the bin directory and run `.\kuiper-ranger.exe`.
+To run it from the Command Prompt, you can go to the appropriate `bin\` subdirectory
+of `x64\` and run `.\kuiper-ranger.exe`. A sample batch file `run.bat` is included at
+the `msvc\` level for easy testing:
 
-A sample batch file `run.bat` is included.
-- use `run.bat` to run Release
-- use `run.bat debug` to run Debug
+- Use `run.bat` to run Release
+- Use `run.bat debug` to run Debug
 
-6) Clean up
+To run it from `File Explorer`, navigate to the `bin\` directory and double-click the `.exe` file.
 
-A sample batch file `clean.bat` is included. It removes both Debug and Release and the whole x86 artifacts directory.
+There is a utility sound testing program built as a separate project called `sound-test.exe`.
+It can only be run from the command prompt because it has a command interface. It allows you
+to play various sounds in one-shot or continuous mode.
+
+## Clean up
+
+A sample batch file `clean.bat` is included. It cleans the `Debug` and `Release` builds
+and removes the `x64\` directory entirely.
