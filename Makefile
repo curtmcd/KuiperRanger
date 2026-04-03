@@ -25,19 +25,18 @@ endif
 
 # Source files
 SRCS1 =	alien.cpp button.cpp debris.cpp extras.cpp font.cpp \
-	game.cpp ghost.cpp help.cpp highlist.cpp \
+	game.cpp ghost.cpp help.cpp highlist.cpp initials.cpp \
 	line.cpp machine.cpp main.cpp missile.cpp mlist.cpp \
-	paused.cpp persist.cpp plot.cpp rand.cpp rocks.cpp \
-	score.cpp shape.cpp ship.cpp sound.cpp speaker.cpp \
-	sprite.cpp text.cpp title.cpp
+	paused.cpp plot.cpp rand.cpp rocks.cpp score.cpp \
+	shape.cpp ship.cpp sound.cpp speaker.cpp sprite.cpp \
+	text.cpp title.cpp
 
 HDRS1 =	alien.hpp button.hpp debris.hpp extras.hpp font.hpp \
-	game.hpp ghost.hpp help.hpp highlist.hpp \
+	game.hpp ghost.hpp help.hpp highlist.hpp initials.hpp \
 	line.hpp machine.hpp missile.hpp mlist.hpp param.hpp \
-	paused.hpp persist.hpp plot.hpp point.hpp rand.hpp \
-	rocks.hpp score.hpp shape.hpp ship.hpp sound.hpp \
-	speaker.hpp sprite.hpp text.hpp title.hpp type.hpp \
-	vect.hpp
+	paused.hpp plot.hpp point.hpp rand.hpp rocks.hpp \
+	score.hpp shape.hpp ship.hpp sound.hpp speaker.hpp \
+	sprite.hpp text.hpp title.hpp type.hpp vect.hpp
 
 # Sound test files
 SRCS2 = soundtest.cpp sound.cpp

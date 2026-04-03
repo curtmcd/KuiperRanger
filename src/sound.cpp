@@ -324,7 +324,7 @@ void Sound::init()
 	return;
     }
 
-    const char *sampleOverride = getenv("AUDIO_SAMPLES");
+    const char *sampleOverride = getenv("KR_SAMPLES");
     int samples;
 
     if (sampleOverride)
@@ -341,7 +341,7 @@ void Sound::init()
 
     dev = SDL_OpenAudioDevice(nullptr, 0, &want, &spec, 0);
     if (!dev) {
-	std::cerr << "Failed to open audio: " << SDL_GetError() << std::endl;
+	std::cerr << "Failed to open audio: " << SDL_GetError() << "\n";
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	return;
     }

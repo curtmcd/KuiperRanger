@@ -1,21 +1,21 @@
-# Kuiper Ranger version 2.5
+# Kuiper Ranger version 2.6
 
-*Dec 18, 1999 - Feb 1, 2026*
+*Dec 18, 1999 - April 2, 2026*
 
 ## Authors
 
-  * Curt McDowell 
-  * Miles Bader 
-  * William Lott 
-  * Originated at Carnegie Mellon in 1988 
+  * Curt McDowell
+  * Miles Bader
+  * William Lott
+  * Originated at Carnegie Mellon in 1988
 
 ### Contributors
 
-  * Christos Zoulas 
-  * Zalmon Stern 
-  * R.K. 
-  * Liverpool 
-  * David Sanderson 
+  * Christos Zoulas
+  * Zalmon Stern
+  * R.K.
+  * Liverpool
+  * David Sanderson
 
 ## Purpose
 
@@ -33,27 +33,19 @@ in which your ship shoots down rocks and flying saucers to gain points.
 ## Notes
 
   * This is a SUPERB implementation and LUCS has managed
-    a high score of 14300 so far: can you do better? 
-  * Your high score nickname can be passed via the `KR_NICK` environment variable. 
-      * If that's not set, it tries `USER`, followed by `LOGNAME`, followed by login name. 
-      * For multi-player, `KR_NICK1`, `KR_NICK2`, and/or `KR_NICK3` can be set. 
-  * High scores are recorded persistently in the system-wide high
-    score file `/var/games/kuiper-ranger/scores` if that file exists and
-	is world readable/writable. 
-      * You can create the file easily by running the script `makehigh.sh`. 
-      * If the system-wide file is not available, the scores are
-	    stored in `$HOME/.local/state/kuiper-ranger/scores` if `$HOME/.local` exists,
-		otherwise `$HOME/.kr-scores`. 
+    a high score of 14300 so far: can you do better?
+  * High scores are normally stored in
+	* `~/.local/share` on Linux or `%APPDATA%` on Windows
+	* You can set the `KR_SCORES` to another writable filename if desired
 
 ## Build Instructions for Linux
 
 ### Native (SDL2) Version
 
 1.  Install `libsdl2-dev`
-2.  Run `./prebuild.sh` 
-3.  Run `make native` (parallel build is default) 
-4.  Optionally run `./makehigh.sh` 
-5.  Run `./build/native/bin/kuiper-ranger` 
+2.  Run `./prebuild.sh`
+3.  Run `make` or `make native` (native is the default), or `make -j` for parallel build
+4.  Run `./build/native/bin/kuiper-ranger`
 
 ### HTML5 (Web) Version
 
@@ -64,10 +56,11 @@ in which your ship shoots down rocks and flying saucers to gain points.
     - `./emsdk activate latest` # Activate within current shell
 	- `source ./emsdk_env.sh`
 	- `em++ -v`
-2.  Run `./prebuild.sh` 
-3.  Run `make emscripten` 
-4.  Run `python3 -m http.server --directory build/emscripten/bin` 
-5.  Open web browser and go to `http://localhost:8000/kuiper-ranger.html` 
+2.  Run `./prebuild.sh`
+3.  Run `make emscripten`
+4.  Run `python3 -m http.server --directory build/emscripten/bin`
+5.  Open web browser and go to `http://localhost:8000/kuiper-ranger.html`
+6.  Install the three files on whichever web server you'd like.
 
 ## Build Instructions for Windows
 

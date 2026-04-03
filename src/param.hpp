@@ -15,9 +15,10 @@
 
 // Game
 #define TITLE		"Kuiper Ranger"
-#define VERSION		"2.5"
+#define VERSION		"2.6"
 #define ICON_FNAME	"32x32.png"
-#define ENVVAR_WIDTH	"PLOT_WIDTH"
+#define ENVVAR_WIDTH	"KR_WIDTH"
+#define ENVVAR_HSFILE	"KR_SCORES"
 #define MAXPLAYERS	3
 #define MARGINCOLOR	"grey5"		// Used for full-screen mode only
 #define PAUSEDBLINK	1.5		// Blink period (sec)
@@ -87,13 +88,17 @@
 #define SCOREDIGITS	6
 
 // Screen positioning
-#define SCOREBARH	56		// height of score area at top
+#define SCOREBARH	56		// Height of score area at top
 #define EXTRAX		100		// x coord of extra-ship display
 #define SCOREX		400		// x coord of current score
 #define HIGHX		800		// x coord of high score
 
 // High score
-#define NICKMAXLEN	8		// max chars in high score nicknames
+#define NICKMAXLEN	8		// Max chars in high score nicknames
+#define NICKBLINK	0.55		// Cursor blink period (sec)
+#define NICKDUTY	PERCENT(66)	// Cursor blink duty cycle
+#define NICKTIMEOUT	60		// Max sec for user to enter nickname
+#define HIGHSCOREMIN	1000		// Lower limit on high score values
 #define HIGHROWS	5		// # rows of high scores
 #define HIGHCOLS	3		// # cols of high scores
 #define HIGHTIMEOUT	(30 * 86400)	// # sec before other high scores time out
@@ -105,7 +110,7 @@
 // Sound
 #define DEETINITPERIOD	1.0		// Initial 'deet' interval (sec)
 #define DEETMINPERIOD	0.25		// Fastest 'deet' interval can get (sec)
-#define DEETSPEEDUP	PERCENT(85)	// 'deet' period multiplier per wave
+#define DEETSPEEDUP	PERCENT(85)	// 'Deet' period multiplier per wave
 
 #define SPEAKERFLASH	2.0		// Duration speaker icon shows (sec)
 

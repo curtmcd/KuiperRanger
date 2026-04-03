@@ -185,13 +185,13 @@
     <ClCompile Include="..\..\src\ghost.cpp" />
     <ClCompile Include="..\..\src\help.cpp" />
     <ClCompile Include="..\..\src\highlist.cpp" />
+    <ClCompile Include="..\..\src\initials.cpp" />
     <ClCompile Include="..\..\src\line.cpp" />
     <ClCompile Include="..\..\src\machine.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\missile.cpp" />
     <ClCompile Include="..\..\src\mlist.cpp" />
     <ClCompile Include="..\..\src\paused.cpp" />
-    <ClCompile Include="..\..\src\persist_win.cpp" />
     <ClCompile Include="..\..\src\plot.cpp" />
     <ClCompile Include="..\..\src\rand.cpp" />
     <ClCompile Include="..\..\src\rocks.cpp" />
@@ -215,6 +215,7 @@
     <ClInclude Include="..\..\src\ghost.hpp" />
     <ClInclude Include="..\..\src\help.hpp" />
     <ClInclude Include="..\..\src\highlist.hpp" />
+    <ClInclude Include="..\..\src\initials.hpp" />
     <ClInclude Include="..\..\src\line.hpp" />
     <ClInclude Include="..\..\src\machine.hpp" />
     <ClInclude Include="..\..\src\math_consts.h" />
@@ -222,7 +223,6 @@
     <ClInclude Include="..\..\src\mlist.hpp" />
     <ClInclude Include="..\..\src\param.hpp" />
     <ClInclude Include="..\..\src\paused.hpp" />
-    <ClInclude Include="..\..\src\persist.hpp" />
     <ClInclude Include="..\..\src\plot.hpp" />
     <ClInclude Include="..\..\src\point.hpp" />
     <ClInclude Include="..\..\src\rand.hpp" />

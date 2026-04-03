@@ -7,6 +7,7 @@
 #include "rocks.hpp"
 #include "alien.hpp"
 #include "score.hpp"
+#include "initials.hpp"
 
 struct Game {
     Game(int _player);
@@ -36,11 +37,13 @@ struct Game {
     Ghost *ghost;
     Rocks *rocks;
     Alien *alien;
+    Initials *initials;
 
     enum class State {
 	ATTRACT,
 	GHOST,
-	ACTIVE
+	ACTIVE,
+	INITIALS,
     };
 
     int player, wave;

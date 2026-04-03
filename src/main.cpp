@@ -45,9 +45,10 @@ static void usage(const char *progName)
     usageString += TITLE " " VERSION "\n";
     usageString += "Usage: ";
     usageString += progName;
-    usageString += " [-w WIDTH] [-fhv]\n"
+    usageString += " [-w WIDTH] [-fRhv]\n"
 	"   -w WIDTH    Open with a specified window width\n"
 	"   -f          Open in full-screen mode (or press F during game)\n"
+	"   -R          Reset all high scores\n"
 	"   -h          Show this help\n"
 	"   -v          Show program version\n";	// for help2man?
 
@@ -86,6 +87,7 @@ int main(int argc, char **argv)
 {
     int i;
     int optWidth = Plot::INIT_WIDTH_DEFAULT;
+    bool optResetHighs = false;
     const char *progName;
 
     if ((progName = strrchr(argv[0], '/')) != NULL ||
@@ -94,13 +96,16 @@ int main(int argc, char **argv)
     else
 	progName = argv[0];
 
-    while ((i = getopt(argc, argv, "w:fvh")) > 0)
+    while ((i = getopt(argc, argv, "w:fRvh")) > 0)
 	switch (i) {
 	case 'w':
 	    optWidth = atoi(optarg);
 	    break;
 	case 'f':
 	    optWidth = Plot::INIT_WIDTH_FULLSCREEN;
+	    break;
+	case 'R':
+	    optResetHighs = true;
 	    break;
 	case 'v':
 	    version(progName);
@@ -134,7 +139,7 @@ int main(int argc, char **argv)
     Speaker::init();
     Paused::init();
     Help::init();
-    HighList::init();
+    HighList::init(optResetHighs);
     Machine::init();
 
     // The wrap area is the whole region below the score bar

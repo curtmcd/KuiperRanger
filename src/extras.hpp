@@ -11,6 +11,8 @@ struct Extras {
     int get() { return lives; }
     void inc() { if (lives < MAXLIVES) lives++; }
     void dec() { lives--; }
+    void clear() { lives = 0; }
+
     void on() { show = true; }
     void off() { show = false; }
 

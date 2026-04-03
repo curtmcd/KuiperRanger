@@ -1,9 +1,9 @@
-.TH kuiper-ranger 6 "March 1998 - February 2026" "Kuiper Ranger version 2.5" "Games"
+.TH kuiper-ranger 6 "March 1998 - April 2026" "Kuiper Ranger version 2.6" "Games"
 .SH NAME
 kuiper-ranger \- Space rocks shooting game using SDL2 cross-platform graphics
 .SH SYNOPSIS
 .B kuiper-ranger
-[\-w \fIWIDTH\fR] [\-fhv]
+[\-w \fIWIDTH\fR] [\-fRhv]
 .SH DESCRIPTION
 .LP
 An old-style vector graphics arcade game
@@ -25,45 +25,56 @@ at most the screen width.
 Open in full-screen mode where possible.
 Alternately, you may press F during the game to toggle full-screen mode.
 .TP 0.5i
+\fB\-R \fR
+Completely clear out the high score file before running.
+.TP 0.5i
 \fB\-h\FR
 Display a help message and exit.
 .TP 0.5i
 \fB\-v\FR
 Display the program version and exit.
+.SH CONTROLS
+The '1', '2', or '3' keys start the game for 1, 2, or 3 players.
 .LP
-Use the -f option to run full-screen, or press F during the game.
+The 'Q' or Escape keys exit the level and/or the game.
+.LP
+The 'S' key toggles the sound on or off.
+.LP
+The 'F' key toggles full-screen mode on or off.
+.LP
+The 'Z' and 'X' keys rotate the ship.
+.LP
+The '.' key thrusts the ship.
+.LP
+The '/' key fires.
+.LP
+The Space Bar performs a random jump through hyperspace.
+.LP
+Press H in the game to see a full description of game controls.
 .SH SOUND
 Cool sound effects are provided!
 They are off by default.
 Press S to toggle the sound on and off.
-.SH ENVIRONMENT
-Set KR_NICK to provide a
-nickname to use in the high score list.
-If it is not set, then USER and LOGNAME are consulted, respectively.
-For multi-player games, set KR_NICK1, KR_NICK2, and KR_NICK3.
+.SH HIGH SCORES
+High scores are stored in a location determined by SDL2, which is
+normally under \fI$HOME/.local/share\fR on Linux or
+\fI%APPDATA%\fR on Windows.
 .LP
-Set PLOT_WIDTH to request a window width similar to the
+An alternate location can be specified using an environment
+variable (below).
+.SH ENVIRONMENT
+Set KR_WIDTH to request a window width similar to the
 .B \-w
 option.
 .LP
-Set AUDIO_SAMPLES to change the size of the audio sample buffer.
+Set KR_SAMPLES to change the size of the audio sample buffer.
 The default is 1024.
 A lower value such as 512 provides less latency but potentially more dropouts.
 A higher value such as 4096 reduces dropouts but increases latency.
-.SH HIGH SCORES
-High scores are maintained persistently in /var/games/kuiper-ranger/scores
-if that file exists and is world writable.
-To create that file, you can run these commands:
-.in +4n
-.EX
-sudo mkdir -p /var/games/kuiper-ranger
-sudo touch /var/games/kuiper-ranger/scores
-sudo chmod 777 /var/games/kuiper-ranger/scores
-.EE
 .LP
-If that file is not writable but $HOME/.local exists, then scores are
-stored in $HOME/.local/state/kuiper-ranger/scores instead.
-And failing that, scores are stored in $HOME/.kr-scores.
+Set KR_SCORES to specify a specific alternate file in which the high
+scores should be maintained. The file must be in a location such
+that the game can create it and write to it.
 .SH COPYRIGHT
 Permission is granted to use this source code for any purpose
 provided proper credit is given to the authors.

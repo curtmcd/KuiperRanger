@@ -46,6 +46,7 @@ static bool pauseMode;
 
 // Input state
 static bool capsLockDown;
+static bool textInputMode;
 
 void Plot::drawLetterbox()
 {
@@ -581,9 +582,14 @@ void Plot::line(double fx, double fy, double tx, double ty)
     }
 }
 
+void Plot::setTextInputMode(bool on)
+{
+    textInputMode = on;
+}
+
 // Poll for window events such as resize and keyboard events that
-// correspond valid game controls. Game controls are propagated to the
-// Buttons module.
+// correspond valid game controls. Game controls (including key entry
+// for high score initials) are propagated to the Buttons module.
 void Plot::pollEvents()
 {
     SDL_Event event;
@@ -613,8 +619,35 @@ void Plot::pollEvents()
 	    bool shiftDown = (event.key.keysym.mod & KMOD_SHIFT);
 	    bool ctrlDown = ((event.key.keysym.mod & KMOD_CTRL) ||
 			     capsLockDown);
+	    SDL_Keycode sym = event.key.keysym.sym;
 
-	    switch (event.key.keysym.sym) {
+	    // In text input mode, alphanumeric keys and certain others
+	    // are input as typed characters rather than control
+	    // buttons.
+	    if (textInputMode && keyDown) {
+		if (sym >= SDLK_a && sym <= SDLK_z) {
+		    if (ctrlDown)
+			Button::charIn(sym - SDLK_a + 1);	// mainly for Ctrl-C
+		    else
+			Button::charIn(sym - SDLK_a + 'A');
+		    break;
+		}
+
+		if (sym >= SDLK_0 && sym <= SDLK_9) {
+		    Button::charIn(sym);
+		    break;
+		}
+
+		if (sym == SDLK_ESCAPE ||
+		    sym == SDLK_BACKSPACE ||
+		    sym == SDLK_DELETE ||
+		    sym == SDLK_RETURN) {
+		    Button::charIn(sym);
+		    break;
+		}
+	    }
+
+	    switch (sym) {
 	    case SDLK_z:
 		if (keyDown && ctrlDown)
 		    Button::press(Button::suspend);
