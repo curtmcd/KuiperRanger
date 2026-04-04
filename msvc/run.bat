@@ -6,6 +6,6 @@ if /I "%~1" == "debug" (
    set CONFIG=Debug
 )
 
-set PROG=".\x64\%CONFIG%\kuiper-ranger\bin\kuiper-ranger.exe"
+set PROG=".\kuiper-ranger\x64\%CONFIG%\kuiper-ranger.exe"
 
 %PROG%

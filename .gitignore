@@ -45,4 +45,8 @@ build/
 
 # Visual Studio cache and build results
 .vs/
-x64/
+obj/
+Release/
+Debug/
+AppPackages/
+BundleArtifacts/

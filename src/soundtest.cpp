@@ -1,12 +1,11 @@
 // Sound Test - utility to assist in waveform design
-// g++ -DSOUND_SDL2 -o soundtest soundtest.cpp sound.cpp -lSDL2
+// g++ -o soundtest soundtest.cpp sound.cpp -lSDL2
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <SDL2/SDL.h>
-
-#define SDL2_MAIN_HANDLED
+// For Windows x86 build only, #include <SDL2/SDL.h> causes undefined symbol <main>
+// even if SDL2_MAIN_HANDLED is defined.
 
 #ifdef _WIN32
 #include <windows.h>		// Sleep
