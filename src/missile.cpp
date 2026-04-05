@@ -56,14 +56,14 @@ void Missile::update()
 
 bool Missile::hitSprite(Sprite *s)
 {
-    // Create a line segment from the current position to the future
+    // Create a line segment from the past position to the current
     // position of the missile, then see if it intersects the shape.
 
     Vect vel = sprite->getVel();
 
     Line l;
-    l.f = sprite->getPos();
-    l.t = l.f + vel * Plot::frameTime();
+    l.t = sprite->getPos();
+    l.f = l.t - vel * Plot::frameTime();
 
     return s->lineTouches(l);
 }

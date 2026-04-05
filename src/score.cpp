@@ -34,11 +34,11 @@ Score::Score()
 
     Point scorePos(SCOREX, (double)SCOREBARH / 2);
     pointsText->setPos(scorePos);
-    pointsText->setScale((double)SCOREBARH / 14.0);
+    pointsText->setScale((double)SCOREBARH / 16.0);
 
     Point highPos(HIGHX, (double)SCOREBARH / 2);
     highText->setPos(highPos);
-    highText->setScale((double)SCOREBARH / 14.0);
+    highText->setScale((double)SCOREBARH / 16.0);
 }
 
 Score::~Score()

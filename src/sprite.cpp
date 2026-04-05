@@ -3,15 +3,14 @@
 
 void Sprite::draw() const
 {
-    double rad = angle * PI / 180.0;
-    double sin_a = -std::sin(rad);	// negative because Y axis upside-down
-    double cos_a = std::cos(rad);
+    for (const auto& l : shape->segs) {
+	// Transform line to display position
+	Vect vf = ((l.f - Origin) * scale).rotate(angle);
+	Vect vt = ((l.t - Origin) * scale).rotate(angle);
 
-    for (const auto& l : shape->segs)
-	Plot::line(pos.x + scale * (l.f.x * cos_a - l.f.y * sin_a),
-		   pos.y + scale * (l.f.x * sin_a + l.f.y * cos_a),
-		   pos.x + scale * (l.t.x * cos_a - l.t.y * sin_a),
-		   pos.y + scale * (l.t.x * sin_a + l.t.y * cos_a));
+	Plot::line(pos.x + vf.x, pos.y + vf.y,
+		   pos.x + vt.x, pos.y + vt.y);
+    }
 }
 
 void Sprite::update()
@@ -54,39 +53,6 @@ void Sprite::update()
     }
 }
 
-// Returns true if any of the line segments of one sprite are
-// overlapping any of the line segments of another.
-// Bug: may malfunction if shape(s) wrap around screen
-bool Sprite::collision(const Sprite *other) const
-{
-    // Quick check for shape radii
-    double distSquared = (other->pos - pos).magnitudeSquared();
-    double sumRad = (getRadius() * scale + other->getRadius() * other->scale);
-
-    if (distSquared > sumRad * sumRad)
-	return false;
-
-    // Slow M * N algorithm tests intersection of all line segment pairs
-
-    for (const auto& l0 : shape->segs)
-	for (const auto& l1 : other->shape->segs) {
-	    // Line A: transform l0 to display position
-	    Vect vf = ((l0.f - Origin) * scale).rotate(angle);
-	    Vect vt = ((l0.t - Origin) * scale).rotate(angle);
-	    Line lA(pos + vf, pos + vt);
-
-	    // Line B: transform l1 to display position
-	    Vect ovf = ((l1.f - Origin) * other->scale).rotate(other->angle);
-	    Vect ovt = ((l1.t - Origin) * other->scale).rotate(other->angle);
-	    Line lB(other->pos + ovf, other->pos + ovt);
-
-	    if (lA.intersects(lB))
-		return true;
-	}
-
-    return false;
-}
-
 // The following routine tells if a given line segment intersects a
 // shape, given the position, rotation, and scale of the shape.
 bool Sprite::lineTouches(const Line& line) const
@@ -94,19 +60,67 @@ bool Sprite::lineTouches(const Line& line) const
     if (scale < 0.01)
 	return false;
 
+    Line wLine = line;
+
+    Rect wa;
+    Plot::getWrapArea(&wa);
+
+    double wrapW = wa.lr.x - wa.ul.x;
+    double wrapH = wa.lr.y - wa.ul.y;
+
+    // Compensate for screen wrap to avoid missing collisions: if the line is
+    // further from the sprite than half the distance across the wrap area in
+    // any direction, wrap it around toward the sprite. It doesn't hurt to do
+    // this even for non-wrapping objects because those can never get into a
+    // wrapped position.
+    if (wLine.f.x > pos.x + wrapW / 2) {
+	wLine.f.x -= wrapW;
+	wLine.t.x -= wrapW;
+    }
+
+    if (wLine.f.x < pos.x - wrapW / 2) {
+	wLine.f.x += wrapW;
+	wLine.t.x += wrapW;
+    }
+
+    if (wLine.f.y > pos.y + wrapH / 2) {
+	wLine.f.y -= wrapH;
+	wLine.t.y -= wrapH;
+    }
+
+    if (wLine.f.y < pos.y - wrapH / 2) {
+	wLine.f.y += wrapH;
+	wLine.t.y += wrapH;
+    }
+
     // Bring the line segment into the shape's local coordinate system
     Line l;
-    l.f = Origin + (line.f - pos).rotate(-angle) / scale;
-    l.t = Origin + (line.t - pos).rotate(-angle) / scale;
+    l.f = Origin + (wLine.f - pos).rotate(-angle) / scale;
+    l.t = Origin + (wLine.t - pos).rotate(-angle) / scale;
 
     // Check if either endpoint is inside the shape
     if (shape->pointInside(l.f) || shape->pointInside(l.t))
-	return true;
+        return true;
 
     // Check if the line segment crosses any of the shape's segments
     for (const auto& seg : shape->segs)
 	if (l.intersects(seg))
 	    return true;
+
+    return false;
+}
+
+// Return true if any of the line segments of another sprite overlap
+// this sprite. Slow O(M + N) algorithm.
+bool Sprite::collision(const Sprite *other) const
+{
+    for (const auto& l : other->shape->segs) {
+	// Transform line to display position
+	Vect vf = ((l.f - Origin) * other->scale).rotate(other->angle);
+	Vect vt = ((l.t - Origin) * other->scale).rotate(other->angle);
+	if (lineTouches(Line(other->pos + vf, other->pos + vt)))
+	    return true;
+    }
 
     return false;
 }
