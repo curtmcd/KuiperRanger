@@ -26,7 +26,7 @@ Open in full-screen mode where possible.
 Alternately, you may press F during the game to toggle full-screen mode.
 .TP 0.5i
 \fB\-R \fR
-Completely clear out the high score file before running.
+Clear out all existing high scores before starting.
 .TP 0.5i
 \fB\-h\FR
 Display a help message and exit.
@@ -50,29 +50,41 @@ The '/' key fires.
 .LP
 The Space Bar performs a random jump through hyperspace.
 .LP
-Press H in the game to see a full description of game controls.
+Press 'H' in the game to see a full description of game controls.
 .SH SOUND
 Cool sound effects are provided!
 They are off by default.
-Press S to toggle the sound on and off.
+Press 'S' to toggle the sound on and off.
 .SH HIGH SCORES
-High scores are stored in a location determined by SDL2, which is
-normally under \fI$HOME/.local/share\fR on Linux or
-\fI%APPDATA%\fR on Windows.
+If the file \fB/var/games/kuiper-ranger/scores\fR exists and is
+world writable, system-wide high scores will be maintained there.
+That file is generally created automatically when the game package
+is installed. It can be created manually by running these commands:
+.in +4n
+.EX
+sudo mkdir -p /var/games/kuiper-ranger
+sudo touch /var/games/kuiper-ranger/scores
+sudo chmod 777 /var/games/kuiper-ranger/scores
+.EE
+.LP
+Otherwise, high scores are stored in a location determined by
+the SDL2 library. On Linux, that is often:
+.in +4n
+\fB$HOME/.local/share/Fishlet/kuiper-ranger/scores\fR
 .LP
 An alternate location can be specified using an environment
 variable (below).
 .SH ENVIRONMENT
-Set KR_WIDTH to request a window width similar to the
+Set \fBKR_WIDTH\fR to request a window width similar to the
 .B \-w
 option.
 .LP
-Set KR_SAMPLES to change the size of the audio sample buffer.
+Set \fBKR_SAMPLES\fR to change the size of the audio sample buffer.
 The default is 1024.
 A lower value such as 512 provides less latency but potentially more dropouts.
 A higher value such as 4096 reduces dropouts but increases latency.
 .LP
-Set KR_SCORES to specify a specific alternate file in which the high
+Set \fBKR_SCORES\fR to specify a specific alternate file in which the high
 scores should be maintained. The file must be in a location such
 that the game can create it and write to it.
 .SH COPYRIGHT

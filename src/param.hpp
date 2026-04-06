@@ -19,15 +19,15 @@
 #define ICON_FNAME	"32x32.png"
 #define ENVVAR_WIDTH	"KR_WIDTH"
 #define ENVVAR_HSFILE	"KR_SCORES"
+#define HSFILE_UNIXPKG	"/var/games/kuiper-ranger/scores"
 #define MAXPLAYERS	3
-#define MARGINCOLOR	"grey5"		// Used for full-screen mode only
 #define PAUSEDBLINK	1.5		// Blink period (sec)
 #define PAUSEDDUTY	PERCENT(85)	// Blink duty cycle
 
 // Ship
 #define SHIPSHOTSPEED	260.0		// Missile speed (pix/sec)
 #define SHIPSHOTDUR	1.50		// Duration of missiles (sec)
-#define MISSILELIMIT	6
+#define MISSILELIMIT	6		// Max player missiles existing at once
 #define HYPERSPACETIME	1.5		// Duration of hyperspace (sec)
 #define SHIPROTSPEED	225.0		// Rotation speed (deg/sec)
 #define STARTLIVES	3		// Less than MAXEXTRA

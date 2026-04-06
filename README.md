@@ -34,9 +34,35 @@ in which your ship shoots down rocks and flying saucers to gain points.
 
   * This is a SUPERB implementation and LUCS has managed
     a high score of 14300 so far: can you do better?
-  * High scores are normally stored in
-	* `~/.local/share` on Linux or `%APPDATA%` on Windows
-	* You can set the `KR_SCORES` to another writable filename if desired
+
+## High score file
+
+The location of the high score file varies between systems and
+configurations.
+
+* Windows
+
+  `%APPDATA%\Fishlet\kuiper-ranger\scores`
+
+* Linux, if installed by a package manager
+
+  `/var/games/kuiper-ranger/scores`
+
+* Linux, if run manually
+
+  `~/.local/share/Fishlet/kuiper-ranger/scores`
+
+  If you would prefer using a system-wide high score file, you may create
+  the file manually:
+
+  * sudo mkdir -p /var/games/kuiper-ranger
+  * sudo touch /var/games/kuiper-ranger/scores
+  * sudo chmod 777 /var/games/kuiper-ranger/scores
+
+* Manual override
+
+  If the environment variable `KR_SCORES` is set to the name of a
+  file that the game can create and write to, scores will be stored there.
 
 ## Build Instructions for Linux
 

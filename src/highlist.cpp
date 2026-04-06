@@ -7,6 +7,11 @@
 #include <algorithm>
 
 #include "highlist.hpp"
+#include "filelock.hpp"
+
+#ifdef __unix__
+#include <unistd.h>
+#endif // __unix__
 
 #define HIGHLIMIT (HIGHCOLS * HIGHROWS)
 
@@ -19,9 +24,19 @@ std::string HighList::getHighScoreFilename()
 {
     char *s;
 
+    // Allow the user to override the exact file location
     if ((s = getenv(ENVVAR_HSFILE)) != NULL && s[0] != '\0')
 	return std::string(s);
 
+#ifdef __unix__
+    // Use the default system-wide file if it exists and is writable.
+    // This would usually be created by a package installer on Linux.
+    if (access(HSFILE_UNIXPKG, R_OK) == 0 &&
+	access(HSFILE_UNIXPKG, W_OK) == 0)
+	return std::string(HSFILE_UNIXPKG);
+#endif // __unix__
+
+    // Use a per-user standard file location
     if ((s = SDL_GetPrefPath("Fishlet", "kuiper-ranger")) != NULL) {
 	std::string path(s);
 	SDL_free(s);
@@ -39,6 +54,8 @@ void HighList::load()
 	std::cerr << "Could not determine location of high score file to load\n";
 	return;
     }
+
+    FileLock lock(path.c_str());
 
     std::ifstream file(path);
     if (!file.is_open()) {
@@ -96,6 +113,8 @@ void HighList::save()
 	std::cerr << "Could not determine location of high score file to save\n";
 	return;
     }
+
+    FileLock lock(path.c_str());
 
     std::ofstream file(path, std::ios::trunc);
     if (!file.is_open()) {
