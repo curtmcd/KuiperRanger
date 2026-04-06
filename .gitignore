@@ -39,3 +39,14 @@
 
 # debug information files
 *.dwo
+
+@ Linux build results
+build/
+
+# Visual Studio cache and build results
+.vs/
+obj/
+Release/
+Debug/
+AppPackages/
+BundleArtifacts/

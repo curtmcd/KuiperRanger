@@ -273,6 +273,7 @@ int Alien::hitMissile(Missile *m)
     if (m->hitSprite(sprite)) {
 	int score = BASEALIENSCORE + MULALIENSCORE * size;
 	die(score);
+	Sound::play(Sound::alienExplode);
 	Sound::play(Sound::alienPoints);
 	return score;
     }

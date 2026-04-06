@@ -1,6 +1,3 @@
-#include <unistd.h>
-#include <pwd.h>
-
 #include "machine.hpp"
 #include "game.hpp"
 #include "button.hpp"
@@ -14,38 +11,6 @@
 
 static bool soundIsOn = false;
 static bool soundOverride = false;
-
-static void getNickname(char name[NICKMAXLEN + 1], int player)
-{
-    struct passwd *pwd;
-    const char *s = NULL;
-
-    switch (player) {
-    case 0:
-	s = getenv("KR_NICK1");
-	break;
-    case 1:
-	s = getenv("KR_NICK2");
-	break;
-    case 2:
-	s = getenv("KR_NICK3");
-	break;
-    }
-
-    if (s == NULL)
-	s = getenv("KR_NICK");
-    if (s == NULL)
-	s = getenv("USER");
-    if (s == NULL)
-	s = getenv("LOGNAME");
-    if (s == NULL && (pwd = getpwuid(getuid())) != NULL)
-	s = pwd->pw_name;
-    if (s == NULL)
-	s = "anon";
-
-    strncpy(name, s, NICKMAXLEN);
-    name[NICKMAXLEN] = '\0';
-}
 
 static Game *attractGame;
 static Game *activeGames[MAXPLAYERS];
@@ -155,34 +120,14 @@ static bool updateAttract()
 
 static void updateTurn()
 {
-    bool playerOut = false;
-    bool turnOver = false;
-
-    if (Button::isDown(Button::quit, true)) {
-	Plot::setPauseMode(false);
-	Paused::stop();
-
-	turnOver = true;
-	playerOut = true;
-    }
-
     Game *g = activeGames[activePlayer];
 
-    if (!g->update()) {
-	turnOver = true;
-	if (g->livesRemaining() == 0)
-	    playerOut = true;
-    }
+    bool turnOver = !g->update();
 
     if (turnOver) {
 	g->stopTurn();
 
-	if (playerOut) {
-	    char name[NICKMAXLEN + 1];
-	    getNickname(name, activePlayer);
-
-	    HighList::record(name, g->currentScore());
-
+	if (g->livesRemaining() == 0) {
 	    delete g;
 	    activeGames[activePlayer] = NULL;
 	}

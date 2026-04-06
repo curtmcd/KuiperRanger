@@ -1,0 +1,20 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="kuiper-ranger/kuiper-ranger.vcxproj" Id="5c422110-88f9-48fc-a7dd-9f2d6929d299">
+    <Platform Solution="*|ARM" Project="x64" />
+    <Platform Solution="*|ARM64" Project="x64" />
+  </Project>
+  <Project Path="msix-package/msix-package.wapproj" Type="c7167f0d-bc9f-4e6e-afe1-012c56b48db5" Id="158e688f-9efe-4990-853b-84cd3ba5eb68">
+    <Deploy />
+  </Project>
+  <Project Path="sound-test/sound-test.vcxproj" Id="ba46a57b-febe-4dc0-86c5-ec47845f0880">
+    <Platform Solution="*|ARM" Project="x64" />
+    <Platform Solution="*|ARM64" Project="x64" />
+  </Project>
+</Solution>

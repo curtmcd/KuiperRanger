@@ -1,13 +1,13 @@
 #ifndef plot_hpp
 #define plot_hpp
 
-// SDL2 plotting support
+// Plotting API
 //
-// The rest of the game plots using virtual coordinates on a fixed size
-// of NOMINAL_WIDTH by NOMINAL_HEIGHT. plot_GetSize() returns
-// this virtual size. All shape coordinates, pixel distances and
-// pixel/frame velocities that the game uses (such as specified in
-// params.h), are assumed to be designed for this virtual size.
+// The game plots all graphics using virtual coordinates on a fixed size
+// of NOMINAL_WIDTH by NOMINAL_HEIGHT. plot_GetSize() returns this
+// virtual size. All shape coordinates, pixel distances and pixel/frame
+// velocities that the game uses (such as specified in params.h), are
+// assumed to be designed for this virtual size.
 //
 // This module scales those coordinates up or down to the actual window
 // or display size right when plotting. As a consequence, window resize
@@ -29,10 +29,9 @@ struct Plot {
     static void term();
 
     static void suspend();
-    static void sync();		// flush and vsync wait
-    static double dt();		// sec that passed between frames,
-                                //   updated once/frame
-    static double runTime();		// time since startup
+    static void sync();			// flush and vsync wait
+    static double dt();			// sec that passed since last frame
+    static double runTime();		// sec since startup
     static double frameTime();		// long-term average of frame time
     static void printFPS();		// secret debugging feature
 
@@ -47,6 +46,7 @@ struct Plot {
     static void line(double fx, double fy, double tx, double ty);
     static void drawLetterbox();
 
+    static void setTextInputMode(bool on);
     static void pollEvents();
 };
 

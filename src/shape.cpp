@@ -6,11 +6,11 @@ void Shape::append(const Line& l)
 
     double r;
 
-    r = (l.f - Origin).magnitude();
+    r = l.f.distance(Origin);
     if (r > radius)
 	radius = r;
 
-    r = (l.t - Origin).magnitude();
+    r = l.t.distance(Origin);
     if (r > radius)
 	radius = r;
 }
@@ -37,13 +37,12 @@ Shape::Shape(const Line *lines, int numLines)
 }
 
 // Determine if a point in the shape's coordinate system is inside the
-// shape. It should be exact for all polygons (convex, non-convex, and
-// ones containing holes).
-// Bug: may malfunction if shape wraps around screen
+// shape. Exact for all polygons (convex, non-convex, and ones containing
+// holes).
 bool Shape::pointInside(const Point& pt) const
 {
     // Quick radius test
-    if ((pt - Origin).magnitudeSquared() > radius * radius)
+    if (pt.distance(Origin) > radius)
 	return false;
 
     // Count how many lines in the polygon intersect with a ray
@@ -57,5 +56,5 @@ bool Shape::pointInside(const Point& pt) const
 	    intersections += (dy * cp < 0);
 	}
 
-    return (intersections % 2) != 0;	    // true if odd
+    return (intersections % 2) != 0;	// true if odd
 }

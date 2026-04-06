@@ -22,7 +22,7 @@ struct Vect {
     }
 
     double argument() const {
-	return std::atan2(y, x) * 180.0 / M_PI;
+        return std::atan2(y, x) * 180.0 / PI;
     }
 
     Vect unitize() const {
@@ -33,7 +33,7 @@ struct Vect {
     }
 
     Vect rotate(double degrees) {
-	double rad = degrees * M_PI / 180.0;
+        double rad = degrees * PI / 180.0;
 	double s = -std::sin(rad);
 	double c = std::cos(rad);
 	return Vect(x * c - y * s, x * s + y * c);

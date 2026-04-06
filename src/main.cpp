@@ -4,7 +4,13 @@
 //      Miles Bader
 //      William Lott
 
+#include <iostream>
+#include <string>
+#ifdef _WIN32
+#include "getopt_win.hpp"
+#else
 #include <getopt.h>
+#endif
 
 #include "type.hpp"
 #include "machine.hpp"
@@ -26,7 +32,7 @@
 #include "param.hpp"
 #include "debris.hpp"
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>		// Note: #defines main to SDL_main
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -34,25 +40,46 @@
 
 static void usage(const char *progName)
 {
-    fprintf(stderr,
-	    TITLE " " VERSION "\n");
-    fprintf(stderr,
-	    "Usage: %s [-w WIDTH] [-fhv]\n", progName);
-    fprintf(stderr,
-	    "   -w WIDTH    Open with a specified window width\n"
-	    "   -f          Open in full-screen mode (or press F during game)\n"
-	    "   -h          Show this help\n"
-	    "   -v          Show program version\n");
-    fprintf(stderr,
-	    "A faithful implementation of a space game using SDL2 cross-platform\n"
-	    "graphics in which your ship shoots down rocks and flying saucers to\n"
-	    "gain points.\n");
+    std::string usageString;
+
+    usageString += TITLE " " VERSION "\n";
+    usageString += "Usage: ";
+    usageString += progName;
+    usageString += " [-w WIDTH] [-fRhv]\n"
+	"   -w WIDTH    Open with a specified window width\n"
+	"   -f          Open in full-screen mode (or press F during game)\n"
+	"   -R          Reset all high scores\n"
+	"   -h          Show this help\n"
+	"   -v          Show program version\n";	// for help2man?
+
+#ifdef _WIN32
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+			     "Kuiper Ranger Help",
+			     usageString.c_str(),
+			     NULL);
+#else // !_WIN32
+    std::cerr << usageString;
+#endif // !_WIN32
+
     exit(1);
 }
 
 static void version(const char *progName)
 {
-    printf("%s version %s\n", progName, VERSION);
+    std::string versionString;
+
+    versionString += progName;
+    versionString += " version " VERSION "\n";
+
+#ifdef _WIN32
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+			     "Kuiper Ranger Version",
+			     versionString.c_str(),
+			     NULL);
+#else
+    std::cerr << versionString;
+#endif
+
     exit(0);
 }
 
@@ -60,20 +87,25 @@ int main(int argc, char **argv)
 {
     int i;
     int optWidth = Plot::INIT_WIDTH_DEFAULT;
+    bool optResetHighs = false;
     const char *progName;
 
-    if ((progName = strrchr(argv[0], '/')) != NULL)
+    if ((progName = strrchr(argv[0], '/')) != NULL ||
+	(progName = strrchr(argv[0], '\\')) != NULL)
 	progName++;
     else
 	progName = argv[0];
 
-    while ((i = getopt(argc, argv, "w:fvh")) > 0)
+    while ((i = getopt(argc, argv, "w:fRvh")) > 0)
 	switch (i) {
 	case 'w':
 	    optWidth = atoi(optarg);
 	    break;
 	case 'f':
 	    optWidth = Plot::INIT_WIDTH_FULLSCREEN;
+	    break;
+	case 'R':
+	    optResetHighs = true;
 	    break;
 	case 'v':
 	    version(progName);
@@ -83,13 +115,16 @@ int main(int argc, char **argv)
 	    break;
 	}
 
+    if (optind < argc)
+	usage(progName);		// Disallow extra text on cmdline
+
     Rand::init();
 
     Button::init();
 
     // Init plot before modules that may need display size
     if (!Plot::init(optWidth, TITLE)) {
-	fprintf(stderr, "Couldn't initialize display.\n");
+	std::cerr << "Couldn't initialize display\n";
 	exit(1);
     }
 
@@ -104,7 +139,7 @@ int main(int argc, char **argv)
     Speaker::init();
     Paused::init();
     Help::init();
-    HighList::init();
+    HighList::init(optResetHighs);
     Machine::init();
 
     // The wrap area is the whole region below the score bar
@@ -157,6 +192,7 @@ int main(int argc, char **argv)
     Sound::term();
     Plot::term();
     Button::term();
+    Rand::term();
 
     // Manual says to call SDL_Quit even after quitting all subsystems
     SDL_Quit();

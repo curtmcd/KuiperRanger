@@ -14,7 +14,6 @@ struct Shape {
     void append(const Shape *sh, const Vect& offset);
     double getRadius() const { return radius; }
 
-    void draw(const Point& pos) const;
     bool pointInside(const Point& pt) const;
 
 public:

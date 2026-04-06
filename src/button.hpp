@@ -3,6 +3,8 @@
 
 #include "type.hpp"
 
+const int textQueueSize = 10;
+
 struct Button {
     enum Code {
 	togglePause,
@@ -26,7 +28,10 @@ struct Button {
 
     static void press(enum Code b);
     static void release(enum Code b);
+    static void charIn(int c);
+
     static bool isDown(enum Code b, bool clear = false);
+    static int charGet();
     static void clear(enum Code b);
     static void clearAll();
 
@@ -35,6 +40,7 @@ struct Button {
 
 private:
     static bool state[NUM_BUTTON];
+    static int textQueue[textQueueSize];
 };
 
 #endif // !button_hpp

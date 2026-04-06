@@ -1,11 +1,12 @@
-#include "highlist.hpp"
-#include "persist.hpp"
+#include <SDL2/SDL.h>
 
 #include <time.h>
-#include <string>
-#include <iostream>
+#include <fstream>
 #include <sstream>
+#include <iostream>
 #include <algorithm>
+
+#include "highlist.hpp"
 
 #define HIGHLIMIT (HIGHCOLS * HIGHROWS)
 
@@ -14,59 +15,62 @@ std::vector<Text *> HighList::texts;
 
 bool HighList::modified;
 
-void HighList::load()
+std::string HighList::getHighScoreFilename()
 {
-    std::string buf;
+    char *s;
 
-    if (!Persist::load(buf)) {
-	fprintf(stderr,
-		"Unable to save high scores (see kuiper-ranger(6))\n");
+    if ((s = getenv(ENVVAR_HSFILE)) != NULL && s[0] != '\0')
+	return std::string(s);
+
+    if ((s = SDL_GetPrefPath("Fishlet", "kuiper-ranger")) != NULL) {
+	std::string path(s);
+	SDL_free(s);
+	return path + "scores";
     }
 
-    std::istringstream iss(buf);
+    return "";
+}
+
+void HighList::load()
+{
+    std::string path = getHighScoreFilename();
+
+    if (path.empty()) {
+	std::cerr << "Could not determine location of high score file to load\n";
+	return;
+    }
+
+    std::ifstream file(path);
+    if (!file.is_open()) {
+	std::cerr << "Could not load high scores\n";
+	return;
+    }
+
+    highs.clear();
+
     std::string line;
 
-    while (std::getline(iss, line)) {
-	const char *s = line.c_str();
+    while (std::getline(file, line)) {
+	std::stringstream ss(line);
+	std::string namePart, scorePart, timePart;
 
-	highEntry he;
+	if (std::getline(ss, namePart, ':') &&
+            std::getline(ss, scorePart, ':') &&
+            std::getline(ss, timePart, ':')) {
 
-	size_t i;
-	for (i = 0; *s != ':' && *s != '\0'; )
-	    if (i < NICKMAXLEN)		// buffer size is +1
-		he.name[i++] = *s++;
-	he.name[i] = '\0';
+            highEntry he;
+            strncpy(he.name, namePart.c_str(), NICKMAXLEN);
+            he.name[NICKMAXLEN] = '\0';
+            he.score = std::stoi(scorePart);
+            he.timeStamp = (time_t)std::stoll(timePart);
 
-	if (*s++ != ':')
-	    continue;	// ignore bad line
-
-	he.score = 0;
-	while (*s >= '0' && *s <= '9')
-	    he.score = he.score * 10 + (*s++ - '0');
-
-	if (*s++ != ':' || he.score < 1)
-	    continue;
-
-	he.timeStamp  = (time_t)0;
-	while (*s >= '0' && *s <= '9')
-	    he.timeStamp = he.timeStamp * 10 + (*s++ - '0');
-
-	if (*s != '\0')
-	    continue;
-
-	highs.push_back(he);
+	    if (he.score >= HIGHSCOREMIN && he.timeStamp <= time(NULL))
+                highs.push_back(he);
+	}
     }
 
     // Sort in case they're out of order
     std::sort(highs.begin(), highs.end());
-
-    // Delete scores from the future
-    for (auto it = highs.begin(); it != highs.end(); ) {
-	if (it->timeStamp > time(NULL))
-	    it = highs.erase(it);
-	else
-	    it++;
-    }
 
     // Delete timed-out scores, except for the top HIGHPERMANENT scores
     if (highs.size() > HIGHPERMANENT)
@@ -79,31 +83,44 @@ void HighList::load()
 
     // Limit total number
     if (highs.size() > HIGHLIMIT)
-	highs.erase(highs.begin() + HIGHLIMIT,
-		    highs.end());
+	highs.resize(HIGHLIMIT);
 
     modified = true;
 }
 
 void HighList::save()
 {
-    std::ostringstream buf;
+    std::string path = getHighScoreFilename();
+
+    if (path.empty()) {
+	std::cerr << "Could not determine location of high score file to save\n";
+	return;
+    }
+
+    std::ofstream file(path, std::ios::trunc);
+    if (!file.is_open()) {
+	std::cerr << "Could not save high score file\n";
+	return;
+    }
 
     for (const auto& he : highs)
-	buf << he.name
-	    << ":"
-	    << he.score
-	    << ":"
-	    << he.timeStamp
-	    << std::endl;
-
-    if (!Persist::save(buf.str()))
-	printf("Unable to save high scores (see kuiper-ranger(6)\n");
+	file << he.name << ":" << he.score << ":" << he.timeStamp << "\n";
 }
 
 int HighList::getBest()
 {
     return (highs.size() > 0) ? highs[0].score : 0;
+}
+
+bool HighList::qualifies(int score)
+{
+    if (score < HIGHSCOREMIN)
+	return false;
+
+    if (highs.size() < HIGHLIMIT)
+	return true;
+
+    return (score > highs.back().score);
 }
 
 void HighList::record(const char *name, int score)
@@ -193,9 +210,12 @@ void HighList::update()
 	texts[i]->update();
 }
 
-void HighList::init()
+void HighList::init(bool resetAll)
 {
-    load();
+    if (resetAll)
+	save();
+    else
+	load();
 
     // Lay out high score texts in rows and columns
     Vect screenSize = Plot::getSize();

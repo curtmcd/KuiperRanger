@@ -5,6 +5,7 @@
 #include "highlist.hpp"
 #include "help.hpp"
 #include "speaker.hpp"
+#include "paused.hpp"
 
 Game::Game(int _player)
 {
@@ -15,6 +16,7 @@ Game::Game(int _player)
     ghost = new Ghost();
     rocks = new Rocks();
     alien = new Alien();
+    initials = new Initials();
 
     player = _player;
     wave = 0;
@@ -25,6 +27,7 @@ Game::Game(int _player)
 
 Game::~Game()
 {
+    delete initials;
     delete alien;
     delete rocks;
     delete ghost;
@@ -53,8 +56,18 @@ void Game::stopAttract()
 // Returns false when ship dies
 bool Game::update()
 {
+    bool requestQuit = false;
+
+    if (Button::isDown(Button::quit, true)) {
+	Plot::setPauseMode(false);
+	Paused::stop();
+
+	requestQuit = true;
+	extras->clear();
+    }
+
     if (rocks->update())
-	if (state != State::ATTRACT)
+	if (state == State::ACTIVE)
 	    wave++;
 
     Sprite *targets[2];
@@ -72,9 +85,21 @@ bool Game::update()
 
     switch (state) {
     case State::ATTRACT:
+	if (requestQuit)
+	    return false;
+
 	break;
 
     case State::GHOST:
+	if (requestQuit) {
+	    if (HighList::qualifies(score->get())) {
+		ghost->stop();
+		initials->start();
+		state = State::INITIALS;
+	    } else
+		return false;
+	}
+
 	ghost->update();
 
 	// Move to active play when player actives any ship control
@@ -90,7 +115,7 @@ bool Game::update()
 	}
 	break;
 
-    case State::ACTIVE:
+    case State::ACTIVE: {
 	ship->update();
 
 	// Check for ship collisions
@@ -128,15 +153,20 @@ bool Game::update()
 		ship->explode();
 	}
 
-	// Ship takes a while to die after exploding, even after debris
-	// dies out, so that the next turn is delayed appropriately.
-	if (ship->isDead())
-	    return false;
-
 	if (score->get() >= scoreThreshold) {
 	    scoreThreshold += EXTRASHIPPOINTS;
 	    extras->inc();
 	    Sound::play(Sound::extraShip);
+	}
+
+	// Ship takes a while to die after exploding, even after debris
+	// dies out, so that the next turn is delayed appropriately.
+	if (ship->isDead() || requestQuit) {
+	    if (livesRemaining() == 0 && HighList::qualifies(score->get())) {
+		initials->start();
+		state = State::INITIALS;
+	    } else
+		return false;
 	}
 
 	// Make "deet" background sound as long as ship is alive and playing
@@ -149,6 +179,21 @@ bool Game::update()
 		deetTimer = deetInterval();
 	    }
 	}
+	break;
+    }
+
+    case State::INITIALS: {
+	char nickName[NICKMAXLEN + 1];
+
+	if (initials->update(nickName)) {
+	    // Done entering initials (could be nothing entered, or aborted)
+	    if (nickName[0] != '\0')
+		HighList::record(nickName, score->get());
+	    initials->stop();
+	    return false;
+	}
+	break;
+    }
     }
 
     return true;
@@ -185,4 +230,6 @@ void Game::stopTurn()
     extras->off();
     rocks->off();
     alien->off();
+
+    initials->stop();
 }

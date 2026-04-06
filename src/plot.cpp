@@ -1,6 +1,9 @@
 #include <signal.h>
 
 #include <SDL2/SDL.h>
+#ifdef _WIN32
+#include <SDL2/SDL_image.h>
+#endif
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -43,6 +46,7 @@ static bool pauseMode;
 
 // Input state
 static bool capsLockDown;
+static bool textInputMode;
 
 void Plot::drawLetterbox()
 {
@@ -158,6 +162,17 @@ bool Plot::init(int requestWidth, const char *windowTitle)
         return false;
     }
 
+#ifdef _WIN32
+    // Set window task bar icon (Windows only; Linux desktops get it from desktop icon)
+    if (IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) {
+	SDL_Surface *icon = IMG_Load(ICON_FNAME);
+	if (icon) {
+	    SDL_SetWindowIcon(window, icon);
+	    SDL_FreeSurface(icon);
+	}
+    }
+#endif // _WIN32
+
     // Set minimum window size to maintain aspect ratio
     SDL_SetWindowMinimumSize(window,
 			     WINDOW_WIDTH_MIN,
@@ -257,8 +272,11 @@ void Plot::term()
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
+// Suspend progam upon entry; return when user resumes program
+// Not supported on Windows
 void Plot::suspend()
 {
+#ifndef _WIN32
     // Temporarily hide window
     SDL_HideWindow(window);
 
@@ -271,6 +289,7 @@ void Plot::suspend()
 
     // RaiseWindow alone doesn't get back focus
     SDL_SetWindowInputFocus(window);
+#endif // !_WIN32
 }
 
 // In vsync mode, SDL_RenderPresent() returns synchronously to vsync.
@@ -563,9 +582,14 @@ void Plot::line(double fx, double fy, double tx, double ty)
     }
 }
 
+void Plot::setTextInputMode(bool on)
+{
+    textInputMode = on;
+}
+
 // Poll for window events such as resize and keyboard events that
-// correspond valid game controls. Game controls are propagated to the
-// Buttons module.
+// correspond valid game controls. Game controls (including key entry
+// for high score initials) are propagated to the Buttons module.
 void Plot::pollEvents()
 {
     SDL_Event event;
@@ -595,8 +619,35 @@ void Plot::pollEvents()
 	    bool shiftDown = (event.key.keysym.mod & KMOD_SHIFT);
 	    bool ctrlDown = ((event.key.keysym.mod & KMOD_CTRL) ||
 			     capsLockDown);
+	    SDL_Keycode sym = event.key.keysym.sym;
 
-	    switch (event.key.keysym.sym) {
+	    // In text input mode, alphanumeric keys and certain others
+	    // are input as typed characters rather than control
+	    // buttons.
+	    if (textInputMode && keyDown) {
+		if (sym >= SDLK_a && sym <= SDLK_z) {
+		    if (ctrlDown)
+			Button::charIn(sym - SDLK_a + 1);	// mainly for Ctrl-C
+		    else
+			Button::charIn(sym - SDLK_a + 'A');
+		    break;
+		}
+
+		if (sym >= SDLK_0 && sym <= SDLK_9) {
+		    Button::charIn(sym);
+		    break;
+		}
+
+		if (sym == SDLK_ESCAPE ||
+		    sym == SDLK_BACKSPACE ||
+		    sym == SDLK_DELETE ||
+		    sym == SDLK_RETURN) {
+		    Button::charIn(sym);
+		    break;
+		}
+	    }
+
+	    switch (sym) {
 	    case SDLK_z:
 		if (keyDown && ctrlDown)
 		    Button::press(Button::suspend);

@@ -19,7 +19,9 @@ static const char *helpStrings[] = {
     "   Pause ................. P",
 #ifndef __EMSCRIPTEN__
     "   Quit .................. Q",
+#ifndef _WIN32
     "   Suspend ............... Ctrl+Z",
+#endif // !_WIN32
 #endif // !__EMSCRIPTEN__
     " ",
     "   Toggle Help ........... H",

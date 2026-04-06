@@ -6,6 +6,9 @@
 #include "point.hpp"
 #include "plot.hpp"
 
+// Note: sprite rotation appears clockwise for positive angles because
+// the display's Y axis is inverted.
+
 struct Sprite {
     void setShape(Shape *s) { shape = s; }
     Shape *getShape() { return shape; }
@@ -37,8 +40,8 @@ struct Sprite {
 
     void update();
 
-    bool collision(const Sprite *other) const;
     bool lineTouches(const Line& line) const;
+    bool collision(const Sprite *other) const;
 
 private:
     void draw() const;

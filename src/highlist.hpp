@@ -1,17 +1,21 @@
 #ifndef highlist_hpp
 #define highlist_hpp
 
+#include <string>
+
 #include "text.hpp"
 #include "param.hpp"
 
 struct HighList {
+    static std::string getHighScoreFilename();
     static int getBest();
 
     // Insert a score into high score list if it is a top score
+    static bool qualifies(int score);
     static void record(const char *name, int score);
 
     // High score graphics
-    static void init();
+    static void init(bool resetAll);
     static void term();
 
     static void on();
