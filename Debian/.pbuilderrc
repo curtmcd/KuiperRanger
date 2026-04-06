@@ -1,0 +1,30 @@
+# File: ~/.pbuilderrc
+
+: ${ARCH:=$(dpkg --print-architecture)}
+: ${DIST:=bookworm}
+
+ARCHITECTURE="$ARCH"
+DISTRIBUTION="$DIST"
+
+# Use standard debootstrap (it now handles foreign archs via binfmt automatically)
+DEBOOTSTRAP="debootstrap"
+
+# Choose the correct mirror based on architecture
+case "$ARCH" in
+    # "Official" architectures (Main Mirror)
+    amd64|i386|arm64|armhf|ppc64el|s390x|mips64el|riscv64)
+        MIRRORSITE="http://deb.debian.org/debian"
+        ;;
+    # "Ports" architectures (Ports Mirror)
+    powerpc|sparc64|hppa|m68k)
+        MIRRORSITE="http://deb.debian.org/debian-ports"
+	DEBOOTSTRAPOPTS="--keyring=/usr/share/keyrings/debian-ports-archive-keyring.gpg"
+        ;;
+    *)
+        echo "Unknown architecture: $ARCH. Defaulting to main mirror."
+        MIRRORSITE="http://deb.debian.org/debian"
+        ;;
+esac
+
+# Define where to store the build environments
+BASETGZ="/var/cache/pbuilder/base-${DIST}-${ARCH}.tgz"

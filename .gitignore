@@ -40,8 +40,20 @@
 # debug information files
 *.dwo
 
-@ Linux build results
+# Linux build results
 build/
+
+# Debian packaging results
+kuiper-ranger-[0-9].[0-9]/
+kuiper-ranger-[0-9].[0-9][0-9]/
+*.deb
+*.ddeb
+*.build
+*.buildinfo
+*.changes
+*.tar.gz
+*.tar.xz
+*.dsc
 
 # Visual Studio cache and build results
 .vs/

@@ -1,0 +1,8 @@
+# See https://wiki.debian.org/UpstreamMetadata for more info/fields.
+
+Bug-Database: https://github.com/fishlet/kuiper-ranger/issues
+Bug-Submit: https://github.com/fishlet/kuiper-ranger/issues/new
+Changelog: https://github.com/fishlet/kuiper-ranger/blob/master/CHANGES
+Documentation: https://github.com/fishlet/kuiper-ranger/wiki
+Repository-Browse: https://github.com/fishlet/kuiper-ranger
+Repository: https://github.com/fishlet/kuiper-ranger.git

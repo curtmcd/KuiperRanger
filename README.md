@@ -19,8 +19,7 @@
 
 ## Purpose
 
-A faithful implementation of a vector arcade game
-in which your ship shoots down rocks and flying saucers to gain points.
+A faithful implementation of a vector arcade game in which your ship shoots down rocks and flying saucers to gain points.
 
 ## Features
 
@@ -32,13 +31,11 @@ in which your ship shoots down rocks and flying saucers to gain points.
 
 ## Notes
 
-  * This is a SUPERB implementation and LUCS has managed
-    a high score of 14300 so far: can you do better?
+  * This is a SUPERB implementation and LUCS has managed a high score of 14300 so far: can you do better?
 
 ## High score file
 
-The location of the high score file varies between systems and
-configurations.
+The location of the high score file varies between systems and configurations:
 
 * Windows
 
@@ -52,8 +49,7 @@ configurations.
 
   `~/.local/share/Fishlet/kuiper-ranger/scores`
 
-  If you would prefer using a system-wide high score file, you may create
-  the file manually:
+  If you would prefer using a system-wide high score file, you may create the file manually:
 
   * sudo mkdir -p /var/games/kuiper-ranger
   * sudo touch /var/games/kuiper-ranger/scores
@@ -61,8 +57,7 @@ configurations.
 
 * Manual override
 
-  If the environment variable `KR_SCORES` is set to the name of a
-  file that the game can create and write to, scores will be stored there.
+  If the environment variable `KR_SCORES` is set to the name of a file that the game can create and write to, scores will be stored there.
 
 ## Build Instructions for Linux
 
@@ -90,15 +85,10 @@ configurations.
 
 ## Build Instructions for Windows
 
+It can be built from Visual Studio or from the Command Prompt.
+
 Please see the separate `README.md` under the `msvc/` directory.
 
 ## History
 
-This game originally ran using exclusively integer arithmetic directly
-on the bitmapped displays of machines at the time, including aiws,
-apa16, sunbw, suncg6, mipscolor, and mega. Eventually, development swung
-toward supporting X11 only. In 2025, Curt ported it to C++, rebased it
-onto the SDL2 graphics and sound library and added sound effects. Now in
-theory it can run on a variety of platforms including Unix (X11 or
-Wayland), Windows, and macOS (it has not yet been tried on the latter
-two). It can also be run in a web browser using Emscripten.
+This game originally ran using exclusively integer arithmetic directly on the bitmapped displays of machines at the time, including aiws, apa16, sunbw, suncg6, mipscolor, and mega. Eventually, development swung toward supporting X11 only. In 2025, Curt ported it to C++, rebased it onto the SDL2 graphics and sound library and added sound effects. Now it can run on a variety of platforms including Unix (X11 or Wayland) on x64, arm64 or riscv5 (it has been packaged as a .deb for all three but the latter two have not been tested), Windows, and in a web browser using Emscripten. It might be ported to MacOS in the future.
