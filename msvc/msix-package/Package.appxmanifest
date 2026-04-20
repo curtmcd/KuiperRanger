@@ -10,7 +10,7 @@
   <Identity
     Name="Fishlet.KuiperRanger"
     Publisher="CN=7DC586FD-4EB3-44E5-B508-1551AADDCFDB"
-    Version="2.6.14.0" />
+    Version="2.6.15.0" />
 
   <Properties>
     <DisplayName>Kuiper Ranger</DisplayName>
@@ -19,7 +19,6 @@
   </Properties>
 
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14393.0" MaxVersionTested="10.0.14393.0" />
   </Dependencies>
 
