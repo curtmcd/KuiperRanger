@@ -7,7 +7,9 @@ Build-Depends:
  debhelper-compat (= 13),
  libsdl2-dev
 Standards-Version: 4.6.2
-Homepage: https://github.com/fishlet/kuiper-ranger
+Homepage: https://github.com/curtmcd/KuiperRanger
+#Vcs-Browser: https://salsa.debian.org/debian/kuiper-ranger
+#Vcs-Git: https://salsa.debian.org/debian/kuiper-ranger.git
 
 Package: kuiper-ranger
 Architecture: any

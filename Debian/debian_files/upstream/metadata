@@ -1,0 +1,8 @@
+# See https://wiki.debian.org/UpstreamMetadata for more info/fields.
+
+Bug-Database: https://github.com/curtmcd/KuiperRanger/issues
+Bug-Submit: https://github.com/curtmcd/KuiperRanger/issues/new
+Changelog: https://github.com/curtmcd/KuiperRanger/blob/master/CHANGES
+Documentation: https://github.com/curtmcd/KuiperRanger/wiki
+Repository-Browse: https://github.com/curtmcd/KuiperRanger
+Repository: https://github.com/curtmcd/KuiperRanger.git
