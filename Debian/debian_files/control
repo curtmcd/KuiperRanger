@@ -1,0 +1,28 @@
+Source: kuiper-ranger
+Section: games
+Priority: optional
+Maintainer: Curt McDowell <gamer@fishlet.com>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+ libsdl2-dev
+Standards-Version: 4.6.2
+Homepage: https://github.com/curtmcd/KuiperRanger
+#Vcs-Browser: https://salsa.debian.org/debian/kuiper-ranger
+#Vcs-Git: https://salsa.debian.org/debian/kuiper-ranger.git
+
+Package: kuiper-ranger
+Architecture: any
+Multi-Arch: foreign
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Space-based vector arcade game - shoot rocks and flying saucers
+ Kuiper Ranger is a faithful implementation of a classic vector arcade game
+ in which your ship shoots down rocks and flying saucers to gain points.
+ .
+ Features:
+  * Uses monochrome vector graphics
+  * Provides sound effects
+  * Saves the high score table between games
+  * Allows rotating turns for one to three players

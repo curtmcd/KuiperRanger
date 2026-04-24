@@ -5,25 +5,52 @@ This file describes the process for creating a Debian Package for Kuiper Ranger.
 ## Prerequisites
 
 	sudo apt update
-	sudo apt install devscripts dpkg-dev dh-make pbuilder
+	sudo apt install devscripts dpkg-dev dh-make
+
+Extra for compiling ARM or RISC:
+
+	sudo apt install pbuilder
+
+## Automatic script
+
+Under Debian/ there is a Makefile that performs the package build steps below. Simply run
+
+	make
+
+The Makefile reads the first line of debian_files/changelog to determine the version number of the package being built.
+
+`WARNING`: the `make clean` target deletes all generated artifacts including the tarball, build directory with debian/ subdirectory, packaging temporary files and the package itself.
 
 ## Create the upstream tarball
 
+`NOTE`: These instructions assume version 2.6.15 is being released. That number should be updated in the changelog for future releases.
+
+The git archive command is used to create the tarball. The Debian/ directory itself is excluded from the tarball, as is the msvc/ (Microsoft) directory.
+
 	cd KuiperRanger
 	ls -ld .git
-	git archive --format=tar.gz --prefix=kuiper-ranger-2.6/ -o Debian/kuiper-ranger_2.6.orig.tar.gz HEAD
+	git archive --format=tar.gz --prefix=kuiper-ranger-2.6.15/ -o Debian/kuiper-ranger_2.6.15.orig.tar.gz HEAD ':!Debian' ':!msvc'
 
-## Extract the tarball to kuiper-ranger-2.6/ in the Debian area
+## Extract the tarball to kuiper-ranger-2.6.15/ in the Debian area
 
 	cd Debian
-	tar xf kuiper-ranger_2.6.orig.tar.gz
-	cd kuiper-ranger-2.6
+	tar xf kuiper-ranger_2.6.15.orig.tar.gz
 
-## Create the debian/* template files
+## Create the debian/* files
+
+Control files that go in the debian/ directory have already been created. They are stored in ./debian\_files and can be copied directly to debian/. They should be examined in detail and updated as necessary, especially the changelog.
+
+	cd kuiper-ranger-2.6.15
+	cp -r ../debian_files debian
+
+These files were initially created using `dh_make` as follows:
 
 	dh_make --single --copyright gpl3 --email gamer@fishlet.com 
 
-Then edit the files under debian/. Retain the files:
+after which the resulting template files were edited.
+
+The needed control files are:
+
 * changelog
 * control
 * copyright
@@ -36,24 +63,20 @@ Then edit the files under debian/. Retain the files:
 * source/format
 * upstream/metadata
 
-Refer to examples in ./debian_example/. It should be possible to pretty much use this example directory as debian/ with the exception of the changelog.
-
-	diff -r debian ../debian_example
-
-To submit an initial release to the repository, open an ITP issue with Debian. Put the bug number of the ITP in the changelog.
-
-It would be a good idea to ARCHIVE THE FULLY BUILT Debian DIRECTORY for anything submitted to Debian.
+Note: It would be a good idea to ARCHIVE THE FULLY BUILT Debian directory for anything submitted to Debian.
 
 ## Do the build
 
 The -us option is passed to dpkg-buildpackage and means not to sign the source package. The -uc option means not to sign the .changes file.
 
-	cd kuiper-ranger-2.6
+	cd kuiper-ranger-2.6.15
 	debuild -us -uc
 
-The output package will be placed in the parent directory (`../kuiper-ranger_2.6-1_*.deb`).
+The output package will be placed in the parent directory (`../kuiper-ranger_2.6.15-1_*.deb`).
 
-# Compiling for ARM and RISC-V
+# Cross-compiling packages for ARM and RISC-V
+
+These packages build, but have not been tested on the respective platforms.
 
 ## Prerequisites
 
@@ -77,7 +100,7 @@ Create /root/.pbuilderrc
 `DIST=bookworm` tells .pbuilderrc to use the current stable release
 
 	sudo ARCH=arm64 DIST=bookworm pbuilder --create
-	cd kuiper-ranger-2.6/debian
+	cd kuiper-ranger-2.6.15/debian
 	sudo ARCH=arm64 DIST=bookworm pdebuild
 
 Outputs go in /var/cache/pbuilder/result/

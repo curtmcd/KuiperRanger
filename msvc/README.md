@@ -1,10 +1,8 @@
 # Windows Build Instructions for Kuiper Ranger
 
-It is very easy to build in Visual Studio or at the Command Prompt if you use `vcpkg` to
-install the SDL2 libraries. The provided Solution file `msvc\msvc.slnx` is set up to
-build the project using the `vcpkg` method.
+It is very easy to build in Visual Studio or at the Command Prompt if you use `vcpkg` to install the SDL2 libraries. The provided Solution file `msvc\msvc.slnx` is set up to build the project using the `vcpkg` method.
 
-Not recommended: using `cmake`, or manually installing libraries in random directories.
+Not recommended: using `cmake`, or manually installing libraries in non-standard folder locations.
 
 ## Install vcpkg (if you don't already have it)
 
@@ -17,14 +15,11 @@ cd C:\vcpkg
 C:\vcpkg integrate install
 ```
 
-Be sure to run `C:\vcpkg integrate install` as above. It makes all of the following
-automatic. Otherwise there are many settings and commands needed in the MS build project files.
+Be sure to run `C:\vcpkg integrate install` as above. It makes all of the following automatic. Otherwise there are many settings and commands needed in the MS build project files.
 
 - Detects and sets up #include paths for C++ libraries being used
-- Detects which libraries are being used, sets up the library paths and dependencies
-  (although it misses SDL2main.lib)
-- As part of the build, automatically copies the needed .dll files to the output directory
-  alongside the .exe files
+- Detects which libraries are being used, sets up the library paths and dependencies (although it misses SDL2main.lib)
+- As part of the build, automatically copies the needed .dll files to the output folder alongside the .exe files
 
 ## Install SDL2 libraries via vcpkg
 
@@ -49,64 +44,58 @@ Select whether you want a `Release` or `Debug` build from the drop-downs at the 
 
 Select the desired platform (likely `x64`) at the top of the screen.
 
-Right click the `kuiper-ranger` or `sound-test` project and 
-run `Build` -> `Build Solution`.
+Right click the `kuiper-ranger` or `sound-test` project and run `Build` -> `Build Solution`.
 
 ### Command Prompt
 
 Use msbuild.
 
-To make it easy, a simple batch file `build.bat` is included that will build any
-of the options.
+To make it easy, a simple batch file `build.bat` is included that will build any of the options.
 
 ## Execute
 
-You can run Kuiper Ranger from within Visual Studio after building it
-by using `Debug` -> `Start Debugging` or `Debug` -> `Start Without Debugging`.
+You can run Kuiper Ranger from within Visual Studio after building it by using `Debug` -> `Start Debugging` or `Debug` -> `Start Without Debugging`.
 
-To run it from the Command Prompt, you can go to the appropriate build subdirectory
-and run `.\kuiper-ranger.exe`. A sample batch file `run.bat` is included at
-the `msvc\` level for easy testing:
+To run it from the Command Prompt, you can go to the appropriate build subfolder and run `.\kuiper-ranger.exe`. A sample batch file `run.bat` is included at the `msvc\` level for easy testing:
 
 - Use `run.bat` to run Release
 - Use `run.bat debug` to run Debug
 
-The utility sound testing program is built as a separate project called `sound-test.exe`.
-It can only be run from the command prompt because it has a command interface. It allows you
-to play various sounds in one-shot or continuous mode.
+The utility sound testing program is built as a separate project called `sound-test.exe`. It can only be run from the command prompt because it has a command interface. It allows you to play various sounds in one-shot or continuous mode.
 
 ## Packaging
 
 The application is packaged as an MSIX bundle that contains both `x86` and `x64` versions.
 
-The project msix-package is configured to build this complete package.
-This is the default if you attempt to build the whole Solution.
+The project msix-package is configured to build this complete package. This is the default if you attempt to build the whole Solution.
 
-To build the package, right-click on the `msix-package` project and select
-`Publish` -> `Create App Packages...`.
+This package was generated as follows:
+* To the solution, Add -> New Project, type `Windows Application Packaging Project`.
+* Visual Assets were auto-generated from the AI-generated cover image `cover-image2Gc.png`.
+* The script `imageRegen.sh` was run Linux to replace all of the generated images with same-sized custom scaled and tweaked versions.
 
-*WARNING*: I've found that the DLLs do NOT get included in the package at all
-unless I run `Clean` on the entire solution prior to `Create App Packages...`!
+This package will be for the desktop only.
+* Edit the `Package.appxmanifest` file
+* Remove the `TargetDeviceFamily` for `Windows.Universal`
 
-To test the package: after it builds, click on the Certificate thing that comes up.
+To build the package:
+* Select `Build` -> `Clean Solution`. Or better yet, run the provided `clean.bat`.
+  *WARNING*: I've found the DLLs do *not* get included in the packaged app unless the solution is cleaned first!!
+* Right-click on the `msix-package` project and select `Publish` -> `Create App Packages...`.
 
-The finished package ends up under `AppPackages/msix-package_2.6.14.0_Test` or similar.
-In that directory is the `msixbundle` file along with a unique certificate in a `cer`
-file that corresponds only to that particular bundle and is required to be installed
-before the bundle can be installed.
+After the build completes in Visual Studio, a window pops up for `Finished creating package` with a button at the bottom labeled `Launch Windows App Certification Kit`. Click that button to generate a certificate.
 
-Double-click the certificate file, import it to Local Machine, and place it in the
-certificate store called `Trusted People`.
+The finished package ends up under `AppPackages\msix-package_2.6.15.0_x86_x64_bundle.msixupload` or similar. Also, a test folder is created called `AppPackages\msix-package_2.6.15.0_Test` or similar.
 
-Next, double-clock the MSIX bundle file to install the app!
+To test the package:
+* In the newly created `*_Test` folder, find the `.cer` file. It contains a certificate that corresponds only to this test release, and is required before it can be installed.
+* Install the certificate by double-clicking on the `cer` file. Import it to `Local Machine` and place it in the certificate store called `Trusted People`.
+* Double-click the `msixbundle` file to install and run the app for testing!
 
-Note: after creating a package, the version number gets updated in
-`msvc/msix-package/Package.appxmanifest` so that file should be checked into Git
-each time a public release is made.
+Note: after creating a package, the version number gets updated in `msvc\msix-package\Package.appxmanifest`. Therefore that file should be checked into Git each time a public release is made.
 
 ## Clean up
 
-Not easy, thanks Microsoft. Their idea of `make clean` is to leave 172 MB of junk around.
+Run `clean.bat` to clean up. This is needed because Microsoft's idea of `make clean` is to leave 172 MB of junk laying around in various folders.
 
-Save the needed artifacts from the `AppPackages` directory then use `git clean` or
-something to clean up.
+This clean script leaves the `AppPackages` folder alone (the folder containing all of the built packages).

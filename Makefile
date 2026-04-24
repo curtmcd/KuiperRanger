@@ -163,6 +163,6 @@ depend: $(addprefix src/,$(SRCS1)) \
 -include .depend
 
 # Clean targets
-.PHONY: clean
-clean:
+.PHONY: clean distclean
+clean distclean:
 	rm -rf $(BUILD_DIR) .depend ID
